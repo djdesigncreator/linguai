@@ -1,0 +1,4148 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1E0D42">
+<title>Lingu.AI</title>
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Lingu.AI">
+<link rel="apple-touch-icon" href="icone-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yusei+Magic&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════════
+   LINGU.AI — sistema de design
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --indigo:#1E0D42;
+  --indigo-80:#3A2A63;
+  --indigo-40:#6B5A9E;
+  --lima:#CAD012;
+  --coral:#E2574C;
+  --teal:#2B7A6F;
+  --papel:#FAF6EF;
+  --branco:#FFFFFF;
+  --linha:#E6DFD2;
+  --texto:#1E0D42;
+  --texto-suave:#6B6480;
+
+  --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px;
+  --sombra:0 2px 14px rgba(30,13,66,.07);
+  --sombra-alta:0 12px 34px rgba(30,13,66,.16);
+  --nav-h:76px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  background:var(--papel);
+  color:var(--texto);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  overflow-wrap:break-word;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{font-family:'Yusei Magic',cursive;font-weight:400;line-height:1.28;}
+button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:none;cursor:pointer;}
+:focus-visible{outline:2.5px solid var(--teal);outline-offset:3px;border-radius:4px;}
+
+/* ── Estrutura ────────────────────────────────────────── */
+#app{min-height:100%;display:flex;flex-direction:column;}
+#ecra{
+  flex:1;
+  width:100%;max-width:520px;margin:0 auto;
+  padding:14px 18px calc(var(--nav-h) + 26px);
+}
+.vista{display:none;animation:entra .26s cubic-bezier(.2,.7,.3,1);}
+.vista.on{display:block;}
+@keyframes entra{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+/* ── Barra superior ───────────────────────────────────── */
+.topo{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:6px 0 18px;
+}
+.marca{display:flex;align-items:center;gap:8px;font-family:'Yusei Magic',cursive;font-size:19px;}
+.marca b{color:var(--lima);font-weight:400;}
+.marca svg{width:26px;height:26px;flex:0 0 auto;}
+
+.par-linguas{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 12px;border-radius:999px;
+  background:var(--branco);border:1.5px solid var(--linha);
+  font-size:17px;line-height:1;
+}
+.par-linguas .seta{font-size:11px;color:var(--indigo-40);}
+
+/* ── Cartões ──────────────────────────────────────────── */
+.cartao{
+  background:var(--branco);border:1.5px solid var(--linha);
+  border-radius:var(--r-lg);padding:20px;margin-bottom:14px;
+}
+.cartao-escuro{
+  background:var(--indigo);color:#fff;border:0;
+  border-radius:var(--r-xl);padding:24px 22px;margin-bottom:16px;
+  box-shadow:var(--sombra-alta);
+}
+
+/* ── Progresso do plano ───────────────────────────────── */
+.plano-nota{
+  text-align:center;font-size:13.5px;color:#CFC7E4;
+  margin-bottom:18px;line-height:1.45;
+}
+.perfil-linha{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
+.avatar{
+  width:54px;height:54px;flex:0 0 auto;border-radius:50%;
+  background:var(--lima);color:var(--indigo);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Yusei Magic',cursive;font-size:22px;
+}
+.perfil-nome{flex:1 1 130px;min-width:0;}
+.perfil-nome .nome{font-size:16px;color:var(--lima);line-height:1.25;}
+.perfil-nome .meta{font-size:12.5px;color:#CFC7E4;margin-top:2px;}
+
+.estatisticas{display:flex;gap:8px;flex:1 1 180px;}
+.estat{flex:1;text-align:center;}
+.estat .n{font-family:'Yusei Magic',cursive;font-size:21px;color:#fff;line-height:1;}
+.estat .r{font-size:11px;color:#CFC7E4;margin-top:5px;line-height:1.2;}
+
+.barra-zona{display:flex;align-items:center;gap:12px;}
+.barra{flex:1;position:relative;height:11px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden;}
+.barra-fill{
+  position:absolute;inset:0 auto 0 0;width:0;
+  background:var(--lima);border-radius:999px;
+  transition:width .9s cubic-bezier(.2,.7,.3,1);
+}
+.barra-txt{font-family:'Yusei Magic',cursive;font-size:17px;color:var(--lima);flex:0 0 auto;}
+
+/* ── Menu de práticas ─────────────────────────────────── */
+.seccao-titulo{font-size:13px;color:var(--texto-suave);margin:22px 4px 12px;}
+
+.pratica{
+  display:flex;align-items:center;gap:14px;width:100%;
+  padding:17px 16px;border-radius:var(--r-lg);margin-bottom:11px;
+  text-align:left;transition:transform .14s;
+}
+.pratica:active{transform:scale(.985);}
+.pratica .ic{
+  width:44px;height:44px;flex:0 0 auto;border-radius:13px;
+  background:rgba(255,255,255,.82);
+  display:flex;align-items:center;justify-content:center;
+}
+.pratica .ic svg{width:21px;height:21px;}
+.pratica .txt{display:block;flex:1;min-width:0;}
+.pratica .t{display:block;font-family:'Yusei Magic',cursive;font-size:15.5px;line-height:1.3;}
+.pratica .d{display:block;font-size:12.5px;opacity:.72;margin-top:3px;line-height:1.35;}
+.pratica .chev{flex:0 0 auto;opacity:.5;}
+
+.p-licoes {background:#8B7BF0;color:#1B1040;}
+.p-conversa{background:#A5E3C0;color:#12503A;}
+.p-verbos {background:#F5B5AB;color:#6E2D25;}
+.p-escrita {background:#F9D08B;color:#6B4413;}
+.p-vocab  {background:#A9C5E8;color:#1B3A63;}
+.p-traduz {background:#D9C6F0;color:#3B2159;}
+
+/* ── Navegação inferior ───────────────────────────────── */
+.nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  background:var(--branco);border-top:1.5px solid var(--linha);
+  padding:9px 6px calc(9px + env(safe-area-inset-bottom));
+}
+.nav-int{display:flex;max-width:520px;margin:0 auto;}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:5px 2px;font-size:11px;color:var(--texto-suave);
+  transition:color .16s;
+}
+.nav-btn svg{width:22px;height:22px;}
+.nav-btn.on{color:var(--indigo);}
+.nav-btn.on svg{stroke:var(--indigo);}
+.nav-btn svg{stroke:currentColor;fill:none;stroke-width:1.9;}
+
+/* ── Estados ──────────────────────────────────────────── */
+.carregar{display:flex;align-items:center;justify-content:center;gap:9px;padding:42px 0;color:var(--texto-suave);font-size:14px;}
+.pontos{display:inline-flex;gap:4px;}
+.pontos i{width:6px;height:6px;border-radius:50%;background:currentColor;animation:salta 1s ease-in-out infinite;}
+.pontos i:nth-child(2){animation-delay:.16s;}
+.pontos i:nth-child(3){animation-delay:.32s;}
+@keyframes salta{0%,72%,100%{opacity:.3;transform:none;}36%{opacity:1;transform:translateY(-4px);}}
+
+.vazio{text-align:center;padding:52px 20px;color:var(--texto-suave);}
+.vazio .t{font-family:'Yusei Magic',cursive;font-size:17px;color:var(--texto);margin-bottom:7px;}
+.vazio .d{font-size:13.5px;line-height:1.55;}
+
+.aviso{
+  background:#FFF4E5;border:1.5px solid #F0C88A;border-radius:var(--r-md);
+  padding:14px 16px;margin-bottom:14px;font-size:13.5px;line-height:1.55;color:#6B4413;
+}
+
+/* ── Botões ───────────────────────────────────────────── */
+.btn{
+  display:block;width:100%;padding:16px;border-radius:var(--r-md);
+  background:var(--coral);color:#fff;text-align:center;
+  font-family:'Yusei Magic',cursive;font-size:15.5px;
+  transition:transform .14s,opacity .14s;
+}
+.btn:active{transform:scale(.99);}
+.btn:disabled{opacity:.6;}
+.btn-calmo{background:var(--branco);color:var(--texto);border:1.5px solid var(--linha);}
+
+.voltar{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:600;color:var(--texto-suave);
+  margin-bottom:14px;padding:4px 0;
+}
+
+/* ── Escolhas (nível, tema) ───────────────────────────── */
+.escolhas{display:flex;flex-direction:column;gap:10px;}
+.escolha{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:16px 18px;border-radius:var(--r-md);
+  background:var(--branco);border:1.5px solid var(--linha);
+  font-weight:600;font-size:14.5px;text-align:left;
+}
+.escolha:active{border-color:var(--teal);background:rgba(43,122,111,.05);}
+
+
+
+
+
+
+/* ── Instalar (PWA) ───────────────────────────────────── */
+.pwa-barra{display:none;position:fixed;left:12px;right:12px;bottom:calc(var(--nav-h) + 12px);z-index:60;
+  max-width:496px;margin:0 auto;align-items:center;gap:12px;
+  background:var(--indigo);color:#fff;border-radius:var(--r-lg);padding:14px 16px;
+  box-shadow:var(--sombra-alta);animation:entra .3s cubic-bezier(.2,.7,.3,1);}
+.pwa-barra.on{display:flex;}
+.pwa-txt{flex:1;min-width:0;}
+.pwa-t{font-family:'Yusei Magic',cursive;font-size:14.5px;}
+.pwa-d{font-size:12px;color:#CFC7E4;margin-top:2px;line-height:1.35;}
+.pwa-sim{flex:0 0 auto;background:var(--lima);color:var(--indigo);border-radius:999px;
+  padding:10px 18px;font-weight:700;font-size:13px;}
+.pwa-nao{flex:0 0 auto;width:28px;height:28px;color:#CFC7E4;font-size:13px;}
+body.em-login .pwa-barra,body.em-entrada .pwa-barra{bottom:16px;}
+
+/* ── Login ────────────────────────────────────────────── */
+body.em-login .nav,body.em-login .topo{display:none;}
+body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
+.lg-topo{text-align:center;margin-bottom:26px;}
+.lg-marca{width:54px;height:54px;margin:0 auto 14px;display:block;}
+.lg-nome{font-family:'Yusei Magic',cursive;font-size:25px;}
+.lg-nome b{color:var(--lima);font-weight:400;}
+.lg-lema{font-size:13.5px;color:var(--texto-suave);margin-top:10px;line-height:1.55;}
+.cod-caixa{display:flex;gap:8px;justify-content:center;margin:6px 0 4px;}
+.cod-d{width:46px;height:56px;text-align:center;font-family:'Yusei Magic',cursive;font-size:24px;
+  border:1.5px solid var(--linha);border-radius:var(--r-md);background:var(--branco);color:var(--texto);}
+.cod-d:focus{outline:none;border-color:var(--teal);background:rgba(43,122,111,.04);}
+.lg-senha{position:relative;}
+.lg-senha .campo{padding-right:48px;}
+.lg-olho{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;font-size:15px;}
+.lg-link{display:block;width:100%;margin-top:14px;padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--texto-suave);}
+.lg-fundo{text-align:center;margin-top:26px;padding-top:20px;border-top:1.5px solid var(--linha);font-size:13.5px;color:var(--texto-suave);}
+.lg-troca{font-weight:700;color:var(--coral);font-size:13.5px;}
+
+.lic-audio-espera{display:flex;align-items:center;gap:10px;background:var(--branco);border:1.5px dashed var(--linha);border-radius:var(--r-md);padding:14px 16px;margin-bottom:18px;font-size:13px;color:var(--texto-suave);}
+
+/* ── Conversação ──────────────────────────────────────── */
+.cv-abas{display:flex;gap:8px;margin-bottom:18px;}
+.cv-aba{flex:1;padding:12px 8px;border-radius:var(--r-md);background:var(--branco);border:1.5px solid var(--linha);font-size:13px;font-weight:600;}
+.cv-aba.on{background:var(--indigo);color:#fff;border-color:var(--indigo);}
+.cv-niveis{display:flex;gap:8px;}
+.cv-nivel{flex:1;padding:10px 6px;border-radius:999px;background:var(--branco);border:1.5px solid var(--linha);font-size:12.5px;font-weight:600;}
+.cv-nivel.on{background:rgba(43,122,111,.1);border-color:var(--teal);color:var(--teal);}
+.cv-topo{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;}
+.cv-tema{font-family:'Yusei Magic',cursive;font-size:19px;}
+.cv-sub{font-size:12.5px;color:var(--texto-suave);margin-top:2px;}
+.cv-fim{padding:9px 15px;border-radius:999px;background:var(--branco);border:1.5px solid var(--linha);font-size:12.5px;font-weight:600;color:var(--coral);flex:0 0 auto;}
+.cv-fio{min-height:36vh;max-height:46vh;overflow-y:auto;padding:4px 0 8px;margin-bottom:8px;}
+.cv-vazio{text-align:center;padding:44px 20px;color:var(--texto-suave);font-size:13.5px;line-height:1.6;}
+.cv-trad{font-size:12.5px;color:var(--texto-suave);margin-top:5px;padding:0 4px;line-height:1.45;}
+.cv-palco{text-align:center;padding-top:10px;border-top:1.5px solid var(--linha);}
+.cv-sugestao{background:#FFF7EC;border:1.5px solid #F0C88A;border-radius:var(--r-md);padding:15px 16px;margin-top:14px;font-size:13.5px;}
+.cv-modelo{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-lg);margin-bottom:11px;overflow:hidden;}
+.cv-modelo-topo{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;}
+.cv-modelo-t{font-family:'Yusei Magic',cursive;font-size:15.5px;line-height:1.3;}
+.cv-modelo-d{font-size:12.5px;color:var(--texto-suave);margin-top:2px;line-height:1.35;}
+.cv-modelo-n{display:inline-block;margin-top:7px;font-size:10.5px;font-weight:600;color:var(--texto-suave);background:var(--papel);padding:3px 9px;border-radius:999px;}
+.cv-modelo-corpo:not(:empty){padding:0 16px 16px;}
+.cv-fala{padding:12px 14px;border-radius:var(--r-md);margin-bottom:8px;}
+.cv-fala.fa{background:rgba(43,122,111,.07);margin-right:20px;}
+.cv-fala.fb{background:rgba(226,87,76,.07);margin-left:20px;}
+.cv-fala-alvo{font-size:14.5px;font-weight:600;line-height:1.45;}
+.cv-fala-ouvir{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(30,13,66,.08);margin-left:6px;vertical-align:middle;color:var(--indigo);}
+.cv-fala-orig{font-size:12.5px;color:var(--texto-suave);margin-top:3px;line-height:1.4;}
+.cv-fala-pron{font-size:11.5px;color:var(--teal);font-style:italic;margin-top:4px;}
+/* ── Vocabulário ──────────────────────────────────────── */
+.vc-imagem{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-xl);padding:20px;margin-bottom:18px;display:flex;align-items:center;justify-content:center;min-height:210px;}
+.vc-imagem img{width:180px;height:180px;object-fit:contain;}
+/* ── Escrita ──────────────────────────────────────────── */
+.mini-rotulo{font-size:11px;font-weight:600;color:var(--texto-suave);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:7px;}
+.es-area{width:100%;min-height:150px;border:1.5px solid var(--linha);border-radius:var(--r-md);padding:15px;font-family:inherit;font-size:15px;line-height:1.6;resize:vertical;background:var(--branco);color:var(--texto);}
+.es-area:focus{outline:none;border-color:var(--teal);}
+.es-conta{text-align:right;font-size:12px;color:var(--texto-suave);margin:7px 2px 14px;}
+.es-erro{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-md);padding:13px 15px;margin-bottom:9px;}
+.es-erro-l{font-size:14.5px;line-height:1.5;}
+.es-x{color:var(--coral);text-decoration:line-through;}
+.es-v{color:var(--teal);font-weight:600;}
+.es-erro-p{font-size:12.5px;color:var(--texto-suave);margin-top:5px;line-height:1.5;}
+
+/* ── Verbos ───────────────────────────────────────────── */
+.vb-cartao{cursor:pointer;padding:16px;}
+.vb-inf{font-family:'Yusei Magic',cursive;font-size:17px;}
+.vb-sig{font-size:13px;color:var(--texto-suave);margin-top:2px;}
+.vb-pron{font-size:12px;color:var(--teal);font-style:italic;margin-top:4px;}
+.vb-seta{font-size:17px;color:var(--texto-suave);transition:transform .2s;flex:0 0 auto;}
+.vb-tempos{margin-top:15px;padding-top:15px;border-top:1.5px solid var(--linha);}
+.vb-tempo{margin-bottom:14px;}
+.vb-tempo:last-child{margin-bottom:0;}
+.vb-tempo-n{font-size:10.5px;font-weight:600;color:var(--teal);letter-spacing:1.1px;text-transform:uppercase;}
+.vb-forma{font-family:'Yusei Magic',cursive;font-size:15.5px;margin:3px 0 6px;}
+.vb-frase{display:flex;align-items:center;gap:10px;background:var(--papel);border-radius:var(--r-sm);padding:10px 12px;}
+.vb-fa{font-size:13.5px;font-weight:600;}
+.vb-fo{font-size:12.5px;color:var(--texto-suave);margin-top:2px;}
+.vb-ouvir{width:28px;height:28px;flex:0 0 auto;border-radius:50%;background:rgba(43,122,111,.12);display:flex;align-items:center;justify-content:center;}
+
+/* ── Tradutor ─────────────────────────────────────────── */
+.tr-direcao{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.tr-lado{flex:1;background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-md);padding:12px 10px;text-align:center;font-size:13.5px;font-weight:600;}
+.tr-troca{width:40px;height:40px;flex:0 0 auto;border-radius:50%;background:var(--indigo);color:#fff;font-size:17px;}
+#trGravar.a-gravar{background:var(--coral);color:#fff;border-color:var(--coral);}
+/* ── Gravação ─────────────────────────────────────────── */
+.gr-etiqueta{font-size:11.5px;font-weight:600;color:var(--teal);letter-spacing:1.4px;text-transform:uppercase;margin-bottom:12px;}
+.gr-frase{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-xl);padding:24px 20px;text-align:center;margin-bottom:22px;}
+.gr-alvo{font-family:'Yusei Magic',cursive;font-size:21px;line-height:1.38;margin-bottom:8px;}
+.gr-origem{font-size:14px;color:var(--texto-suave);line-height:1.45;}
+.gr-pron{font-size:12.5px;color:var(--teal);font-style:italic;margin-top:8px;}
+.gr-ouvir{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:9px 17px;border-radius:999px;background:rgba(43,122,111,.1);font-size:12.5px;font-weight:600;color:var(--teal);}
+.gr-palco{text-align:center;padding:10px 0 4px;}
+.gr-onda{width:100%;height:76px;margin-bottom:14px;display:block;}
+.gr-botao{width:82px;height:82px;border-radius:50%;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(226,87,76,.32);transition:transform .16s;}
+.gr-botao:active{transform:scale(.94);}
+.gr-botao.a-gravar{background:var(--indigo);animation:pulsa 1.4s ease-in-out infinite;}
+@keyframes pulsa{0%,100%{box-shadow:0 0 0 0 rgba(30,13,66,.34);}50%{box-shadow:0 0 0 17px rgba(30,13,66,0);}}
+.gr-dica{font-size:13px;color:var(--texto-suave);margin-top:14px;}
+.gr-dica-erro{color:var(--coral);font-weight:600;}
+.gr-rever{margin-top:22px;}
+.gr-refazer{display:block;width:100%;margin-top:12px;padding:12px;color:var(--texto-suave);font-weight:600;font-size:13px;}
+.gr-ouvido{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-md);padding:15px 16px;margin-bottom:12px;}
+.gr-ouvido-r{font-size:11px;font-weight:600;color:var(--texto-suave);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:5px;}
+.gr-ouvido-t{font-size:14.5px;line-height:1.5;}
+/* ── Exercícios ───────────────────────────────────────── */
+.ex-sair{width:32px;height:32px;flex:0 0 auto;border-radius:50%;background:var(--branco);border:1.5px solid var(--linha);font-size:13px;color:var(--texto-suave);}
+.ex-etiqueta{font-size:11.5px;font-weight:600;color:var(--teal);letter-spacing:1.4px;text-transform:uppercase;margin-bottom:10px;}
+.ex-caixa{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-xl);padding:26px 20px;margin-bottom:18px;text-align:center;}
+.ex-enunciado{font-family:'Yusei Magic',cursive;font-size:21px;line-height:1.4;margin-bottom:8px;}
+.ex-apoio{font-size:13.5px;color:var(--texto-suave);line-height:1.45;}
+.escolha.op-certa{border-color:var(--teal);background:rgba(43,122,111,.12);}
+.escolha.op-errada{border-color:var(--coral);background:rgba(226,87,76,.1);}
+.ex-reacao{border-radius:var(--r-md);padding:14px 16px;margin:16px 0 12px;}
+.ex-reacao.boa{background:rgba(43,122,111,.1);}
+.ex-reacao.ma{background:rgba(226,87,76,.09);}
+.ex-reacao-t{font-family:'Yusei Magic',cursive;font-size:15px;}
+.ex-reacao-d{font-size:14.5px;font-weight:600;margin-top:4px;}
+.ex-anel{position:relative;width:132px;height:132px;margin:22px auto 16px;}
+.ex-anel svg{width:100%;height:100%;transform:rotate(0);}
+.ex-anel circle{transition:stroke-dashoffset 1s cubic-bezier(.2,.7,.3,1);}
+.ex-anel-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Yusei Magic',cursive;font-size:29px;}
+.ex-xp{display:inline-block;background:var(--lima);color:var(--indigo);border-radius:999px;padding:9px 22px;font-family:'Yusei Magic',cursive;font-size:17px;}
+
+/* ── Jogo ─────────────────────────────────────────────── */
+.jogo-linha{display:flex;gap:9px;margin-bottom:12px;}
+.jogo-selo{flex:1;background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-md);padding:13px 8px;text-align:center;}
+.jogo-selo.aceso{border-color:var(--coral);background:rgba(226,87,76,.05);}
+.jogo-selo .n{font-family:'Yusei Magic',cursive;font-size:21px;line-height:1;}
+.jogo-selo .r{font-size:10.5px;color:var(--texto-suave);margin-top:5px;}
+.meta-cartao{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-md);padding:14px 16px;margin-bottom:16px;cursor:pointer;}
+.meta-cartao.meta-feita{border-color:var(--teal);background:rgba(43,122,111,.05);}
+.meta-barra{height:8px;border-radius:999px;background:var(--linha);overflow:hidden;}
+.meta-barra div{height:100%;background:var(--lima);border-radius:999px;transition:width .6s;}
+.conq-selo{width:86px;height:86px;margin:0 auto 18px;border-radius:50%;background:var(--papel);border:2px solid var(--lima);display:flex;align-items:center;justify-content:center;font-size:40px;}
+.conq-grelha{display:flex;flex-wrap:wrap;gap:9px;}
+.conq{width:calc(33.33% - 6px);background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-md);padding:14px 7px;text-align:center;}
+.conq-off{opacity:.36;}
+.conq-ic{font-size:25px;margin-bottom:6px;}
+.conq-n{font-size:10.5px;line-height:1.3;color:var(--texto-suave);}
+/* ── Planos ───────────────────────────────────────────── */
+.plano{position:relative;background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-xl);padding:24px 20px 20px;margin-bottom:14px;}
+.plano-top{border-color:var(--indigo);border-width:2px;box-shadow:var(--sombra-alta);}
+.plano-fita{position:absolute;top:-11px;left:20px;background:var(--indigo);color:#fff;font-size:11px;font-weight:600;padding:5px 13px;border-radius:999px;letter-spacing:.3px;}
+.plano-fita-meu{background:var(--teal);left:auto;right:20px;}
+.plano-nome{font-family:'Yusei Magic',cursive;font-size:17px;margin-bottom:10px;}
+.plano-preco{display:flex;align-items:baseline;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.plano-preco .v{font-family:'Yusei Magic',cursive;font-size:29px;color:var(--indigo);}
+.plano-preco .p{font-size:12.5px;color:var(--texto-suave);}
+.plano-itens{list-style:none;margin-bottom:20px;}
+.plano-itens li{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13.5px;line-height:1.45;}
+.plano-itens svg{width:15px;height:15px;flex:0 0 auto;margin-top:2px;color:var(--teal);}
+.barra-livre{height:7px;border-radius:999px;background:var(--linha);overflow:hidden;margin-top:12px;}
+.barra-livre div{height:100%;background:var(--coral);border-radius:999px;}
+
+/* ── Folha de pagamento ───────────────────────────────── */
+.folha-fundo{position:fixed;inset:0;background:rgba(30,13,66,.5);z-index:95;display:flex;align-items:flex-end;justify-content:center;}
+.folha{background:var(--papel);border-radius:26px 26px 0 0;padding:20px 18px calc(26px + env(safe-area-inset-bottom));width:100%;max-width:520px;max-height:88vh;overflow-y:auto;}
+.folha-topo{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.folha-x{width:34px;height:34px;flex:0 0 auto;border-radius:50%;background:var(--branco);border:1.5px solid var(--linha);font-size:15px;color:var(--texto-suave);}
+.metodo{display:flex;align-items:center;gap:13px;width:100%;padding:15px 15px;border-radius:var(--r-md);background:var(--branco);border:1.5px solid var(--linha);text-align:left;}
+.metodo:active{border-color:var(--teal);}
+.metodo-ponto{width:11px;height:11px;border-radius:50%;flex:0 0 auto;}
+.rotulo{display:block;font-size:12.5px;font-weight:600;color:var(--texto-suave);margin-bottom:6px;}
+.campo{width:100%;padding:14px 15px;border:1.5px solid var(--linha);border-radius:var(--r-md);background:var(--branco);font-family:inherit;font-size:15.5px;color:var(--texto);}
+.campo:focus{outline:none;border-color:var(--teal);}
+.pg-erro{background:#FDECEA;border:1.5px solid #F3B5AE;border-radius:var(--r-md);padding:12px 14px;margin-top:14px;font-size:13px;color:#8A2E24;line-height:1.5;}
+.pg-quadro{width:100%;height:700px;max-height:70vh;border:0;border-radius:var(--r-md);background:var(--branco);}
+.pg-caixa{position:relative;min-height:240px;}
+.pg-carregando{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:13px;color:var(--texto-suave);background:var(--branco);border-radius:var(--r-md);border:1.5px solid var(--linha);}
+.pg-quadro{transition:opacity .4s;}
+.pg-nota{text-align:center;font-size:12.5px;color:var(--texto-suave);padding:14px 10px 2px;line-height:1.5;}
+
+/* ── Assistente ───────────────────────────────────────── */
+#asstFio{min-height:44vh;max-height:56vh;overflow-y:auto;padding-bottom:8px;}
+.asst-linha{display:flex;flex-direction:column;margin-bottom:14px;}
+.asst-linha.eu{align-items:flex-end;}
+.asst-linha.ia{align-items:flex-start;}
+.asst-bolha{max-width:84%;padding:13px 15px;border-radius:17px;font-size:14.5px;line-height:1.55;white-space:pre-wrap;}
+.asst-linha.eu .asst-bolha{background:var(--indigo);color:#fff;border-bottom-right-radius:5px;}
+.asst-linha.ia .asst-bolha{background:var(--branco);border:1.5px solid var(--linha);border-bottom-left-radius:5px;}
+.asst-ouvir{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 12px;border-radius:999px;background:rgba(43,122,111,.1);font-size:11.5px;font-weight:600;color:var(--teal);}
+.asst-vazio{text-align:center;padding:36px 14px;color:var(--texto-suave);}
+.asst-vazio .t{font-family:'Yusei Magic',cursive;font-size:18px;color:var(--texto);margin-bottom:8px;}
+.asst-vazio p{font-size:13.5px;line-height:1.6;}
+.asst-sugs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px;}
+.asst-sug{padding:9px 15px;border-radius:999px;background:var(--branco);border:1.5px solid var(--linha);font-size:12.5px;font-weight:600;color:var(--texto);}
+.asst-barra{display:flex;gap:10px;align-items:flex-end;padding-top:12px;border-top:1.5px solid var(--linha);}
+.asst-barra textarea{flex:1;border:1.5px solid var(--linha);border-radius:17px;padding:12px 15px;font-family:inherit;font-size:14.5px;resize:none;max-height:110px;background:var(--branco);line-height:1.45;}
+.asst-barra textarea:focus{outline:none;border-color:var(--teal);}
+#asstEnviar{width:44px;height:44px;flex:0 0 auto;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;}
+#asstEnviar svg{width:18px;height:18px;}
+body.em-entrada .nav,body.em-entrada .topo{display:none;}
+body.em-entrada #ecra{padding-top:30px;padding-bottom:40px;}
+.escolha .n{font-size:11.5px;font-weight:600;color:var(--texto-suave);background:var(--papel);padding:3px 9px;border-radius:999px;flex:0 0 auto;}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="ecra">
+
+    <div class="topo">
+      <div class="marca">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#1E0D42" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="1.9" fill="#1E0D42"/>
+          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#E2574C" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+        <span>Lingu<b>.AI</b></span>
+      </div>
+      <button class="par-linguas" id="btnPar" aria-label="Trocar idiomas">
+        <span id="flagDe">🇵🇹</span><span class="seta">→</span><span id="flagPara">🇬🇧</span>
+      </button>
+    </div>
+
+    <!-- ══ INÍCIO ══ -->
+    <section class="vista on" id="v-inicio">
+      <div id="inicioConteudo">
+        <div class="carregar"><span>A carregar</span><span class="pontos"><i></i><i></i><i></i></span></div>
+      </div>
+    </section>
+
+    <!-- ══ PRATICAR ══ -->
+    <section class="vista" id="v-praticar">
+      <h1 style="font-size:23px;margin-bottom:6px;" id="txPraticarT"></h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;" id="txPraticarD"></p>
+      <div id="listaPraticas"></div>
+    </section>
+
+    <!-- ══ LOGIN ══ -->
+    <section class="vista" id="v-login"></section>
+
+    <!-- ══ ENTRADA (primeira vez) ══ -->
+    <section class="vista" id="v-entrada"></section>
+
+    <!-- ══ MÓDULO (Lições, Conversação, etc.) ══ -->
+    <section class="vista" id="v-modulo"></section>
+
+    <!-- ══ PERFIL ══ -->
+    <section class="vista" id="v-perfil">
+      <div id="perfilConteudo">
+        <div class="carregar"><span>A carregar</span><span class="pontos"><i></i><i></i><i></i></span></div>
+      </div>
+    </section>
+
+    <!-- ══ PLANOS ══ -->
+    <section class="vista" id="v-planos">
+      <h1 style="font-size:23px;margin-bottom:18px;" id="txPlanosT"></h1>
+      <div id="planosConteudo"></div>
+    </section>
+
+    <!-- ══ ASSISTENTE ══ -->
+    <section class="vista" id="v-assistente">
+      <h1 style="font-size:23px;margin-bottom:6px;" id="txAsstT"></h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:18px;" id="txAsstD"></p>
+      <div id="assistenteConteudo"></div>
+    </section>
+
+  </div>
+
+  <div class="pwa-barra" id="pwaBarra">
+    <div class="pwa-txt">
+      <div class="pwa-t" id="txPwaT"></div>
+      <div class="pwa-d" id="txPwaD"></div>
+    </div>
+    <button class="pwa-sim" id="pwaSim"></button>
+    <button class="pwa-nao" id="pwaNao" aria-label="Agora não">✕</button>
+  </div>
+
+  <nav class="nav" aria-label="Navegação principal">
+    <div class="nav-int" id="navInt"></div>
+  </nav>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   1. CONFIGURAÇÃO
+   ══════════════════════════════════════════════════════════ */
+/* ┌────────────────────────────────────────────────────────┐
+   │  MUDAR-AQUI                                            │
+   │                                                        │
+   │  Antes de lançar, troca a linha da versão:             │
+   │      'version-test'  →  'version-live'                 │
+   │                                                        │
+   │  E não te esqueças do Deploy to Live no Bubble.        │
+   └────────────────────────────────────────────────────────┘ */
+const CFG = {
+  // Domínio da app Bubble. Sem barra no fim.
+  bubble: 'https://linguai.top',
+
+  // MUDAR-AQUI  ←  'version-test' para desenvolver · 'version-live' para o público
+  versao: 'version-test',
+
+  // Carteira MozPayment (identificador público do comerciante)
+  carteira: '1734511587937x979305281327726600',
+  moz: 'https://mozpayment.co.mz/api/1.1/wf',
+
+  // Ficheiro das 154 palavras com imagens (fica ao lado da app)
+  vocabulario: 'vocabulario.json'
+};
+
+const API = {
+  dados: t => `${CFG.bubble}/${CFG.versao}/api/1.1/obj/${t}`,
+  wf:    e => `${CFG.bubble}/${CFG.versao}/api/1.1/wf/${e}`
+};
+
+/* ══════════════════════════════════════════════════════════
+   2. IDIOMAS
+   ══════════════════════════════════════════════════════════ */
+const IDIOMAS = [
+  {c:'pt',n:'Português',b:'🇵🇹'}, {c:'en',n:'English',b:'🇬🇧'},
+  {c:'es',n:'Español',b:'🇪🇸'},   {c:'fr',n:'Français',b:'🇫🇷'},
+  {c:'de',n:'Deutsch',b:'🇩🇪'},   {c:'it',n:'Italiano',b:'🇮🇹'},
+  {c:'zh',n:'中文',b:'🇨🇳'},       {c:'ja',n:'日本語',b:'🇯🇵'},
+  {c:'ko',n:'한국어',b:'🇰🇷'},     {c:'ar',n:'العربية',b:'🇸🇦'},
+  {c:'ru',n:'Русский',b:'🇷🇺'},   {c:'hi',n:'हिन्दी',b:'🇮🇳'},
+  {c:'nl',n:'Nederlands',b:'🇳🇱'},{c:'sv',n:'Svenska',b:'🇸🇪'},
+  {c:'tr',n:'Türkçe',b:'🇹🇷'}
+];
+const acharIdioma = (cod, alt) => IDIOMAS.find(l => l.c === cod) || alt;
+
+/* ══════════════════════════════════════════════════════════
+   3. ESTADO — uma só fonte de verdade
+   ══════════════════════════════════════════════════════════ */
+const Estado = {
+  utilizador:null,
+  origem:'pt',
+  destino:'en',
+  textos:{},
+  vista:'inicio',
+
+  guardar(){
+    try{
+      localStorage.setItem('linguai:estado', JSON.stringify({
+        origem:this.origem, destino:this.destino, textos:this.textos
+      }));
+    }catch(e){}
+  },
+  repor(){
+    try{
+      const g = JSON.parse(localStorage.getItem('linguai:estado') || '{}');
+      if(g.origem) this.origem = g.origem;
+      if(g.destino) this.destino = g.destino;
+      if(g.textos) this.textos = g.textos;
+    }catch(e){}
+  }
+};
+
+// Tradução da interface. Cai para português quando a chave não veio.
+const RESERVA = {
+  // Navegação
+  inicio:'Início', perfil:'Perfil', praticar:'Praticar', planos:'Planos', assistente:'Assistente',
+  // Comuns
+  voltar:'Voltar', continuar:'Continuar', anterior:'Anterior', seguinte:'Seguinte',
+  fechar:'Fechar', trocar:'Trocar', a_carregar:'A carregar',
+  iniciante:'Iniciante', intermedio:'Intermédio', avancado:'Avançado',
+  qual_nivel:'Qual é o teu nível?', escolhe_tema:'Escolhe um tema',
+  licoes:'Lições', conversas:'Conversas', escritas:'Escritas',
+  // Início
+  sem_dados:'Sem ligação aos teus dados.',
+  sem_dados_d:'Confirma que a Data API está ligada e que tens sessão iniciada.',
+  tens_minutos:'Tens', neste_plano:'neste plano', minutos:'minutos',
+  dias:'dias', conquistas:'conquistas',
+  meta_hoje:'Meta de hoje', meta_feita:'Meta de hoje cumprida',
+  // Praticar
+  praticar_hoje:'O que praticamos hoje?', praticar_sub:'Escolhe por onde queres começar.',
+  p_licoes:'Lições do dia a dia', p_licoes_d:'Frases reais por tema e nível, com áudio.',
+  p_conversa:'Conversação', p_conversa_d:'Fala e a professora responde por voz.',
+  p_verbos:'Conjugação de verbos', p_verbos_d:'Aprende a conjugar, com exemplos.',
+  p_escrita:'Escrita corrigida', p_escrita_d:'Escreve e recebe cada erro explicado.',
+  p_vocab:'Vocabulário', p_vocab_d:'Palavras novas com imagens, por categoria.',
+  p_traduz:'Tradutor', p_traduz_d:'Traduz por voz, texto ou ficheiro.',
+  // Perfil
+  teus_idiomas:'Os teus idiomas', explicacoes_em:'Explicações em', a_aprender:'A aprender',
+  atividade:'Atividade', terminar_sessao:'Terminar sessão',
+  tua_lingua:'A tua língua', tua_lingua_d:'A língua em que tudo te é explicado.',
+  queres_aprender:'Queres aprender', queres_aprender_d:'A língua que vais praticar.',
+  // Lição
+  podes_mudar:'Podes mudar quando quiseres.', temas:'temas',
+  a_preparar_licao:'A preparar a lição', a_preparar_audio:'A preparar o áudio',
+  ouvir_frases:'Ouvir as frases', fazer_exercicios:'Fazer os exercícios',
+  gravar_voz:'Gravar a minha voz', escolher_nivel:'Escolher outro nível',
+  // Exercícios
+  ex_traduz:'Traduz', ex_diz:'Como se diz', ex_completa:'Completa',
+  certo:'Certo!', resposta_era:'A resposta era:', ver_resultado:'Ver resultado',
+  acertaste:'Acertaste', de:'de', repetir:'Repetir os exercícios', voltar_licao:'Voltar à lição',
+  impecavel:'Impecável!', muito_bem:'Muito bem!', quase_la:'Estás quase lá', continua:'Continua a praticar',
+  // Gravação
+  repete_frase:'Repete a frase', ouvir_frase:'Ouvir a frase',
+  toca_gravar:'Toca para gravar', a_gravar:'A gravar', ouve_antes:'Ouve antes de enviares',
+  ouvir_minha_voz:'Ouvir a minha voz', enviar_avaliacao:'Enviar para avaliação',
+  gravar_de_novo:'Gravar de novo', sem_microfone:'Não consegui aceder ao microfone.',
+  o_que_ouvi:'O que ouvi', tentar_de_novo:'Tentar de novo', a_avaliar:'A avaliar',
+  // Escrita
+  escreve_em:'Escreve em', sugestao_tema:'Sugestão de tema', outro_tema:'Outro tema',
+  escreve_aqui:'Escreve aqui…', palavras:'palavras', avaliar_escrita:'Avaliar a minha escrita',
+  versao_corrigida:'Versão corrigida', erros_melhorar:'Erros a melhorar',
+  comentario:'Comentário da professora', escrever_outro:'Escrever outro', a_corrigir:'A corrigir',
+  // Verbos
+  conjugacao:'Conjugação', verbos:'verbos', gerar_mais:'Gerar mais verbos',
+  a_preparar_verbos:'A preparar os verbos',
+  // Tradutor
+  tradutor:'Tradutor', escreve_ou_grava:'Escreve ou grava…', traduzir:'Traduzir',
+  a_traduzir:'A traduzir', ouvir:'Ouvir',
+  // Vocabulário
+  que_objeto:'Que objeto é este?', escolhe_categoria:'Escolhe uma categoria para praticar.',
+  todas:'Todas misturadas', outra_ronda:'Outra ronda', trocar_categoria:'Trocar de categoria',
+  a_carregar_palavras:'A carregar as palavras',
+  // Conversação
+  ao_vivo:'Ao vivo', exemplos:'Exemplos',
+  sobre_falar:'Sobre o que queres falar?', conversa_sub:'Tu falas, a professora responde por voz.',
+  toca_fala:'Toca e fala', a_ouvir:'A ouvir… toca para parar',
+  terminar:'Terminar', conversa_fim:'Conversa terminada', nova_conversa:'Nova conversa',
+  pontos_fortes:'Pontos fortes', a_melhorar:'A melhorar', trocas:'trocas',
+  exemplos_sub:'Diálogos curtos para veres como soa antes de arriscares ao vivo.',
+  escolher_tema:'Escolher outro tema',
+  // Planos
+  plano_gratuito:'Estás no plano gratuito', minutos_acabaram:'Os teus 20 minutos terminaram',
+  restam_te:'Restam-te', escolhe_plano:'Escolhe um plano abaixo para continuares a praticar.',
+  assina_onde:'Assina de qualquer parte do mundo. Estuda onde estiveres, a qualquer hora.',
+  assinar:'Assinar plano', plano_ativo:'Plano ativo', mais_escolhido:'Mais escolhido',
+  teu_plano:'O teu plano', muda_cancela:'Podes mudar ou cancelar quando quiseres.',
+  como_pagar:'Como queres pagar?', pagar:'Pagar', nome:'Nome',
+  confirmacao_tlm:'Vais receber um pedido de confirmação no telemóvel.',
+  pagamento_recebido:'Pagamento recebido', ja_ativo:'já está ativo.',
+  continuar_aprender:'Continuar a aprender',
+  // Assistente
+  tira_duvidas:'Tira as tuas dúvidas',
+  assistente_sub:'Gramática, vocabulário, pronúncia — pergunta à vontade.',
+  escreve_duvida:'Escreve a tua dúvida...',
+  ola:'Olá!', assistente_vazio:'Pergunta-me o que quiseres — posso explicar, dar exemplos, e até propor um exercício.',
+  sug_gramatica:'Regra de gramática', sug_diferenca:'Diferença de palavras', sug_pronuncia:'Como pronunciar',
+  // PWA
+  instalar:'Instalar', instalar_t:'Instalar a Lingu.AI',
+  instalar_d:'Fica no teu ecrã principal, como uma app.'
+};
+const t = ch => Estado.textos[ch] || RESERVA[ch] || ch;
+
+/* ══════════════════════════════════════════════════════════
+   4. LIGAÇÃO AO BUBBLE
+   ══════════════════════════════════════════════════════════ */
+// Ações que consomem tempo de estudo — bloqueadas sem plano
+const ACOES_PAGAS = [
+  'gerar_licao','gerar_audio_licao','avaliar_gravacao','conversar','gerar_voz',
+  'gerar_dialogo','avaliar_conversa_final','gerar_verbos','avaliar_escrita',
+  'traduzir','transcrever','assistente'
+];
+
+const Rede = {
+  token(){
+    try{ return localStorage.getItem('linguai:token') || ''; }catch(e){ return ''; }
+  },
+  guardarToken(t){
+    try{ t ? localStorage.setItem('linguai:token', t) : localStorage.removeItem('linguai:token'); }catch(e){}
+  },
+
+  async pedir(url, opcoes = {}){
+    const cabecalhos = {'Content-Type':'application/json', ...(opcoes.headers || {})};
+    const t = this.token();
+    if(t) cabecalhos['Authorization'] = 'Bearer ' + t;
+
+    const r = await fetch(url, {
+      ...opcoes,
+      credentials:'include',
+      headers:cabecalhos
+    });
+    if(!r.ok){
+      const corpo = await r.text().catch(() => '');
+      throw new Error(`${r.status} — ${corpo.slice(0,160)}`);
+    }
+    return r.json();
+  },
+
+  // Lê registos de um Data Type
+  listar(tipo, restricoes){
+    let url = API.dados(tipo);
+    if(restricoes) url += '?constraints=' + encodeURIComponent(JSON.stringify(restricoes));
+    return this.pedir(url).then(d => (d.response && d.response.results) || []);
+  },
+
+  // Chama um Backend Workflow (a chave da OpenAI fica no servidor)
+  correr(evento, dados){
+    // Sem plano e sem minutos, nada que gaste IA passa daqui
+    if(ACOES_PAGAS.indexOf(evento) > -1 && typeof Rota !== 'undefined' && !Rota.podeUsar()){
+      Rota.barrar();
+      return Promise.reject(new Error('sem_plano'));
+    }
+    return this.pedir(API.wf(evento), {
+      method:'POST', body:JSON.stringify(dados || {})
+    }).then(d => {
+      const resp = d.response || {};
+      // O Bubble devolve um token no login e no registo — guardá-lo é o que mantém a sessão
+      if(resp.token) this.guardarToken(resp.token);
+      return resp;
+    });
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   5. ECRÃS
+   ══════════════════════════════════════════════════════════ */
+const ICONES = {
+  inicio:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/>',
+  perfil:'<circle cx="12" cy="8" r="3.6"/><path d="M4.6 20.4c0-3.9 3.3-6.2 7.4-6.2s7.4 2.3 7.4 6.2"/>',
+  praticar:'<circle cx="12" cy="12" r="9"/><path d="M12 7.6v8.8M7.6 12h8.8"/>',
+  planos:'<rect x="3" y="5.5" width="18" height="13" rx="2.6"/><path d="M12 9.6v4.8M13.6 10.7h-2.3a1.3 1.3 0 0 0 0 2.6h1.4a1.3 1.3 0 0 1 0 2.6H10.4"/>',
+  assistente:'<path d="m12 3 1.9 4.7L18.6 9.6l-4.7 1.9L12 16.2l-1.9-4.7L5.4 9.6l4.7-1.9z"/><path d="m18 15.4.9 2.2 2.2.9-2.2.9-.9 2.2-.9-2.2-2.2-.9 2.2-.9z"/>'
+};
+
+const PRATICAS = [
+  {id:'licoes',   cls:'p-licoes',   cor:'#6B5AD6', k:'p_licoes',  ic:'<path d="M3 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H3zM21 5h-7a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h7z"/>'},
+  {id:'conversa', cls:'p-conversa', cor:'#2E8F66', k:'p_conversa', ic:'<rect x="3" y="4.5" width="18" height="13" rx="3"/><path d="m8 20.5 3-3h3"/>'},
+  {id:'verbos',   cls:'p-verbos',   cor:'#C4564A', k:'p_verbos', ic:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9.5a4 4 0 0 1 0 5"/>'},
+  {id:'escrita',  cls:'p-escrita',  cor:'#B8860B', k:'p_escrita', ic:'<path d="m4 20 4-1L20 7l-3-3L5 16z"/>'},
+  {id:'vocab',    cls:'p-vocab',    cor:'#2F5E9E', k:'p_vocab', ic:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M8 9h8M8 13h5"/>'},
+  {id:'traduz',   cls:'p-traduz',   cor:'#6B4A99', k:'p_traduz', ic:'<path d="M4 13v-2a8 8 0 0 1 16 0v2"/><rect x="2.5" y="13" width="4.5" height="7" rx="2"/><rect x="17" y="13" width="4.5" height="7" rx="2"/>'}
+];
+
+const Ecras = {
+  // ── Início ──────────────────────────────────────────
+  async inicio(){
+    const alvo = document.getElementById('inicioConteudo');
+    const u = Estado.utilizador;
+
+    if(!u){
+      alvo.innerHTML = `
+        <div class="aviso">
+          <b>Sem ligação aos teus dados.</b><br>
+          Confirma que a Data API está ligada nas definições do Bubble e que tens sessão iniciada.
+        </div>`;
+      return;
+    }
+
+    const inicial = (u.nome || '?').trim().charAt(0).toUpperCase();
+    const pct = Math.max(0, Math.min(100, Math.round(u.progresso || 0)));
+    const dest = acharIdioma(Estado.destino, IDIOMAS[1]);
+
+    alvo.innerHTML = `
+      <div class="cartao-escuro">
+        <p class="plano-nota">Tens <b style="color:var(--lima)">${u.minutos ?? 0} minutos</b> neste plano</p>
+
+        <div class="perfil-linha">
+          <div class="avatar">${inicial}</div>
+          <div class="perfil-nome">
+            <div class="nome">${u.nome || 'Aluno'}</div>
+            <div class="meta">${u.nivel || t('iniciante')} · ${dest.n}</div>
+          </div>
+          <div class="estatisticas">
+            <div class="estat"><div class="n">${u.licoes ?? 0}</div><div class="r">${t('licoes')}</div></div>
+            <div class="estat"><div class="n">${u.conversas ?? 0}</div><div class="r">${t('conversas')}</div></div>
+            <div class="estat"><div class="n">${u.escritas ?? 0}</div><div class="r">${t('escritas')}</div></div>
+          </div>
+        </div>
+
+        <div class="barra-zona">
+          <div class="barra"><div class="barra-fill" id="barraFill"></div></div>
+          <div class="barra-txt">${pct}%</div>
+        </div>
+      </div>
+
+      ${Jogo.cartao()}
+
+      <div class="seccao-titulo">Continuar</div>
+      <div id="atalhoRapido"></div>`;
+
+    requestAnimationFrame(() => {
+      const f = document.getElementById('barraFill');
+      if(f) f.style.width = pct + '%';
+    });
+
+    const mc = alvo.querySelector('.meta-cartao');
+    if(mc) mc.onclick = () => Jogo.escolherMeta();
+
+    document.getElementById('atalhoRapido').innerHTML = this.botaoPratica(PRATICAS[0]);
+    this.ligarPraticas();
+  },
+
+  botaoPratica(p){
+    return `<button class="pratica ${p.cls}" data-pratica="${p.id}">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="${p.cor}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">${p.ic}</svg></span>
+      <span class="txt"><span class="t">${t(p.k)}</span><span class="d">${t(p.k + '_d')}</span></span>
+      <svg class="chev" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>
+    </button>`;
+  },
+
+  ligarPraticas(){
+    document.querySelectorAll('[data-pratica]').forEach(b => {
+      b.onclick = () => Rota.abrirPratica(b.dataset.pratica);
+    });
+  },
+
+  // ── Praticar ────────────────────────────────────────
+  praticar(){
+    document.getElementById('listaPraticas').innerHTML =
+      PRATICAS.map(p => this.botaoPratica(p)).join('');
+    this.ligarPraticas();
+  },
+
+  // ── Perfil ──────────────────────────────────────────
+  perfil(){
+    const u = Estado.utilizador || {};
+    const org = acharIdioma(Estado.origem, IDIOMAS[0]);
+    const dst = acharIdioma(Estado.destino, IDIOMAS[1]);
+
+    document.getElementById('perfilConteudo').innerHTML = `
+      <div style="text-align:center;padding:14px 0 22px;">
+        <div class="avatar" style="width:84px;height:84px;font-size:34px;margin:0 auto 14px;">
+          ${(u.nome || '?').trim().charAt(0).toUpperCase()}
+        </div>
+        <h1 style="font-size:21px;">${u.nome || 'Aluno'}</h1>
+        <p style="color:var(--texto-suave);font-size:13.5px;margin-top:4px;">
+          ${u.nivel || t('iniciante')} · ${dst.n}
+        </p>
+      </div>
+
+      <div class="seccao-titulo">Os teus idiomas</div>
+      <div class="cartao" style="display:flex;align-items:center;justify-content:space-between;gap:14px;">
+        <div>
+          <div style="font-size:12px;color:var(--texto-suave);margin-bottom:3px;">Explicações em</div>
+          <div style="font-size:16px;">${org.b} ${org.n}</div>
+        </div>
+        <button class="btn btn-calmo" style="width:auto;padding:10px 16px;font-size:13px;" data-trocar="origem">Trocar</button>
+      </div>
+      <div class="cartao" style="display:flex;align-items:center;justify-content:space-between;gap:14px;">
+        <div>
+          <div style="font-size:12px;color:var(--texto-suave);margin-bottom:3px;">A aprender</div>
+          <div style="font-size:16px;">${dst.b} ${dst.n}</div>
+        </div>
+        <button class="btn btn-calmo" style="width:auto;padding:10px 16px;font-size:13px;" data-trocar="destino">Trocar</button>
+      </div>
+
+      <button class="btn btn-calmo" id="perfSair" style="margin-bottom:8px;">Terminar sessão</button>
+
+      <div class="seccao-titulo">Conquistas</div>
+      ${Jogo.painelConquistas()}
+
+      <div class="seccao-titulo">Atividade</div>
+      <div class="cartao" style="display:flex;text-align:center;gap:8px;">
+        <div style="flex:1;"><div style="font-family:'Yusei Magic',cursive;font-size:23px;color:var(--coral);">${u.licoes ?? 0}</div><div style="font-size:11.5px;color:var(--texto-suave);margin-top:3px;">${t('licoes')}</div></div>
+        <div style="flex:1;"><div style="font-family:'Yusei Magic',cursive;font-size:23px;color:var(--teal);">${u.conversas ?? 0}</div><div style="font-size:11.5px;color:var(--texto-suave);margin-top:3px;">${t('conversas')}</div></div>
+        <div style="flex:1;"><div style="font-family:'Yusei Magic',cursive;font-size:23px;color:var(--indigo);">${u.escritas ?? 0}</div><div style="font-size:11.5px;color:var(--texto-suave);margin-top:3px;">${t('escritas')}</div></div>
+      </div>`;
+
+    const bs = document.getElementById('perfSair');
+    if(bs) bs.onclick = async () => {
+      try{ await Rede.correr('sair'); }catch(e){}
+      Rede.guardarToken('');
+      try{ localStorage.clear(); }catch(e){}
+      Estado.utilizador = null;
+      Login.abrir();
+    };
+
+    document.querySelectorAll('[data-trocar]').forEach(b => {
+      b.onclick = () => Seletor.abrir(b.dataset.trocar);
+    });
+  },
+
+  planos(){ Planos.pintar(); },
+
+  assistente(){ Assistente.pintar(); }
+};
+
+/* ══════════════════════════════════════════════════════════
+   6. SELETOR DE IDIOMAS
+   ══════════════════════════════════════════════════════════ */
+const Seletor = {
+  abrir(qual){
+    const atual = qual === 'origem' ? Estado.origem : Estado.destino;
+    const fundo = document.createElement('div');
+    fundo.style.cssText = 'position:fixed;inset:0;background:rgba(30,13,66,.46);z-index:90;display:flex;align-items:flex-end;justify-content:center;';
+    fundo.innerHTML = `
+      <div style="background:var(--papel);border-radius:24px 24px 0 0;padding:22px 18px calc(28px + env(safe-area-inset-bottom));width:100%;max-width:520px;max-height:78vh;overflow-y:auto;">
+        <h3 style="font-size:17px;margin-bottom:4px;">${qual === 'origem' ? 'Explicações em' : 'Queres aprender'}</h3>
+        <p style="font-size:12.5px;color:var(--texto-suave);margin-bottom:16px;">
+          ${qual === 'origem' ? 'A língua em que tudo te é explicado.' : 'A língua que vais praticar.'}
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          ${IDIOMAS.map(l => `
+            <button data-cod="${l.c}" style="display:flex;align-items:center;gap:8px;padding:12px 11px;border-radius:13px;background:${l.c === atual ? 'rgba(43,122,111,.1)' : 'var(--branco)'};border:1.5px solid ${l.c === atual ? 'var(--teal)' : 'var(--linha)'};font-weight:600;font-size:13.5px;width:calc(50% - 4px);text-align:left;">
+              <span style="font-size:17px;">${l.b}</span><span>${l.n}</span>
+            </button>`).join('')}
+        </div>
+        <button id="fecharSel" style="display:block;width:100%;margin-top:16px;padding:13px;color:var(--texto-suave);font-weight:600;font-size:13px;">Fechar</button>
+      </div>`;
+    document.body.appendChild(fundo);
+
+    fundo.querySelectorAll('[data-cod]').forEach(b => {
+      b.onclick = async () => {
+        const mudouDestino = (qual === 'destino' && Estado.destino !== b.dataset.cod);
+
+        if(qual === 'origem') Estado.origem = b.dataset.cod;
+        else Estado.destino = b.dataset.cod;
+        Estado.guardar();
+        fundo.remove();
+        Nucleo.pintarPar();
+
+        // Trocar a língua a aprender invalida a lição e os verbos em curso
+        if(mudouDestino){
+          Licoes.licao = null;
+          Verbos.lista = [];
+          Conversa.tema = null;
+          Conversa.historico = [];
+          Conversa.dialogos = {};
+        }
+
+        // Língua nova = interface nova
+        if(qual === 'origem'){
+          Estado.textos = {};
+          await Nucleo.carregarTextos();
+        }
+
+        await Nucleo.guardarIdiomas();
+
+        // Atualiza o que já temos em vez de reler — o Bubble pode ainda
+        // não ter gravado, e a escolha da pessoa reverteria no ecrã.
+        if(Estado.utilizador){
+          Estado.utilizador.lingua_origem_codigo  = Estado.origem;
+          Estado.utilizador.lingua_destino_codigo = Estado.destino;
+          Estado.utilizador.lingua_origem_nome    = acharIdioma(Estado.origem, IDIOMAS[0]).n;
+          Estado.utilizador.lingua_destino_nome   = acharIdioma(Estado.destino, IDIOMAS[1]).n;
+        }
+
+        Nucleo.pintarPar();
+        Nucleo.pintarNav();
+        Nucleo.pintarTextos();
+        Rota.ir(qual === 'destino' ? 'inicio' : Estado.vista);
+      };
+    });
+    const fechar = () => fundo.remove();
+    fundo.querySelector('#fecharSel').onclick = fechar;
+    fundo.onclick = e => { if(e.target === fundo) fechar(); };
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   7. ROTA
+   ══════════════════════════════════════════════════════════ */
+const Rota = {
+  ir(vista){
+    Estado.vista = vista;
+    document.querySelectorAll('.vista').forEach(v => v.classList.remove('on'));
+    const alvo = document.getElementById('v-' + vista);
+    if(alvo) alvo.classList.add('on');
+
+    document.querySelectorAll('.nav-btn').forEach(b =>
+      b.classList.toggle('on', b.dataset.vista === vista));
+
+    if(Ecras[vista]) Ecras[vista]();
+    window.scrollTo({top:0, behavior:'smooth'});
+  },
+
+  mostrarModulo(){
+    Estado.vista = 'modulo';
+    document.querySelectorAll('.vista').forEach(v => v.classList.remove('on'));
+    document.getElementById('v-modulo').classList.add('on');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+    window.scrollTo({top:0, behavior:'smooth'});
+  },
+
+  // Uma só verificação, usada em todo o lado
+  podeUsar(){
+    const u = Estado.utilizador || {};
+    if(u.plano) return true;
+    return Number(u.minutos_usados || 0) < MINUTOS_GRATIS;
+  },
+
+  barrar(){
+    Rota.ir('planos');
+  },
+
+  abrirPratica(id){
+    if(!this.podeUsar()){ this.barrar(); return; }
+    const modulos = {
+      licoes:  () => Licoes.abrir(),
+      escrita: () => Escrita.abrir(),
+      verbos:  () => Verbos.abrir(),
+      traduz:  () => Tradutor.abrir(),
+      vocab:   () => Vocabulario.abrir(),
+      conversa:() => Conversa.abrir()
+    };
+    if(modulos[id]) return modulos[id]();
+    this.mostrarModulo();
+    document.getElementById('v-modulo').innerHTML =
+      '<button class="voltar" id="volt">← ' + t('voltar') + '</button>' +
+      '<div class="vazio"><div class="t">Em migração</div>' +
+      '<div class="d">Este módulo ainda vive na versão antiga da app.</div></div>';
+    document.getElementById('volt').onclick = () => Rota.ir('praticar');
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: LIÇÕES
+   Sem recarregar a página. Tudo acontece no mesmo ecrã.
+   ══════════════════════════════════════════════════════════ */
+const TEMAS = {
+  pt:{
+    Iniciante:['Cumprimentos e apresentações','Números de 1 a 20','A família','Comidas e bebidas','A rotina do dia','Animais','Roupa','A casa e as divisões','Dias e meses','O tempo que faz','Partes do corpo','Na escola','Transportes','Profissões','As horas','Compras no mercado','Desporto','Música','Festas e aniversários','Emoções','Na farmácia','No parque','Comer fora','Brinquedos e jogos','Material escolar'],
+    'Intermédio':['Apresentar-se no trabalho','No restaurante','Combinar com amigos','No supermercado','Falar do trabalho','No aeroporto','Reservar hotel','Pedir direções','No banco','Emergências e saúde','Passatempos','Tecnologia e redes','No ginásio','Convites e eventos','Reclamar e devolver','Currículo e candidaturas','Correio e encomendas','Cinema e teatro','Arrendar casa','Seguros','Voluntariado','Cozinhar','Organizar um evento','Notícias do dia','Estudar na universidade'],
+    'Avançado':['Negociar','Argumentar e convencer','Entrevistas exigentes','Tendências de mercado','Contar histórias','Apresentações de negócio','Política e sociedade','Ambiente','Dilemas éticos','Inteligência artificial','Liderar equipas','Imprensa e atualidade','Relações internacionais','Empreender','Debates filosóficos','Direito e contratos','Economia','Ciência e investigação','Crítica de arte','Psicologia','Marketing e marca','Saúde pública','História e geopolítica','Ensinar','Criatividade e inovação']
+  },
+  en:{
+    Iniciante:['Greetings and introductions','Numbers 1 to 20','Family','Food and drink','Daily routine','Animals','Clothes','Home and rooms','Days and months','The weather','Parts of the body','At school','Getting around','Jobs','Telling the time','Shopping for food','Sport','Music','Parties and birthdays','Feelings','At the pharmacy','At the park','Eating out','Toys and games','School supplies'],
+    'Intermédio':['Introducing yourself at work','At the restaurant','Making plans with friends','At the supermarket','Talking about work','At the airport','Booking a hotel','Asking for directions','At the bank','Emergencies and health','Hobbies','Technology and social media','At the gym','Invitations and events','Complaints and returns','CV and job applications','Post and parcels','Cinema and theatre','Renting a home','Insurance','Volunteering','Cooking','Planning an event','Today in the news','University life'],
+    'Avançado':['Negotiating','Arguing and persuading','Demanding interviews','Market trends','Telling stories','Business presentations','Politics and society','The environment','Ethical dilemmas','Artificial intelligence','Leading teams','Press and current affairs','International relations','Starting a business','Philosophical debate','Law and contracts','Economics','Science and research','Art criticism','Psychology','Marketing and brand','Public health','History and geopolitics','Teaching','Creativity and innovation']
+  }
+};
+
+const Licoes = {
+  nivel:null, temas:[], pagina:0, POR_PAG:8,
+  licao:null, fraseSel:0, paginaFrase:0, FRASES_POR_PAG:5,
+  audio:null, lento:false,
+
+  alvo(){ return document.getElementById('v-modulo'); },
+
+  abrir(){
+    Rota.mostrarModulo();
+    this.nivel = null;
+    try{ this.nivel = localStorage.getItem('linguai:nivel'); }catch(e){}
+    if(this.nivel) this.verTemas(); else this.verNiveis();
+  },
+
+  // ── 1. Nível ──────────────────────────────────────────
+  verNiveis(){
+    const niveis = [
+      {v:'Iniciante',  k:'iniciante'},
+      {v:'Intermédio', k:'intermedio'},
+      {v:'Avançado',   k:'avancado'}
+    ];
+    this.alvo().innerHTML = `
+      <button class="voltar" data-sair>← ${t('voltar')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">${t('qual_nivel')}</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;">Podes mudar quando quiseres.</p>
+      <div class="escolhas">
+        ${niveis.map(n => `<button class="escolha" data-nivel="${n.v}">${t(n.k)}<span style="color:var(--indigo-40)">→</span></button>`).join('')}
+      </div>`;
+    this.alvo().querySelector('[data-sair]').onclick = () => Rota.ir('praticar');
+    this.alvo().querySelectorAll('[data-nivel]').forEach(b => {
+      b.onclick = () => {
+        this.nivel = b.dataset.nivel;
+        try{ localStorage.setItem('linguai:nivel', this.nivel); }catch(e){}
+        this.pagina = 0;
+        this.verTemas();
+      };
+    });
+  },
+
+  // ── 2. Tema ───────────────────────────────────────────
+  verTemas(){
+    const banco = TEMAS[Estado.origem] || TEMAS.en;
+    this.temas = banco[this.nivel] || banco.Iniciante;
+
+    const total = Math.ceil(this.temas.length / this.POR_PAG);
+    const ini = this.pagina * this.POR_PAG;
+    const lote = this.temas.slice(ini, ini + this.POR_PAG);
+
+    this.alvo().innerHTML = `
+      <button class="voltar" data-mudar-nivel>← ${t('qual_nivel')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">${t('escolhe_tema')}</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;">${this.nivel} · ${this.temas.length} temas</p>
+      <div class="escolhas">
+        ${lote.map(x => `<button class="escolha" data-tema="${x.replace(/"/g,'&quot;')}">${x}</button>`).join('')}
+      </div>
+      ${total > 1 ? `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px;">
+        <button class="btn btn-calmo" style="width:auto;padding:11px 16px;font-size:13px;" data-pag="-1" ${this.pagina===0?'disabled':''}>← ${t('anterior')||'Anterior'}</button>
+        <span style="font-size:12.5px;color:var(--texto-suave);font-weight:600;">${this.pagina+1} / ${total}</span>
+        <button class="btn btn-calmo" style="width:auto;padding:11px 16px;font-size:13px;" data-pag="1" ${this.pagina>=total-1?'disabled':''}>${t('seguinte')||'Seguinte'} →</button>
+      </div>` : ''}`;
+
+    this.alvo().querySelector('[data-mudar-nivel]').onclick = () => {
+      try{ localStorage.removeItem('linguai:nivel'); }catch(e){}
+      this.verNiveis();
+    };
+    this.alvo().querySelectorAll('[data-tema]').forEach(b => {
+      b.onclick = () => this.gerar(b.dataset.tema, b);
+    });
+    this.alvo().querySelectorAll('[data-pag]').forEach(b => {
+      b.onclick = () => { this.pagina += Number(b.dataset.pag); this.verTemas(); };
+    });
+  },
+
+  // ── 3. Gerar (sem recarregar) ─────────────────────────
+  async gerar(tema, botao){
+    this.alvo().querySelectorAll('[data-tema]').forEach(b => b.disabled = true);
+    if(botao) botao.innerHTML = `A preparar a lição <span class="pontos"><i></i><i></i><i></i></span>`;
+
+    try{
+      const r = await Rede.correr('gerar_licao', {
+        tema, nivel:this.nivel,
+        origem:  acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino: acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+
+      let frases = r.frases;
+      if(typeof frases === 'string'){
+        try{
+          let s = frases.slice(frases.indexOf('['));
+          const f = s.lastIndexOf(']');
+          if(f > -1) s = s.slice(0, f+1);
+          frases = JSON.parse(s);
+        }catch(e){ frases = []; }
+      }
+
+      this.licao = {tema, explicacao:r.explicacao || '', audio:r.audio || '', frases:frases || []};
+      this.fraseSel = 0; this.paginaFrase = 0;
+      this.verLicao();
+      if(!this.licao.audio) this.pedirAudio();
+    }catch(e){
+      this.alvo().innerHTML = `
+        <button class="voltar" data-voltar-temas>← ${t('escolhe_tema')}</button>
+        <div class="aviso"><b>Não consegui preparar a lição.</b><br>${e.message}</div>`;
+      this.alvo().querySelector('[data-voltar-temas]').onclick = () => this.verTemas();
+    }
+  },
+
+  // Pede o áudio em segundo plano; a lição já está a ser lida.
+  async pedirAudio(){
+    const licaoNaAltura = this.licao;
+    try{
+      const r = await Rede.correr('gerar_audio_licao', {
+        frases: JSON.stringify(licaoNaAltura.frases)
+      });
+      // Só aplica se a pessoa ainda estiver nesta mesma lição
+      if(r && r.audio && this.licao === licaoNaAltura){
+        this.licao.audio = r.audio;
+        this.verLicao();
+      }
+    }catch(e){
+      const av = document.getElementById('licAudioEspera');
+      if(av) av.textContent = 'O áudio não ficou disponível desta vez.';
+    }
+  },
+
+  // ── 4. A lição ────────────────────────────────────────
+  verLicao(){
+    const L = this.licao;
+    const totalPag = Math.max(1, Math.ceil(L.frases.length / this.FRASES_POR_PAG));
+    const ini = this.paginaFrase * this.FRASES_POR_PAG;
+    const lote = L.frases.slice(ini, ini + this.FRASES_POR_PAG);
+
+    this.alvo().innerHTML = `
+      <button class="voltar" data-voltar-temas>← ${t('escolhe_tema')}</button>
+      <h1 style="font-size:22px;margin-bottom:16px;">${L.tema}</h1>
+
+      ${L.explicacao ? `<div class="cartao" style="background:#F3EFFB;border-color:#DCD2F2;">
+        <p style="font-size:14.5px;line-height:1.65;">${L.explicacao}</p>
+      </div>` : ''}
+
+      ${!L.audio ? `<div class="lic-audio-espera">
+        <span class="pontos"><i></i><i></i><i></i></span>
+        <span id="licAudioEspera">A preparar o áudio das ${L.frases.length} frases…</span>
+      </div>` : ''}
+
+      ${L.audio ? `<div class="cartao-escuro" style="padding:16px 18px;margin-bottom:18px;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <button id="licPlay" style="width:46px;height:46px;flex:0 0 auto;border-radius:50%;background:var(--lima);display:flex;align-items:center;justify-content:center;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#1E0D42"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;color:#CFC7E4;">Ouvir as ${L.frases.length} frases</div>
+            <div id="licTempo" style="font-size:12px;color:var(--lima);margin-top:2px;">0:00</div>
+          </div>
+          <button id="licVel" class="btn btn-calmo" style="width:auto;padding:8px 13px;font-size:12px;background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2);">1×</button>
+        </div>
+        <audio id="licAudio" preload="metadata" src="${L.audio}"></audio>
+      </div>` : ''}
+
+      <div id="licFrases">
+        ${lote.map((f, i) => this.linhaFrase(f, ini + i)).join('')}
+      </div>
+
+      ${totalPag > 1 ? `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0;">
+        <button class="btn btn-calmo" style="width:auto;padding:11px 16px;font-size:13px;" data-fpag="-1" ${this.paginaFrase===0?'disabled':''}>←</button>
+        <span style="font-size:12.5px;color:var(--texto-suave);font-weight:600;">${ini+1}–${Math.min(ini+this.FRASES_POR_PAG, L.frases.length)} de ${L.frases.length}</span>
+        <button class="btn btn-calmo" style="width:auto;padding:11px 16px;font-size:13px;" data-fpag="1" ${this.paginaFrase>=totalPag-1?'disabled':''}>→</button>
+      </div>` : ''}
+
+      <button class="btn" id="licPraticar" style="margin-top:8px;">Fazer os exercícios</button>
+      <button class="btn btn-calmo" id="licGravar" style="margin-top:10px;">Gravar a minha voz</button>`;
+
+    this.ligarLicao();
+  },
+
+  linhaFrase(f, idx){
+    const alvo = f.alvo || f.en || '';
+    const orig = f.origem || f.pt || '';
+    const pron = f.pronuncia || '';
+    const sel = idx === this.fraseSel;
+    return `
+      <div class="cartao" data-frase="${idx}" style="padding:15px 16px;margin-bottom:9px;cursor:pointer;${sel?'border-color:var(--teal);background:rgba(43,122,111,.05);':''}">
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:600;font-size:15px;">${alvo}</div>
+            <div style="font-size:13px;color:var(--texto-suave);margin-top:2px;">${orig}</div>
+            ${pron ? `<div style="font-size:12px;color:var(--teal);font-style:italic;margin-top:4px;">🗣 ${pron}</div>` : ''}
+          </div>
+          <button class="ouvir-frase" data-texto="${alvo.replace(/"/g,'&quot;')}" style="width:32px;height:32px;flex:0 0 auto;border-radius:50%;background:rgba(43,122,111,.12);display:flex;align-items:center;justify-content:center;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="var(--teal)"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+      </div>`;
+  },
+
+  ligarLicao(){
+    const raiz = this.alvo();
+
+    raiz.querySelector('[data-voltar-temas]').onclick = () => {
+      if(this.audio){ this.audio.pause(); this.audio = null; }
+      this.verTemas();
+    };
+
+    raiz.querySelectorAll('[data-fpag]').forEach(b => {
+      b.onclick = () => { this.paginaFrase += Number(b.dataset.fpag); this.verLicao(); };
+    });
+
+    raiz.querySelectorAll('[data-frase]').forEach(c => {
+      c.onclick = e => {
+        if(e.target.closest('.ouvir-frase')) return;
+        this.fraseSel = Number(c.dataset.frase);
+        this.verLicao();
+      };
+    });
+
+    raiz.querySelectorAll('.ouvir-frase').forEach(b => {
+      b.onclick = () => this.falar(b.dataset.texto);
+    });
+
+    const a = raiz.querySelector('#licAudio');
+    if(a){
+      this.audio = a;
+      const play = raiz.querySelector('#licPlay');
+      const tempo = raiz.querySelector('#licTempo');
+      const vel = raiz.querySelector('#licVel');
+
+      play.onclick = () => {
+        if(a.paused){ a.play(); play.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="#1E0D42"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
+        else{ a.pause(); play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#1E0D42"><path d="M8 5v14l11-7z"/></svg>'; }
+      };
+      a.ontimeupdate = () => {
+        const s = Math.floor(a.currentTime);
+        tempo.textContent = Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+      };
+      a.onended = () => { play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#1E0D42"><path d="M8 5v14l11-7z"/></svg>'; };
+      vel.onclick = () => {
+        this.lento = !this.lento;
+        a.playbackRate = this.lento ? 0.72 : 1;
+        vel.textContent = this.lento ? '0.7×' : '1×';
+      };
+    }
+
+    raiz.querySelector('#licPraticar').onclick = () => Exercicios.abrir(this.licao);
+
+    const bg = raiz.querySelector('#licGravar');
+    if(bg) bg.onclick = () => {
+      const f = this.licao.frases[this.fraseSel];
+      if(f) Gravacao.abrir(f, this.licao);
+    };
+  },
+
+  falar(texto){
+    if(!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    const mapa = {pt:'pt-PT',en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',
+                  zh:'zh-CN',ja:'ja-JP',ko:'ko-KR',ar:'ar-SA',ru:'ru-RU',hi:'hi-IN',
+                  nl:'nl-NL',sv:'sv-SE',tr:'tr-TR'};
+    u.lang = mapa[Estado.destino] || 'en-US';
+    u.rate = 0.9;
+    speechSynthesis.speak(u);
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: ENTRADA
+   Escolher as línguas → avaliar o nível → gravar → entrar.
+   Abre em inglês (ainda não sabemos quem é) e traduz-se
+   assim que a pessoa escolhe a língua dela.
+   ══════════════════════════════════════════════════════════ */
+const TXT_ENTRADA = {
+  en:{fala:'Which language do you speak best?',falaSub:'Everything will be explained in it.',
+      aprender:'What do you want to learn?',aprenderSub:'Pick the language you want to practise.',
+      nivel:'How well do you know it?',nivelSub:'Choose how you prefer to find out.',
+      quiz:'Quick test',quizSub:'10 multiple-choice questions, about 2 minutes.',
+      escrever:'Write a little',escreverSub:'Answer 3 open questions and let the AI assess you.',
+      saltar:'Skip — I will choose myself',voltar:'Back',comecar:'Start',
+      aPreparar:'Preparing',aAvaliar:'Assessing your answers',escreveAqui:'Write your answer here...',
+      seguinte:'Next',resultado:'Your level'},
+  pt:{fala:'Que língua falas melhor?',falaSub:'Vamos explicar-te tudo nessa língua.',
+      aprender:'O que queres aprender?',aprenderSub:'Escolhe a língua que queres praticar.',
+      nivel:'Qual é o teu nível?',nivelSub:'Escolhe como preferes descobrir.',
+      quiz:'Teste rápido',quizSub:'10 perguntas de escolha múltipla, uns 2 minutos.',
+      escrever:'Escrever um pouco',escreverSub:'Responde a 3 perguntas e deixa a IA avaliar-te.',
+      saltar:'Saltar — escolho eu',voltar:'Voltar',comecar:'Começar',
+      aPreparar:'A preparar',aAvaliar:'A avaliar as tuas respostas',escreveAqui:'Escreve aqui a tua resposta...',
+      seguinte:'Seguinte',resultado:'O teu nível'},
+  es:{fala:'¿Qué idioma hablas mejor?',falaSub:'Te lo explicaremos todo en él.',
+      aprender:'¿Qué quieres aprender?',aprenderSub:'Elige el idioma que quieres practicar.',
+      nivel:'¿Cuál es tu nivel?',nivelSub:'Elige cómo prefieres averiguarlo.',
+      quiz:'Test rápido',quizSub:'10 preguntas de opción múltiple, unos 2 minutos.',
+      escrever:'Escribir un poco',escreverSub:'Responde 3 preguntas y deja que la IA te evalúe.',
+      saltar:'Saltar — elijo yo',voltar:'Volver',comecar:'Empezar',
+      aPreparar:'Preparando',aAvaliar:'Evaluando tus respuestas',escreveAqui:'Escribe tu respuesta aquí...',
+      seguinte:'Siguiente',resultado:'Tu nivel'},
+  fr:{fala:'Quelle langue parles-tu le mieux ?',falaSub:'Tout te sera expliqué dans cette langue.',
+      aprender:'Que veux-tu apprendre ?',aprenderSub:'Choisis la langue que tu veux pratiquer.',
+      nivel:'Quel est ton niveau ?',nivelSub:'Choisis comment le découvrir.',
+      quiz:'Test rapide',quizSub:'10 questions à choix multiple, environ 2 minutes.',
+      escrever:'Écrire un peu',escreverSub:'Réponds à 3 questions et laisse l\u2019IA t\u2019évaluer.',
+      saltar:'Passer — je choisis moi-même',voltar:'Retour',comecar:'Commencer',
+      aPreparar:'Préparation',aAvaliar:'Évaluation de tes réponses',escreveAqui:'Écris ta réponse ici...',
+      seguinte:'Suivant',resultado:'Ton niveau'},
+  de:{fala:'Welche Sprache sprichst du am besten?',falaSub:'Alles wird dir darin erklärt.',
+      aprender:'Was möchtest du lernen?',aprenderSub:'Wähle die Sprache, die du üben willst.',
+      nivel:'Wie gut kannst du sie?',nivelSub:'Wähle, wie du es herausfinden willst.',
+      quiz:'Schnelltest',quizSub:'10 Multiple-Choice-Fragen, etwa 2 Minuten.',
+      escrever:'Etwas schreiben',escreverSub:'Beantworte 3 Fragen und lass dich von der KI einschätzen.',
+      saltar:'Überspringen — ich wähle selbst',voltar:'Zurück',comecar:'Starten',
+      aPreparar:'Wird vorbereitet',aAvaliar:'Deine Antworten werden bewertet',escreveAqui:'Schreibe hier deine Antwort...',
+      seguinte:'Weiter',resultado:'Dein Niveau'},
+  it:{fala:'Quale lingua parli meglio?',falaSub:'Ti spiegheremo tutto in questa lingua.',
+      aprender:'Cosa vuoi imparare?',aprenderSub:'Scegli la lingua che vuoi praticare.',
+      nivel:'Qual è il tuo livello?',nivelSub:'Scegli come preferisci scoprirlo.',
+      quiz:'Test rapido',quizSub:'10 domande a scelta multipla, circa 2 minuti.',
+      escrever:'Scrivere un po\u2019',escreverSub:'Rispondi a 3 domande e lascia che l\u2019IA ti valuti.',
+      saltar:'Salta — scelgo io',voltar:'Indietro',comecar:'Inizia',
+      aPreparar:'Preparazione',aAvaliar:'Valutazione delle tue risposte',escreveAqui:'Scrivi qui la tua risposta...',
+      seguinte:'Avanti',resultado:'Il tuo livello'},
+  zh:{fala:'你最擅长哪种语言？',falaSub:'我们会用这种语言为你讲解一切。',
+      aprender:'你想学什么？',aprenderSub:'选择你想练习的语言。',
+      nivel:'你的水平如何？',nivelSub:'选择你喜欢的评估方式。',
+      quiz:'快速测试',quizSub:'10道选择题，约2分钟。',
+      escrever:'写一点',escreverSub:'回答3个问题，让AI评估你。',
+      saltar:'跳过 — 我自己选',voltar:'返回',comecar:'开始',
+      aPreparar:'正在准备',aAvaliar:'正在评估你的答案',escreveAqui:'在这里写下你的答案...',
+      seguinte:'下一个',resultado:'你的水平'},
+  ja:{fala:'一番得意な言語は？',falaSub:'その言語ですべて説明します。',
+      aprender:'何を学びたいですか？',aprenderSub:'練習したい言語を選んでください。',
+      nivel:'どのくらい話せますか？',nivelSub:'確認方法を選んでください。',
+      quiz:'クイックテスト',quizSub:'選択式10問、約2分。',
+      escrever:'少し書く',escreverSub:'3つの質問に答えてAIに評価してもらいます。',
+      saltar:'スキップ — 自分で選ぶ',voltar:'戻る',comecar:'始める',
+      aPreparar:'準備中',aAvaliar:'回答を評価中',escreveAqui:'ここに答えを書いてください...',
+      seguinte:'次へ',resultado:'あなたのレベル'},
+  ko:{fala:'어떤 언어를 가장 잘하세요?',falaSub:'그 언어로 모든 것을 설명해 드립니다.',
+      aprender:'무엇을 배우고 싶으세요?',aprenderSub:'연습하고 싶은 언어를 선택하세요.',
+      nivel:'얼마나 알고 계신가요?',nivelSub:'확인 방법을 선택하세요.',
+      quiz:'빠른 테스트',quizSub:'객관식 10문항, 약 2분.',
+      escrever:'조금 써보기',escreverSub:'3개 질문에 답하고 AI 평가를 받으세요.',
+      saltar:'건너뛰기 — 직접 선택',voltar:'뒤로',comecar:'시작',
+      aPreparar:'준비 중',aAvaliar:'답변 평가 중',escreveAqui:'여기에 답을 쓰세요...',
+      seguinte:'다음',resultado:'당신의 수준'},
+  ar:{fala:'ما هي اللغة التي تتقنها أكثر؟',falaSub:'سنشرح لك كل شيء بها.',
+      aprender:'ماذا تريد أن تتعلم؟',aprenderSub:'اختر اللغة التي تريد ممارستها.',
+      nivel:'ما مستواك؟',nivelSub:'اختر كيف تفضل معرفة ذلك.',
+      quiz:'اختبار سريع',quizSub:'10 أسئلة اختيار من متعدد، حوالي دقيقتين.',
+      escrever:'اكتب قليلاً',escreverSub:'أجب على 3 أسئلة ودع الذكاء الاصطناعي يقيّمك.',
+      saltar:'تخطي — سأختار بنفسي',voltar:'رجوع',comecar:'ابدأ',
+      aPreparar:'جاري التحضير',aAvaliar:'جاري تقييم إجاباتك',escreveAqui:'اكتب إجابتك هنا...',
+      seguinte:'التالي',resultado:'مستواك'},
+  ru:{fala:'На каком языке вы говорите лучше всего?',falaSub:'Мы всё объясним на нём.',
+      aprender:'Что хотите изучать?',aprenderSub:'Выберите язык для практики.',
+      nivel:'Какой у вас уровень?',nivelSub:'Выберите, как хотите это узнать.',
+      quiz:'Быстрый тест',quizSub:'10 вопросов с выбором ответа, около 2 минут.',
+      escrever:'Немного написать',escreverSub:'Ответьте на 3 вопроса, и ИИ вас оценит.',
+      saltar:'Пропустить — выберу сам',voltar:'Назад',comecar:'Начать',
+      aPreparar:'Подготовка',aAvaliar:'Оценка ваших ответов',escreveAqui:'Напишите ответ здесь...',
+      seguinte:'Далее',resultado:'Ваш уровень'},
+  hi:{fala:'आप कौन सी भाषा सबसे अच्छी बोलते हैं?',falaSub:'हम आपको सब कुछ उसी में समझाएंगे।',
+      aprender:'आप क्या सीखना चाहते हैं?',aprenderSub:'अभ्यास के लिए भाषा चुनें।',
+      nivel:'आपका स्तर क्या है?',nivelSub:'चुनें कि आप कैसे जानना चाहते हैं।',
+      quiz:'त्वरित परीक्षण',quizSub:'10 बहुविकल्पीय प्रश्न, लगभग 2 मिनट।',
+      escrever:'थोड़ा लिखें',escreverSub:'3 प्रश्नों के उत्तर दें और AI को आकलन करने दें।',
+      saltar:'छोड़ें — मैं खुद चुनूंगा',voltar:'वापस',comecar:'शुरू करें',
+      aPreparar:'तैयार हो रहा है',aAvaliar:'आपके उत्तरों का आकलन',escreveAqui:'अपना उत्तर यहाँ लिखें...',
+      seguinte:'आगे',resultado:'आपका स्तर'},
+  nl:{fala:'Welke taal spreek je het best?',falaSub:'We leggen alles daarin uit.',
+      aprender:'Wat wil je leren?',aprenderSub:'Kies de taal die je wilt oefenen.',
+      nivel:'Hoe goed ken je die?',nivelSub:'Kies hoe je het wilt ontdekken.',
+      quiz:'Snelle test',quizSub:'10 meerkeuzevragen, ongeveer 2 minuten.',
+      escrever:'Iets schrijven',escreverSub:'Beantwoord 3 vragen en laat de AI je beoordelen.',
+      saltar:'Overslaan — ik kies zelf',voltar:'Terug',comecar:'Starten',
+      aPreparar:'Wordt voorbereid',aAvaliar:'Je antwoorden worden beoordeeld',escreveAqui:'Schrijf hier je antwoord...',
+      seguinte:'Volgende',resultado:'Jouw niveau'},
+  sv:{fala:'Vilket språk talar du bäst?',falaSub:'Vi förklarar allt på det.',
+      aprender:'Vad vill du lära dig?',aprenderSub:'Välj språket du vill öva på.',
+      nivel:'Hur mycket kan du?',nivelSub:'Välj hur du vill ta reda på det.',
+      quiz:'Snabbtest',quizSub:'10 flervalsfrågor, ungefär 2 minuter.',
+      escrever:'Skriv lite',escreverSub:'Svara på 3 frågor och låt AI:n bedöma dig.',
+      saltar:'Hoppa över — jag väljer själv',voltar:'Tillbaka',comecar:'Börja',
+      aPreparar:'Förbereder',aAvaliar:'Dina svar bedöms',escreveAqui:'Skriv ditt svar här...',
+      seguinte:'Nästa',resultado:'Din nivå'},
+  tr:{fala:'En iyi hangi dili konuşuyorsun?',falaSub:'Her şeyi o dilde anlatacağız.',
+      aprender:'Ne öğrenmek istiyorsun?',aprenderSub:'Pratik yapmak istediğin dili seç.',
+      nivel:'Seviyen ne?',nivelSub:'Nasıl öğrenmek istediğini seç.',
+      quiz:'Hızlı test',quizSub:'10 çoktan seçmeli soru, yaklaşık 2 dakika.',
+      escrever:'Biraz yaz',escreverSub:'3 soruyu yanıtla ve yapay zekanın seni değerlendirmesine izin ver.',
+      saltar:'Atla — kendim seçerim',voltar:'Geri',comecar:'Başla',
+      aPreparar:'Hazırlanıyor',aAvaliar:'Cevapların değerlendiriliyor',escreveAqui:'Cevabını buraya yaz...',
+      seguinte:'İleri',resultado:'Seviyen'}
+};
+
+const PERG_ESCRITA = [
+  'Tell me about yourself and what you do.',
+  'Describe your last weekend in a few sentences.',
+  'What would you do if you won a lot of money? Explain why.'
+];
+
+const Entrada = {
+  origem:null, destino:null, nivel:'',
+  perguntas:[], pergIdx:0, respostas:[],
+  escritaIdx:0, escritas:[],
+
+  txt(){ return TXT_ENTRADA[this.origem ? this.origem.c : 'en'] || TXT_ENTRADA.en; },
+  alvo(){ return document.getElementById('v-entrada'); },
+
+  precisa(){
+    const u = Estado.utilizador;
+    return !u || !u.lingua_origem_codigo || !u.lingua_destino_codigo;
+  },
+
+  abrir(){
+    document.body.classList.add('em-entrada');
+    document.querySelectorAll('.vista').forEach(v => v.classList.remove('on'));
+    this.alvo().classList.add('on');
+    this.passoLingua('origem');
+  },
+
+  progresso(n){
+    return `<div style="display:flex;gap:6px;margin-bottom:22px;">
+      ${[1,2,3].map(i => `<span style="flex:1;height:4px;border-radius:2px;background:${i<=n?'var(--teal)':'var(--linha)'};"></span>`).join('')}
+    </div>`;
+  },
+
+  // ── Passo 1 e 2: as línguas ───────────────────────────
+  passoLingua(qual){
+    const T = this.txt();
+    const excluir = qual === 'destino' && this.origem ? this.origem.c : null;
+    const escolhido = qual === 'origem' ? this.origem : this.destino;
+    const rtl = this.origem && this.origem.c === 'ar';
+
+    this.alvo().innerHTML = `
+      <div style="direction:${rtl?'rtl':'ltr'};">
+        ${this.progresso(qual === 'origem' ? 1 : 2)}
+        ${qual === 'destino' ? `<button class="voltar" id="entVoltar">← ${T.voltar}</button>` : ''}
+        <h1 style="font-size:23px;margin-bottom:6px;">${qual === 'origem' ? T.fala : T.aprender}</h1>
+        <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;">
+          ${qual === 'origem' ? T.falaSub : T.aprenderSub}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:9px;">
+          ${IDIOMAS.filter(l => l.c !== excluir).map(l => `
+            <button data-cod="${l.c}" style="display:flex;align-items:center;gap:9px;padding:14px 12px;border-radius:14px;
+              background:${escolhido && escolhido.c===l.c ? 'rgba(43,122,111,.1)' : 'var(--branco)'};
+              border:1.5px solid ${escolhido && escolhido.c===l.c ? 'var(--teal)' : 'var(--linha)'};
+              font-weight:600;font-size:13.5px;width:calc(50% - 5px);text-align:${rtl?'right':'left'};">
+              <span style="font-size:19px;">${l.b}</span><span style="min-width:0;">${l.n}</span>
+            </button>`).join('')}
+        </div>
+      </div>`;
+
+    const v = document.getElementById('entVoltar');
+    if(v) v.onclick = () => this.passoLingua('origem');
+
+    this.alvo().querySelectorAll('[data-cod]').forEach(b => {
+      b.onclick = () => {
+        const l = acharIdioma(b.dataset.cod, IDIOMAS[0]);
+        if(qual === 'origem'){ this.origem = l; this.passoLingua('destino'); }
+        else{ this.destino = l; this.passoModo(); }
+      };
+    });
+  },
+
+  // ── Passo 3: como avaliar ─────────────────────────────
+  passoModo(){
+    const T = this.txt();
+    const rtl = this.origem.c === 'ar';
+    this.alvo().innerHTML = `
+      <div style="direction:${rtl?'rtl':'ltr'};">
+        ${this.progresso(3)}
+        <button class="voltar" id="entVoltar">← ${T.voltar}</button>
+        <h1 style="font-size:23px;margin-bottom:6px;">${T.nivel}</h1>
+        <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;">${T.nivelSub}</p>
+
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <button id="mQuiz" class="cartao" style="text-align:${rtl?'right':'left'};margin:0;">
+            <div style="font-size:26px;margin-bottom:8px;">📝</div>
+            <div style="font-family:'Yusei Magic',cursive;font-size:16px;margin-bottom:4px;">${T.quiz}</div>
+            <div style="font-size:12.5px;color:var(--texto-suave);line-height:1.45;">${T.quizSub}</div>
+          </button>
+          <button id="mEscrita" class="cartao" style="text-align:${rtl?'right':'left'};margin:0;">
+            <div style="font-size:26px;margin-bottom:8px;">💬</div>
+            <div style="font-family:'Yusei Magic',cursive;font-size:16px;margin-bottom:4px;">${T.escrever}</div>
+            <div style="font-size:12.5px;color:var(--texto-suave);line-height:1.45;">${T.escreverSub}</div>
+          </button>
+        </div>
+
+        <button id="mSaltar" style="display:block;width:100%;margin-top:16px;padding:14px;
+          color:var(--texto-suave);font-weight:600;font-size:13.5px;">${T.saltar}</button>
+      </div>`;
+
+    document.getElementById('entVoltar').onclick = () => this.passoLingua('destino');
+    document.getElementById('mQuiz').onclick = () => this.gerarQuiz();
+    document.getElementById('mEscrita').onclick = () => this.passoEscrita();
+    document.getElementById('mSaltar').onclick = () => { this.nivel = ''; this.terminar(); };
+  },
+
+  // ── Teste de escolha múltipla ─────────────────────────
+  async gerarQuiz(){
+    const T = this.txt();
+    const b = document.getElementById('mQuiz');
+    b.disabled = true;
+    b.innerHTML = `<div class="carregar" style="padding:18px 0;">${T.aPreparar}
+      <span class="pontos"><i></i><i></i><i></i></span></div>`;
+    try{
+      const r = await Rede.correr('avaliar_nivel', {
+        modo:'gerar_perguntas', origem:this.origem.n, destino:this.destino.n
+      });
+      let p = r.perguntas;
+      if(typeof p === 'string'){
+        let s = p.slice(p.indexOf('['));
+        const f = s.lastIndexOf(']'); if(f>-1) s = s.slice(0,f+1);
+        p = JSON.parse(s);
+      }
+      this.perguntas = p || []; this.pergIdx = 0; this.respostas = [];
+      if(!this.perguntas.length) throw new Error('sem perguntas');
+      this.verPergunta();
+    }catch(e){
+      this.passoModo();
+      this.alvo().insertAdjacentHTML('afterbegin',
+        `<div class="aviso">Não consegui preparar o teste. ${e.message}</div>`);
+    }
+  },
+
+  verPergunta(){
+    const p = this.perguntas[this.pergIdx];
+    const total = this.perguntas.length;
+    this.alvo().innerHTML = `
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:20px;">
+        <div style="flex:1;height:5px;background:var(--linha);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${this.pergIdx/total*100}%;background:var(--teal);transition:width .3s;"></div>
+        </div>
+        <span style="font-size:12px;color:var(--texto-suave);font-weight:600;">${this.pergIdx+1}/${total}</span>
+      </div>
+      <div class="cartao" style="padding:22px 18px;font-size:16.5px;line-height:1.5;">${p.pergunta}</div>
+      <div class="escolhas">
+        ${(p.opcoes||[]).map((o,i) => `<button class="escolha" data-op="${i}">${o}</button>`).join('')}
+      </div>`;
+
+    this.alvo().querySelectorAll('[data-op]').forEach(b => {
+      b.onclick = () => {
+        this.respostas.push({
+          dificuldade:p.dificuldade || 'intermedio',
+          acertou:Number(b.dataset.op) === p.correta
+        });
+        this.pergIdx++;
+        if(this.pergIdx < total) this.verPergunta();
+        else this.avaliar('avaliar_multipla', JSON.stringify(this.respostas));
+      };
+    });
+  },
+
+  // ── Teste por escrita ─────────────────────────────────
+  passoEscrita(){
+    const T = this.txt();
+    const total = PERG_ESCRITA.length;
+    this.alvo().innerHTML = `
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:20px;">
+        <div style="flex:1;height:5px;background:var(--linha);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${this.escritaIdx/total*100}%;background:var(--teal);transition:width .3s;"></div>
+        </div>
+        <span style="font-size:12px;color:var(--texto-suave);font-weight:600;">${this.escritaIdx+1}/${total}</span>
+      </div>
+      <div class="cartao" style="padding:18px;font-size:15.5px;line-height:1.5;">${PERG_ESCRITA[this.escritaIdx]}</div>
+      <textarea id="entTexto" placeholder="${T.escreveAqui}" style="width:100%;min-height:120px;
+        border:1.5px solid var(--linha);border-radius:14px;padding:14px;font-family:inherit;
+        font-size:14.5px;resize:vertical;background:var(--branco);line-height:1.55;"></textarea>
+      <button class="btn" id="entProx" style="margin-top:12px;">${T.seguinte} →</button>`;
+
+    document.getElementById('entProx').onclick = () => {
+      const t = document.getElementById('entTexto').value.trim();
+      if(!t) return;
+      this.escritas.push('P: ' + PERG_ESCRITA[this.escritaIdx] + '\nR: ' + t);
+      this.escritaIdx++;
+      if(this.escritaIdx < total) this.passoEscrita();
+      else this.avaliar('avaliar_conversa', this.escritas.join('\n\n'));
+    };
+  },
+
+  // ── Avaliar e mostrar ─────────────────────────────────
+  async avaliar(modo, dados){
+    const T = this.txt();
+    this.alvo().innerHTML = `<div class="carregar" style="padding:70px 0;">
+      ${T.aAvaliar}<span class="pontos"><i></i><i></i><i></i></span></div>`;
+    try{
+      const r = await Rede.correr('avaliar_nivel', {
+        modo, origem:this.origem.n, destino:this.destino.n, respostas:dados
+      });
+      this.nivel = r.nivel || '';
+      this.verResultado(r.feedback || '');
+    }catch(e){
+      this.nivel = '';
+      this.terminar();
+    }
+  },
+
+  verResultado(feedback){
+    const T = this.txt();
+    this.alvo().innerHTML = `
+      <div style="text-align:center;padding:28px 6px;">
+        <div style="font-size:12.5px;color:var(--texto-suave);letter-spacing:1.4px;text-transform:uppercase;margin-bottom:14px;">${T.resultado}</div>
+        <div style="display:inline-block;background:var(--indigo);color:#fff;border-radius:999px;
+          padding:13px 32px;font-family:'Yusei Magic',cursive;font-size:21px;margin-bottom:20px;">${this.nivel}</div>
+        <p style="font-size:14.5px;color:var(--texto-suave);line-height:1.65;">${feedback}</p>
+      </div>
+      <button class="btn" id="entFim">${T.comecar} →</button>`;
+    document.getElementById('entFim').onclick = e => this.terminar(e.currentTarget);
+  },
+
+  // ── Gravar e entrar ───────────────────────────────────
+  async terminar(botao){
+    const T = this.txt();
+    if(botao){
+      botao.disabled = true;
+      botao.innerHTML = `${T.aPreparar} <span class="pontos"><i></i><i></i><i></i></span>`;
+    }
+    Estado.origem  = this.origem.c;
+    Estado.destino = this.destino.c;
+    Estado.guardar();
+
+    try{
+      await Rede.correr('definir_idiomas', {
+        origem_codigo:this.origem.c,  origem_nome:this.origem.n,
+        destino_codigo:this.destino.c, destino_nome:this.destino.n,
+        nivel:this.nivel
+      });
+    }catch(e){
+      console.warn('[Lingu.AI] Idiomas não gravados:', e.message);
+    }
+
+    document.body.classList.remove('em-entrada');
+    this.alvo().classList.remove('on');
+    await Nucleo.carregarUtilizador();
+    await Nucleo.carregarTextos();
+    Nucleo.pintarPar();
+    Nucleo.pintarNav();
+    Nucleo.pintarTextos();
+    Rota.ir('inicio');
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: PLANOS + PAGAMENTO
+   As credenciais da MozPayment ficam no Bubble, nunca aqui.
+   ══════════════════════════════════════════════════════════ */
+const MINUTOS_GRATIS = 20;
+
+const PLANOS = [
+  {id:'semanal',  nome:'Plano Semanal',  periodo:'por semana',    valor:150, preco:'MZN 150',
+   itens:['Lições ilimitadas por nível','Correção de pronúncia com IA','Conversação ao vivo','Correção de escrita']},
+  {id:'quinzenal',nome:'Plano Quinzenal',periodo:'a cada 15 dias',valor:390, preco:'MZN 390',
+   itens:['Tudo do plano Semanal','Ideal para experimentar sem compromisso longo','Acompanhamento de progresso']},
+  {id:'mensal',   nome:'Plano Mensal',   periodo:'por mês',       valor:750, preco:'MZN 750', destaque:true,
+   itens:['Tudo do Semanal e Quinzenal','Acompanhamento de progresso','Suporte prioritário']}
+];
+
+const METODOS = [
+  {id:'mpesa', nome:'M-Pesa',            sub:'Vodacom · 84 ou 85', cor:'#E2574C', tipo:'telefone'},
+  {id:'emola', nome:'e-Mola',            sub:'Movitel · 86 ou 87', cor:'#F5A623', tipo:'telefone'},
+  {id:'cartao',nome:'Visa / Mastercard', sub:'Cartão de crédito ou débito', cor:'#2F5E9E', tipo:'cartao'}
+];
+
+const Planos = {
+  pintar(){
+    const u = Estado.utilizador || {};
+    const atual = u.plano || '';
+    const usados = Number(u.minutos_usados || 0);
+    const restam = Math.max(0, MINUTOS_GRATIS - usados);
+    const bloqueado = !atual && restam <= 0;
+
+    document.getElementById('planosConteudo').innerHTML = `
+      ${!atual ? `
+        <div class="cartao" style="margin-bottom:20px;${bloqueado ? 'border-color:#F0C88A;background:#FFF7EC;' : ''}">
+          <div style="font-family:'Yusei Magic',cursive;font-size:15.5px;margin-bottom:6px;">
+            ${bloqueado ? 'Os teus 20 minutos terminaram' : 'Estás no plano gratuito'}
+          </div>
+          <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;">
+            ${bloqueado
+              ? 'Escolhe um plano abaixo para continuares a praticar.'
+              : 'Restam-te <b style="color:var(--coral)">' + restam + ' minutos</b> de ' + MINUTOS_GRATIS + '.'}
+          </p>
+          ${!bloqueado ? '<div class="barra-livre"><div style="width:' + (usados/MINUTOS_GRATIS*100) + '%"></div></div>' : ''}
+        </div>` : ''}
+
+      <p style="color:var(--texto-suave);font-size:14px;line-height:1.6;margin-bottom:20px;">
+        Assina de qualquer parte do mundo. Estuda onde estiveres, a qualquer hora.
+      </p>
+
+      ${PLANOS.map(p => `
+        <div class="plano ${p.destaque ? 'plano-top' : ''}">
+          ${p.destaque ? '<div class="plano-fita">Mais escolhido</div>' : ''}
+          ${atual === p.id ? '<div class="plano-fita plano-fita-meu">O teu plano</div>' : ''}
+          <div class="plano-nome">${p.nome}</div>
+          <div class="plano-preco"><span class="v">${p.preco}</span><span class="p">${p.periodo}</span></div>
+          <ul class="plano-itens">
+            ${p.itens.map(i => `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg><span>${i}</span></li>`).join('')}
+          </ul>
+          <button class="btn ${p.destaque ? '' : 'btn-calmo'}" data-plano="${p.id}" ${atual === p.id ? 'disabled' : ''}>
+            ${atual === p.id ? 'Plano ativo' : 'Assinar plano'}
+          </button>
+        </div>`).join('')}
+
+      <p style="text-align:center;font-size:12px;color:var(--texto-suave);margin-top:4px;">
+        Podes mudar ou cancelar quando quiseres.
+      </p>`;
+
+    document.querySelectorAll('[data-plano]').forEach(b => {
+      b.onclick = () => Pagamento.abrir(PLANOS.find(p => p.id === b.dataset.plano));
+    });
+  }
+};
+
+/* ── Pagamento ──────────────────────────────────────────── */
+const Pagamento = {
+  plano:null, fundo:null,
+
+  abrir(plano){
+    this.plano = plano;
+    this.fundo = document.createElement('div');
+    this.fundo.className = 'folha-fundo';
+    document.body.appendChild(this.fundo);
+    this.escolherMetodo();
+    this.fundo.onclick = e => { if(e.target === this.fundo) this.fechar(); };
+  },
+
+  fechar(){ this.pararVigia(); if(this.fundo){ this.fundo.remove(); this.fundo = null; } },
+
+  folha(dentro){ this.fundo.innerHTML = '<div class="folha">' + dentro + '</div>'; },
+
+  topo(titulo, sub, comVoltar){
+    return `<div class="folha-topo">
+      ${comVoltar ? '<button class="folha-x" id="pgVoltar" aria-label="Voltar">←</button>' : ''}
+      <div style="flex:1;${comVoltar ? 'text-align:center;' : ''}">
+        <div style="font-family:'Yusei Magic',cursive;font-size:16.5px;">${titulo}</div>
+        ${sub ? `<div style="font-size:12.5px;color:var(--texto-suave);margin-top:2px;">${sub}</div>` : ''}
+      </div>
+      <button class="folha-x" id="pgX" aria-label="Fechar">✕</button>
+    </div>`;
+  },
+
+  ligarTopo(voltarPara){
+    const x = document.getElementById('pgX');
+    if(x) x.onclick = () => this.fechar();
+    const v = document.getElementById('pgVoltar');
+    if(v) v.onclick = voltarPara;
+  },
+
+  escolherMetodo(){
+    this.folha(
+      this.topo(this.plano.nome, this.plano.preco + ' · ' + this.plano.periodo, false) +
+      `<p style="font-size:13px;color:var(--texto-suave);margin-bottom:14px;">Como queres pagar?</p>
+       <div style="display:flex;flex-direction:column;gap:10px;">
+       ${METODOS.map(m => `
+         <button class="metodo" data-metodo="${m.id}">
+           <span class="metodo-ponto" style="background:${m.cor}"></span>
+           <span style="flex:1;min-width:0;">
+             <span style="display:block;font-weight:600;font-size:14.5px;">${m.nome}</span>
+             <span style="display:block;font-size:12.5px;color:var(--texto-suave);margin-top:1px;">${m.sub}</span>
+           </span>
+           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:.45"><path d="m9 5 7 7-7 7"/></svg>
+         </button>`).join('')}
+       </div>`);
+
+    this.ligarTopo();
+    this.fundo.querySelectorAll('[data-metodo]').forEach(b => {
+      b.onclick = () => {
+        const m = METODOS.find(x => x.id === b.dataset.metodo);
+        m.tipo === 'telefone' ? this.pedirNumero(m) : this.cartao();
+      };
+    });
+  },
+
+  pedirNumero(metodo){
+    const nome = (Estado.utilizador && Estado.utilizador.nome) || '';
+    this.folha(
+      this.topo(metodo.nome, this.plano.preco, true) +
+      `<label class="rotulo">Número ${metodo.nome}</label>
+       <input id="pgNumero" class="campo" type="tel" inputmode="numeric" maxlength="9"
+              placeholder="${metodo.id === 'mpesa' ? '84XXXXXXX' : '86XXXXXXX'}">
+       <label class="rotulo" style="margin-top:14px;">Nome</label>
+       <input id="pgNome" class="campo" type="text" placeholder="O teu nome" value="${nome}">
+       <div id="pgErro" class="pg-erro" style="display:none;"></div>
+       <button class="btn" id="pgPagar" style="margin-top:18px;">Pagar ${this.plano.preco}</button>
+       <p style="font-size:12px;color:var(--texto-suave);text-align:center;margin-top:12px;line-height:1.5;">
+         Vais receber um pedido de confirmação no telemóvel.</p>`);
+
+    this.ligarTopo(() => this.escolherMetodo());
+    document.getElementById('pgPagar').onclick = e => this.cobrar(metodo, e.currentTarget);
+  },
+
+  async cobrar(metodo, botao){
+    const numero = document.getElementById('pgNumero').value.replace(/\D/g,'');
+    const nome = document.getElementById('pgNome').value.trim();
+    const erro = document.getElementById('pgErro');
+    const falhar = m => { erro.textContent = m; erro.style.display = 'block'; };
+    erro.style.display = 'none';
+
+    if(numero.length !== 9) return falhar('O número tem de ter 9 dígitos.');
+    const validos = metodo.id === 'mpesa' ? ['84','85'] : ['86','87'];
+    if(!validos.includes(numero.slice(0,2)))
+      return falhar('Um número ' + metodo.nome + ' começa por ' + validos.join(' ou ') + '.');
+    if(!nome) return falhar('Escreve o teu nome.');
+
+    botao.disabled = true;
+    botao.innerHTML = 'A enviar o pedido <span class="pontos"><i></i><i></i><i></i></span>';
+
+    const rota = metodo.id === 'mpesa' ? 'pagamentorotativompesa' : 'pagamentorotativoemola';
+
+    try{
+      // O servidor devolve sempre HTTP 200 — o resultado está no campo "cod".
+      const resposta = await fetch(CFG.moz + '/' + rota, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          carteira:CFG.carteira, numero, cliente:nome, valor:String(this.plano.valor)
+        })
+      });
+      const r = await resposta.json();
+
+      if(Number(r.cod) === 200){
+        // Avisa o Bubble para ativar o plano deste utilizador
+        try{
+          await Rede.correr('confirmar_pagamento', {
+            plano:this.plano.id, metodo:metodo.id,
+            valor:String(this.plano.valor), numero,
+            transacao:r.transacao || ''
+          });
+        }catch(err){ console.warn('[Lingu.AI] Plano não confirmado:', err.message); }
+        return this.sucesso(r.transacao || '');
+      }
+
+      botao.disabled = false;
+      botao.textContent = 'Pagar ' + this.plano.preco;
+      falhar(r.detalhe || r.mensagem || 'O pagamento não foi aceite.');
+    }catch(e){
+      botao.disabled = false;
+      botao.textContent = 'Pagar ' + this.plano.preco;
+      falhar('Não consegui contactar o pagamento. Verifica a ligação e tenta outra vez.');
+    }
+  },
+
+  async cartao(){
+    this.folha(this.topo('Cartão', this.plano.preco, true) +
+      '<div class="carregar" style="padding:52px 0;">A abrir o pagamento seguro<span class="pontos"><i></i><i></i><i></i></span></div>');
+    this.ligarTopo(() => this.escolherMetodo());
+
+    try{
+      const r = await Rede.correr('pagar_cartao', {
+        plano:this.plano.id,
+        valor:String(this.plano.valor),
+        nome_cliente:(Estado.utilizador && Estado.utilizador.nome) || '',
+        nome_producto:this.plano.nome
+      });
+
+      const url = r.url || r.link || r.checkout;
+      if(!url) throw new Error(r.mensagem || 'não recebi o endereço de pagamento');
+
+      this.folha(this.topo('Pagamento seguro', this.plano.preco, true) +
+        `<div class="pg-caixa">
+           <div class="pg-carregando" id="pgCarregando">
+             <span class="pontos"><i></i><i></i><i></i></span>
+             <span>A abrir a página do banco…</span>
+           </div>
+           <iframe id="pgFrame" src="${url}" class="pg-quadro" title="Pagamento"
+                   allow="payment" loading="eager" style="opacity:0;"></iframe>
+         </div>
+         <div class="pg-nota" id="pgNota">Preenche os dados do cartão acima para concluir.</div>
+         <button class="btn btn-calmo" id="pgJaPaguei" style="margin-top:10px;display:none;">Já paguei — verificar</button>`);
+
+      this.ligarTopo(() => { this.pararVigia(); this.escolherMetodo(); });
+
+      const frame = document.getElementById('pgFrame');
+      frame.onload = () => {
+        const aviso = document.getElementById('pgCarregando');
+        if(aviso) aviso.remove();
+        frame.style.opacity = '1';
+      };
+      // Rede lenta: mostra assim mesmo ao fim de 6 segundos
+      setTimeout(() => {
+        const aviso = document.getElementById('pgCarregando');
+        if(aviso){ aviso.remove(); frame.style.opacity = '1'; }
+      }, 6000);
+
+      // O botão de verificar só faz sentido depois de a pessoa ter tempo de pagar
+      setTimeout(() => {
+        const b = document.getElementById('pgJaPaguei');
+        const n = document.getElementById('pgNota');
+        if(b){
+          b.style.display = 'block';
+          b.onclick = ev => this.verificar(ev.currentTarget);
+        }
+        if(n) n.textContent = 'Assim que o banco confirmar, libertamos o teu plano.';
+      }, 20000);
+
+      this.vigiar();
+
+    }catch(e){
+      this.folha(this.topo('Cartão', this.plano.preco, true) +
+        '<div class="pg-erro" style="display:block;">Não consegui abrir o pagamento. ' + e.message + '</div>');
+      this.ligarTopo(() => this.escolherMetodo());
+    }
+  },
+
+  // Vai perguntando ao Bubble se o pagamento já entrou
+  vigiar(){
+    this.pararVigia();
+    let tentativas = 0;
+    this.vigia = setInterval(async () => {
+      tentativas++;
+      if(tentativas > 60){ this.pararVigia(); return; }   // desiste ao fim de ~3 min
+      try{
+        const r = await Rede.correr('estado_pagamento', {plano:this.plano.id});
+        if(r && (r.estado === 'completed' || r.estado === 'pago')){
+          this.pararVigia();
+          this.sucesso(r.transacao || '');
+        }
+      }catch(err){}
+    }, 3000);
+  },
+
+  pararVigia(){ if(this.vigia){ clearInterval(this.vigia); this.vigia = null; } },
+
+  async verificar(botao){
+    botao.disabled = true;
+    botao.innerHTML = 'A verificar <span class="pontos"><i></i><i></i><i></i></span>';
+    try{
+      const r = await Rede.correr('estado_pagamento', {plano:this.plano.id});
+      if(r && (r.estado === 'completed' || r.estado === 'pago')){
+        this.pararVigia();
+        return this.sucesso(r.transacao || '');
+      }
+      botao.disabled = false;
+      botao.textContent = 'Ainda não entrou — verificar de novo';
+    }catch(e){
+      botao.disabled = false;
+      botao.textContent = 'Já paguei — verificar';
+    }
+  },
+
+  sucesso(transacao){
+    this.folha(`
+      <div style="text-align:center;padding:26px 6px 10px;">
+        <div style="width:62px;height:62px;margin:0 auto 18px;border-radius:50%;background:rgba(43,122,111,.12);display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg>
+        </div>
+        <div style="font-family:'Yusei Magic',cursive;font-size:19px;margin-bottom:8px;">Pagamento recebido</div>
+        <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.6;">O ${this.plano.nome} já está ativo.
+          ${transacao ? '<br><span style="font-size:12px;">Ref. ' + transacao + '</span>' : ''}</p>
+      </div>
+      <button class="btn" id="pgFim" style="margin-top:14px;">Continuar a aprender</button>`);
+
+    document.getElementById('pgFim').onclick = async () => {
+      this.fechar();
+      await Nucleo.carregarUtilizador();
+      Rota.ir('inicio');
+    };
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: ASSISTENTE
+   ══════════════════════════════════════════════════════════ */
+const SUGESTOES = [
+  {r:'Regra de gramática',    m:'Explica-me uma regra de gramática'},
+  {r:'Diferença de palavras', m:'Qual a diferença entre estas duas palavras?'},
+  {r:'Como pronunciar',       m:'Como pronuncio esta palavra?'}
+];
+
+const Assistente = {
+  historico:[], aEsperar:false,
+
+  pintar(){
+    document.getElementById('assistenteConteudo').innerHTML = `
+      <div id="asstFio">${this.historico.length ? '' : this.boasVindas()}</div>
+      <div class="asst-barra">
+        <textarea id="asstTexto" rows="1" placeholder="Escreve a tua dúvida..."></textarea>
+        <button id="asstEnviar" aria-label="Enviar">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M2 21 23 12 2 3v7l15 2-15 2z"/></svg>
+        </button>
+      </div>`;
+
+    if(this.historico.length) this.repintarFio(); else this.ligarSugestoes();
+
+    const caixa = document.getElementById('asstTexto');
+    caixa.oninput = () => {
+      caixa.style.height = 'auto';
+      caixa.style.height = Math.min(caixa.scrollHeight, 110) + 'px';
+    };
+    caixa.onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); this.enviar(); } };
+    document.getElementById('asstEnviar').onclick = () => this.enviar();
+  },
+
+  boasVindas(){
+    return `<div class="asst-vazio">
+      <div class="t">Olá! 👋</div>
+      <p>Pergunta-me o que quiseres — posso explicar, dar exemplos, e até propor um exercício.</p>
+      <div class="asst-sugs">
+        ${SUGESTOES.map(s => `<button class="asst-sug" data-sug="${s.m}">${s.r}</button>`).join('')}
+      </div></div>`;
+  },
+
+  ligarSugestoes(){
+    document.querySelectorAll('[data-sug]').forEach(b => {
+      b.onclick = () => { document.getElementById('asstTexto').value = b.dataset.sug; this.enviar(); };
+    });
+  },
+
+  repintarFio(){
+    const fio = document.getElementById('asstFio');
+    fio.innerHTML = this.historico.map(h => `
+      <div class="asst-linha ${h.de === 'eu' ? 'eu' : 'ia'}">
+        <div class="asst-bolha">${h.texto}</div>
+        ${h.de === 'ia' ? `<button class="asst-ouvir" data-falar="${h.texto.replace(/"/g,'&quot;').slice(0,400)}">
+          <svg viewBox="0 0 24 24" fill="var(--teal)" width="10" height="10"><path d="M8 5v14l11-7z"/></svg> Ouvir</button>` : ''}
+      </div>`).join('') + (this.aEsperar ?
+      '<div class="asst-linha ia"><div class="asst-bolha"><span class="pontos"><i></i><i></i><i></i></span></div></div>' : '');
+
+    fio.querySelectorAll('[data-falar]').forEach(b => b.onclick = () => this.falar(b.dataset.falar));
+    fio.scrollTop = fio.scrollHeight;
+  },
+
+  async enviar(){
+    const caixa = document.getElementById('asstTexto');
+    const texto = caixa.value.trim();
+    if(!texto || this.aEsperar) return;
+
+    this.historico.push({de:'eu', texto});
+    caixa.value = ''; caixa.style.height = 'auto';
+    this.aEsperar = true;
+    this.repintarFio();
+
+    try{
+      const r = await Rede.correr('assistente', {
+        mensagem:texto,
+        historico:JSON.stringify(this.historico.slice(0,-1)),
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+      this.aEsperar = false;
+      this.historico.push({de:'ia', texto:(r.resposta || '').trim() || 'Não consegui responder agora.'});
+    }catch(e){
+      this.aEsperar = false;
+      this.historico.push({de:'ia', texto:'Não consegui responder agora. Tenta outra vez, por favor. 🙏'});
+    }
+    this.repintarFio();
+  },
+
+  falar(texto){
+    if(!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    const mapa = {pt:'pt-PT',en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',
+                  zh:'zh-CN',ja:'ja-JP',ko:'ko-KR',ar:'ar-SA',ru:'ru-RU',hi:'hi-IN',
+                  nl:'nl-NL',sv:'sv-SE',tr:'tr-TR'};
+    u.lang = mapa[Estado.origem] || 'pt-PT';
+    speechSynthesis.speak(u);
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: EXERCÍCIOS
+   Gerados a partir das frases da própria lição.
+   Instantâneos, sem custo, e sempre sobre o que acabou de ver.
+   ══════════════════════════════════════════════════════════ */
+const Exercicios = {
+  lista:[], idx:0, acertos:0, licao:null,
+
+  baralhar(a){
+    const c = a.slice();
+    for(let i = c.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [c[i], c[j]] = [c[j], c[i]];
+    }
+    return c;
+  },
+
+  // Constrói 8 exercícios variados a partir das frases
+  montar(licao){
+    this.licao = licao;
+    const fr = (licao.frases || []).filter(f => (f.alvo || f.en) && (f.origem || f.pt));
+    if(fr.length < 4) return false;
+
+    const alvo   = f => f.alvo   || f.en || '';
+    const origem = f => f.origem || f.pt || '';
+    const outras = (certa, campo) =>
+      this.baralhar(fr.filter(f => f !== certa)).slice(0,3).map(campo);
+
+    const base = this.baralhar(fr).slice(0, 8);
+    this.lista = base.map((f, i) => {
+      const tipo = i % 3;
+
+      if(tipo === 0){
+        // Traduzir: mostra a frase na língua-alvo, escolhe o significado
+        const opcoes = this.baralhar([origem(f), ...outras(f, origem)]);
+        return {tipo:'traduzir', enunciado:alvo(f), pergunta:'O que significa?',
+                opcoes, correta:opcoes.indexOf(origem(f))};
+      }
+
+      if(tipo === 1){
+        // Dizer: mostra o significado, escolhe a frase certa
+        const opcoes = this.baralhar([alvo(f), ...outras(f, alvo)]);
+        return {tipo:'dizer', enunciado:origem(f), pergunta:'Como se diz?',
+                opcoes, correta:opcoes.indexOf(alvo(f))};
+      }
+
+      // Completar: esconde a palavra mais longa da frase
+      const palavras = alvo(f).split(' ');
+      let alvoIdx = 0;
+      palavras.forEach((p, k) => {
+        if(p.replace(/[^\p{L}]/gu,'').length > palavras[alvoIdx].replace(/[^\p{L}]/gu,'').length) alvoIdx = k;
+      });
+      const certa = palavras[alvoIdx].replace(/[.,!?;:]$/,'');
+      const buraco = palavras.map((p,k) => k === alvoIdx ? '____' : p).join(' ');
+
+      const bancoPalavras = fr.filter(x => x !== f)
+        .flatMap(x => alvo(x).split(' '))
+        .map(p => p.replace(/[.,!?;:]$/,''))
+        .filter(p => p.replace(/[^\p{L}]/gu,'').length > 2 && p.toLowerCase() !== certa.toLowerCase());
+
+      const distr = this.baralhar([...new Set(bancoPalavras)]).slice(0,3);
+      while(distr.length < 3) distr.push('—');
+      const opcoes = this.baralhar([certa, ...distr]);
+
+      return {tipo:'completar', enunciado:buraco, pergunta:origem(f),
+              opcoes, correta:opcoes.indexOf(certa)};
+    });
+
+    this.idx = 0; this.acertos = 0;
+    return true;
+  },
+
+  abrir(licao){
+    if(!this.montar(licao)){
+      Jogo.premiar('licao', {tema:licao.tema});
+      return Licoes.verLicao();
+    }
+    Rota.mostrarModulo();
+    this.ver();
+  },
+
+  ver(){
+    const e = this.lista[this.idx];
+    const total = this.lista.length;
+    const etiqueta = {traduzir:'Traduz', dizer:'Como se diz', completar:'Completa'}[e.tipo];
+
+    document.getElementById('v-modulo').innerHTML = `
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:20px;">
+        <button class="ex-sair" id="exSair" aria-label="Sair">✕</button>
+        <div style="flex:1;height:6px;background:var(--linha);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${this.idx/total*100}%;background:var(--lima);transition:width .3s;"></div>
+        </div>
+        <span style="font-size:12px;color:var(--texto-suave);font-weight:600;">${this.idx+1}/${total}</span>
+      </div>
+
+      <div class="ex-etiqueta">${etiqueta}</div>
+      <div class="ex-caixa">
+        <div class="ex-enunciado">${e.enunciado}</div>
+        <div class="ex-apoio">${e.pergunta}</div>
+      </div>
+
+      <div class="escolhas" id="exOpcoes">
+        ${e.opcoes.map((o,i) => `<button class="escolha" data-op="${i}">${o}</button>`).join('')}
+      </div>
+      <div id="exReacao"></div>`;
+
+    document.getElementById('exSair').onclick = () => Licoes.verLicao();
+    document.querySelectorAll('#exOpcoes [data-op]').forEach(b => {
+      b.onclick = () => this.responder(Number(b.dataset.op), b);
+    });
+  },
+
+  responder(escolha, botao){
+    const e = this.lista[this.idx];
+    const certo = escolha === e.correta;
+    if(certo) this.acertos++;
+
+    document.querySelectorAll('#exOpcoes [data-op]').forEach(b => {
+      b.disabled = true;
+      const i = Number(b.dataset.op);
+      if(i === e.correta) b.classList.add('op-certa');
+      else if(b === botao) b.classList.add('op-errada');
+    });
+
+    document.getElementById('exReacao').innerHTML = `
+      <div class="ex-reacao ${certo ? 'boa' : 'ma'}">
+        <div class="ex-reacao-t">${certo ? 'Certo!' : 'A resposta era:'}</div>
+        ${!certo ? `<div class="ex-reacao-d">${e.opcoes[e.correta]}</div>` : ''}
+      </div>
+      <button class="btn" id="exProx">${this.idx + 1 < this.lista.length ? 'Seguinte' : 'Ver resultado'}</button>`;
+
+    document.getElementById('exProx').onclick = () => {
+      this.idx++;
+      if(this.idx < this.lista.length) this.ver();
+      else this.resultado();
+    };
+  },
+
+  resultado(){
+    const total = this.lista.length;
+    const pct = Math.round(this.acertos / total * 100);
+    const xp = Jogo.premiar('exercicio', {acertos:this.acertos, total, tema:this.licao.tema});
+
+    let titulo = 'Continua a praticar', emoji = '💪';
+    if(pct >= 90){ titulo = 'Impecável!'; emoji = '🏆'; }
+    else if(pct >= 70){ titulo = 'Muito bem!'; emoji = '🎉'; }
+    else if(pct >= 50){ titulo = 'Estás quase lá'; emoji = '👍'; }
+
+    document.getElementById('v-modulo').innerHTML = `
+      <div style="text-align:center;padding:24px 6px;">
+        <div style="font-size:52px;margin-bottom:12px;">${emoji}</div>
+        <h1 style="font-size:23px;margin-bottom:8px;">${titulo}</h1>
+        <p style="color:var(--texto-suave);font-size:14px;">Acertaste ${this.acertos} de ${total}</p>
+
+        <div class="ex-anel">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--linha)" stroke-width="11"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--lima)" stroke-width="11"
+              stroke-linecap="round" transform="rotate(-90 60 60)"
+              stroke-dasharray="314" stroke-dashoffset="${314 - 314*pct/100}"/>
+          </svg>
+          <div class="ex-anel-n">${pct}%</div>
+        </div>
+
+        <div class="ex-xp">+${xp} XP</div>
+      </div>
+
+      <button class="btn" id="exRepetir" style="margin-bottom:10px;">Repetir os exercícios</button>
+      <button class="btn btn-calmo" id="exVoltar">Voltar à lição</button>`;
+
+    document.getElementById('exRepetir').onclick = () => this.abrir(this.licao);
+    document.getElementById('exVoltar').onclick = () => Licoes.verLicao();
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: JOGO (XP · sequência · conquistas · meta diária)
+   ══════════════════════════════════════════════════════════ */
+const XP_POR = {
+  licao:20, exercicio_base:10, exercicio_certo:3,
+  gravacao:15, conversa:30, escrita:25, vocabulario:12
+};
+
+const CONQUISTAS = [
+  {id:'primeira',  ic:'🌱', nome:'Primeiro passo',    d:'Concluíste a tua primeira lição',      ver:e => e.licoes >= 1},
+  {id:'dez',       ic:'📚', nome:'Dez lições',        d:'Chegaste às 10 lições',                ver:e => e.licoes >= 10},
+  {id:'cinquenta', ic:'🎓', nome:'Cinquenta lições',  d:'Meio caminho andado',                  ver:e => e.licoes >= 50},
+  {id:'falante',   ic:'🗣', nome:'Primeira conversa', d:'Falaste com a professora',             ver:e => e.conversas >= 1},
+  {id:'escritor',  ic:'✍️', nome:'Primeiro texto',    d:'Escreveste e foste corrigido',         ver:e => e.escritas >= 1},
+  {id:'semana',    ic:'🔥', nome:'Uma semana',        d:'7 dias seguidos a praticar',           ver:e => e.sequencia >= 7},
+  {id:'mes',       ic:'⚡️', nome:'Um mês',            d:'30 dias seguidos — impressionante',    ver:e => e.sequencia >= 30},
+  {id:'mil',       ic:'💎', nome:'Mil XP',            d:'Somaste 1000 pontos',                  ver:e => e.xp >= 1000},
+  {id:'perfeito',  ic:'🏆', nome:'Sem falhar uma',    d:'100% num conjunto de exercícios',      ver:e => e.perfeitos >= 1}
+];
+
+const METAS = [
+  {id:'leve',   xp:50,  nome:'Leve',    d:'cerca de 5 minutos'},
+  {id:'normal', xp:100, nome:'Normal',  d:'cerca de 10 minutos'},
+  {id:'serio',  xp:200, nome:'A sério', d:'cerca de 20 minutos'}
+];
+
+const Jogo = {
+  e:{xp:0, xpHoje:0, sequencia:0, ultimoDia:'', licoes:0, conversas:0,
+     escritas:0, perfeitos:0, meta:'normal', conquistas:[]},
+
+  hoje(){ return new Date().toISOString().slice(0,10); },
+
+  repor(){
+    try{
+      const g = JSON.parse(localStorage.getItem('linguai:jogo') || '{}');
+      Object.assign(this.e, g);
+    }catch(err){}
+    this.verificarDia();
+  },
+
+  guardar(){
+    try{ localStorage.setItem('linguai:jogo', JSON.stringify(this.e)); }catch(err){}
+    Rede.correr('guardar_jogo', this.e).catch(() => {});
+  },
+
+  // Mantém ou parte a sequência, e zera o contador do dia
+  verificarDia(){
+    const h = this.hoje();
+    if(this.e.ultimoDia === h) return;
+
+    if(this.e.ultimoDia){
+      const ontem = new Date(Date.now() - 864e5).toISOString().slice(0,10);
+      if(this.e.ultimoDia !== ontem) this.e.sequencia = 0;
+    }
+    this.e.xpHoje = 0;
+  },
+
+  metaAtual(){ return METAS.find(m => m.id === this.e.meta) || METAS[1]; },
+
+  premiar(tipo, dados){
+    this.verificarDia();
+    let xp = 0;
+
+    if(tipo === 'licao'){ xp = XP_POR.licao; this.e.licoes++; }
+    else if(tipo === 'exercicio'){
+      xp = XP_POR.exercicio_base + dados.acertos * XP_POR.exercicio_certo;
+      if(dados.acertos === dados.total) this.e.perfeitos++;
+    }
+    else if(tipo === 'gravacao')    xp = XP_POR.gravacao;
+    else if(tipo === 'conversa'){   xp = XP_POR.conversa; this.e.conversas++; }
+    else if(tipo === 'escrita'){    xp = XP_POR.escrita;  this.e.escritas++; }
+    else if(tipo === 'vocabulario') xp = XP_POR.vocabulario;
+
+    this.e.xp += xp;
+    this.e.xpHoje += xp;
+
+    // Sequência: conta o dia assim que há atividade
+    const h = this.hoje();
+    if(this.e.ultimoDia !== h){ this.e.sequencia++; this.e.ultimoDia = h; }
+
+    const novas = this.conquistasNovas();
+    this.guardar();
+    if(novas.length) setTimeout(() => this.mostrarConquista(novas[0]), 700);
+    return xp;
+  },
+
+  conquistasNovas(){
+    const ganhas = [];
+    CONQUISTAS.forEach(c => {
+      if(this.e.conquistas.includes(c.id)) return;
+      if(c.ver(this.e)){ this.e.conquistas.push(c.id); ganhas.push(c); }
+    });
+    return ganhas;
+  },
+
+  mostrarConquista(c){
+    const f = document.createElement('div');
+    f.className = 'folha-fundo';
+    f.innerHTML = `
+      <div class="folha" style="text-align:center;padding-top:30px;">
+        <div style="font-size:14px;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;">Nova conquista</div>
+        <div class="conq-selo">${c.ic}</div>
+        <div style="font-family:'Yusei Magic',cursive;font-size:20px;margin-bottom:8px;">${c.nome}</div>
+        <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;margin-bottom:22px;">${c.d}</p>
+        <button class="btn" id="conqOk">Boa!</button>
+      </div>`;
+    document.body.appendChild(f);
+    f.querySelector('#conqOk').onclick = () => f.remove();
+    f.onclick = ev => { if(ev.target === f) f.remove(); };
+  },
+
+  // Cartão para o ecrã Início
+  cartao(){
+    const meta = this.metaAtual();
+    const pct = Math.min(100, Math.round(this.e.xpHoje / meta.xp * 100));
+    const feito = this.e.xpHoje >= meta.xp;
+
+    return `
+      <div class="jogo-linha">
+        <div class="jogo-selo ${this.e.sequencia > 0 ? 'aceso' : ''}">
+          <div class="n">${this.e.sequencia}</div>
+          <div class="r">🔥 dias</div>
+        </div>
+        <div class="jogo-selo">
+          <div class="n">${this.e.xp}</div>
+          <div class="r">⭐ XP</div>
+        </div>
+        <div class="jogo-selo">
+          <div class="n">${this.e.conquistas.length}</div>
+          <div class="r">🏅 conquistas</div>
+        </div>
+      </div>
+
+      <div class="meta-cartao ${feito ? 'meta-feita' : ''}">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
+          <span style="font-size:13.5px;font-weight:600;">
+            ${feito ? '✓ Meta de hoje cumprida' : 'Meta de hoje · ' + meta.nome}
+          </span>
+          <span style="font-size:12.5px;color:var(--texto-suave);">${this.e.xpHoje}/${meta.xp} XP</span>
+        </div>
+        <div class="meta-barra"><div style="width:${pct}%"></div></div>
+      </div>`;
+  },
+
+  // Ecrã de conquistas, para o Perfil
+  painelConquistas(){
+    return `<div class="conq-grelha">
+      ${CONQUISTAS.map(c => {
+        const tem = this.e.conquistas.includes(c.id);
+        return `<div class="conq ${tem ? '' : 'conq-off'}" title="${c.d}">
+          <div class="conq-ic">${c.ic}</div>
+          <div class="conq-n">${c.nome}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  },
+
+  escolherMeta(){
+    const f = document.createElement('div');
+    f.className = 'folha-fundo';
+    f.innerHTML = `
+      <div class="folha">
+        <div class="folha-topo">
+          <div style="flex:1;">
+            <div style="font-family:'Yusei Magic',cursive;font-size:17px;">Meta diária</div>
+            <div style="font-size:12.5px;color:var(--texto-suave);margin-top:2px;">Quanto queres praticar por dia?</div>
+          </div>
+          <button class="folha-x" id="metaX">✕</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          ${METAS.map(m => `
+            <button class="escolha" data-meta="${m.id}" style="${m.id === this.e.meta ? 'border-color:var(--teal);background:rgba(43,122,111,.06);' : ''}">
+              <span><span style="display:block;">${m.nome}</span>
+              <span style="display:block;font-size:12px;color:var(--texto-suave);font-weight:400;margin-top:2px;">${m.xp} XP · ${m.d}</span></span>
+            </button>`).join('')}
+        </div>
+      </div>`;
+    document.body.appendChild(f);
+    f.querySelector('#metaX').onclick = () => f.remove();
+    f.onclick = ev => { if(ev.target === f) f.remove(); };
+    f.querySelectorAll('[data-meta]').forEach(b => {
+      b.onclick = () => { this.e.meta = b.dataset.meta; this.guardar(); f.remove(); Rota.ir('inicio'); };
+    });
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: LOGIN
+   As palavras-passe vão para o Bubble, que trata da sessão.
+   ══════════════════════════════════════════════════════════ */
+const Login = {
+  modo:'entrar',   // 'entrar' | 'criar' | 'esqueci'
+
+  abrir(){
+    document.body.classList.add('em-login');
+    document.querySelectorAll('.vista').forEach(v => v.classList.remove('on'));
+    document.getElementById('v-login').classList.add('on');
+    this.ver();
+  },
+
+  fechar(){
+    document.body.classList.remove('em-login');
+    document.getElementById('v-login').classList.remove('on');
+  },
+
+  ver(){
+    const criar = this.modo === 'criar';
+    const esqueci = this.modo === 'esqueci';
+
+    document.getElementById('v-login').innerHTML = `
+      <div class="lg-topo">
+        <svg viewBox="0 0 32 32" fill="none" class="lg-marca">
+          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#1E0D42" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="1.9" fill="#1E0D42"/>
+          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#E2574C" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+        <div class="lg-nome">Lingu<b>.AI</b></div>
+        <p class="lg-lema">${esqueci
+          ? 'Escreve o teu email e enviamos-te um link.'
+          : criar ? 'Cria a tua conta e escolhe as tuas línguas.'
+                  : 'Bem-vindo de volta.'}</p>
+      </div>
+
+      ${criar ? `
+        <label class="rotulo">Nome</label>
+        <input id="lgNome" class="campo" type="text" autocomplete="name" placeholder="Como te chamas?">` : ''}
+
+      <label class="rotulo" ${criar ? 'style="margin-top:14px;"' : ''}>Email</label>
+      <input id="lgEmail" class="campo" type="email" autocomplete="email"
+             inputmode="email" placeholder="o.teu@email.com">
+
+      ${!esqueci ? `
+        <label class="rotulo" style="margin-top:14px;">Palavra-passe</label>
+        <div class="lg-senha">
+          <input id="lgSenha" class="campo" type="password"
+                 autocomplete="${criar ? 'new-password' : 'current-password'}"
+                 placeholder="${criar ? 'Mínimo 8 caracteres' : 'A tua palavra-passe'}">
+          <button class="lg-olho" id="lgOlho" type="button" aria-label="Mostrar">👁</button>
+        </div>` : ''}
+
+      <div id="lgErro" class="pg-erro" style="display:none;"></div>
+
+      <button class="btn" id="lgAcao" style="margin-top:20px;">
+        ${esqueci ? 'Enviar link' : criar ? 'Criar conta' : 'Entrar'}
+      </button>
+
+      ${!esqueci ? `<button class="lg-link" id="lgEsqueci">Esqueci-me da palavra-passe</button>` : ''}
+
+      <div class="lg-fundo">
+        ${esqueci
+          ? '<span>Lembraste-te?</span> <button class="lg-troca" data-modo="entrar">Entrar</button>'
+          : criar
+            ? '<span>Já tens conta?</span> <button class="lg-troca" data-modo="entrar">Entrar</button>'
+            : '<span>Ainda não tens conta?</span> <button class="lg-troca" data-modo="criar">Criar conta</button>'}
+      </div>`;
+
+    const olho = document.getElementById('lgOlho');
+    if(olho) olho.onclick = () => {
+      const s = document.getElementById('lgSenha');
+      s.type = s.type === 'password' ? 'text' : 'password';
+      olho.textContent = s.type === 'password' ? '👁' : '🙈';
+    };
+
+    const esq = document.getElementById('lgEsqueci');
+    if(esq) esq.onclick = () => { this.modo = 'esqueci'; this.ver(); };
+
+    document.querySelectorAll('#v-login [data-modo]').forEach(b => {
+      b.onclick = () => { this.modo = b.dataset.modo; this.ver(); };
+    });
+
+    document.getElementById('lgAcao').onclick = e => this.agir(e.currentTarget);
+
+    ['lgEmail','lgSenha','lgNome'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.onkeydown = ev => { if(ev.key === 'Enter') document.getElementById('lgAcao').click(); };
+    });
+  },
+
+  verConfirmar(email){
+    document.getElementById('v-login').innerHTML = `
+      <div class="lg-topo" style="padding-top:44px;">
+        <div style="font-size:48px;margin-bottom:14px;">📬</div>
+        <div class="lg-nome" style="font-size:21px;">Escreve o código</div>
+        <p class="lg-lema">Enviámos 6 dígitos para<br><b>${email}</b></p>
+      </div>
+
+      <div class="cod-caixa" id="codCaixa">
+        ${[0,1,2,3,4,5].map(i => `<input class="cod-d" id="cod${i}" type="tel" inputmode="numeric" maxlength="1" autocomplete="${i===0?'one-time-code':'off'}">`).join('')}
+      </div>
+
+      <div id="lgConfErro" class="pg-erro" style="display:none;"></div>
+
+      <button class="btn" id="lgVerificar" style="margin-top:20px;">Confirmar</button>
+      <button class="lg-link" id="lgReenviar">Não recebi — enviar outro</button>
+
+      <div class="lg-fundo">
+        <button class="lg-troca" id="lgOutroEmail">Usar outro email</button>
+      </div>`;
+
+    document.getElementById('lgOutroEmail').onclick = () => {
+      try{ localStorage.removeItem('linguai:porConfirmar'); }catch(err){}
+      this.modo = 'entrar';
+      this.ver();
+    };
+
+    const casas = [0,1,2,3,4,5].map(i => document.getElementById('cod' + i));
+
+    casas.forEach((casa, i) => {
+      casa.oninput = () => {
+        casa.value = casa.value.replace(/\D/g, '');
+        if(casa.value && i < 5) casas[i+1].focus();
+        if(casas.every(x => x.value)) document.getElementById('lgVerificar').click();
+      };
+      casa.onkeydown = ev => {
+        if(ev.key === 'Backspace' && !casa.value && i > 0) casas[i-1].focus();
+      };
+      // Colar o código de uma vez
+      casa.onpaste = ev => {
+        ev.preventDefault();
+        const texto = (ev.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+        texto.split('').forEach((d, k) => { if(casas[k]) casas[k].value = d; });
+        if(texto.length === 6) document.getElementById('lgVerificar').click();
+        else if(casas[texto.length]) casas[texto.length].focus();
+      };
+    });
+    casas[0].focus();
+
+    document.getElementById('lgVerificar').onclick = async e => {
+      const bt = e.currentTarget;
+      const erro = document.getElementById('lgConfErro');
+      const codigo = casas.map(x => x.value).join('');
+
+      erro.style.display = 'none';
+      if(codigo.length !== 6){
+        erro.textContent = 'Escreve os 6 dígitos.';
+        erro.style.display = 'block';
+        return;
+      }
+
+      bt.disabled = true;
+      bt.innerHTML = 'A confirmar <span class="pontos"><i></i><i></i><i></i></span>';
+
+      try{
+        const r = await Rede.correr('confirmar_codigo', {email, codigo});
+        if(r && r.ok === 'yes'){
+          try{ localStorage.removeItem('linguai:porConfirmar'); }catch(err){}
+          this.fechar();
+          await Nucleo.carregarUtilizador();
+          if(Entrada.precisa()) Entrada.abrir();
+          else{ Nucleo.pintarPar(); Nucleo.pintarNav(); Rota.ir('inicio'); }
+          return;
+        }
+        throw new Error('errado');
+      }catch(err){
+        bt.disabled = false;
+        bt.textContent = 'Confirmar';
+        erro.textContent = 'Código errado. Confirma os 6 dígitos do email.';
+        erro.style.display = 'block';
+        casas.forEach(x => { x.value = ''; });
+        casas[0].focus();
+      }
+    };
+
+    document.getElementById('lgReenviar').onclick = async e => {
+      const bt = e.currentTarget;
+      bt.disabled = true;
+      bt.textContent = 'A enviar…';
+      try{
+        await Rede.correr('reenviar_codigo', {email});
+        bt.textContent = 'Enviado ✓ — vê o teu email';
+        setTimeout(() => { bt.disabled = false; bt.textContent = 'Não recebi — enviar outro'; }, 30000);
+      }catch(err){
+        bt.disabled = false;
+        bt.textContent = 'Não recebi — enviar outro';
+      }
+    };
+  },
+
+  async agir(botao){
+    const erro = document.getElementById('lgErro');
+    const falhar = m => {
+      erro.textContent = m; erro.style.display = 'block';
+      botao.disabled = false;
+      botao.textContent = this.modo === 'esqueci' ? 'Enviar link' : this.modo === 'criar' ? 'Criar conta' : 'Entrar';
+    };
+    erro.style.display = 'none';
+
+    const email = (document.getElementById('lgEmail').value || '').trim().toLowerCase();
+    const senhaEl = document.getElementById('lgSenha');
+    const senha = senhaEl ? senhaEl.value : '';
+    const nomeEl = document.getElementById('lgNome');
+    const nome = nomeEl ? nomeEl.value.trim() : '';
+
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return falhar('Escreve um email válido.');
+    if(this.modo === 'criar' && !nome) return falhar('Escreve o teu nome.');
+    if(this.modo !== 'esqueci' && senha.length < 8) return falhar('A palavra-passe tem de ter pelo menos 8 caracteres.');
+
+    botao.disabled = true;
+    botao.innerHTML = 'Um momento <span class="pontos"><i></i><i></i><i></i></span>';
+
+    try{
+      if(this.modo === 'esqueci'){
+        await Rede.correr('recuperar_senha', {email});
+        document.getElementById('v-login').innerHTML = `
+          <div class="lg-topo" style="padding-top:60px;">
+            <div style="font-size:48px;margin-bottom:14px;">📬</div>
+            <div class="lg-nome" style="font-size:20px;">Verifica o teu email</div>
+            <p class="lg-lema">Se houver conta com <b>${email}</b>, enviámos um link para criares uma nova palavra-passe.</p>
+          </div>
+          <button class="btn btn-calmo" id="lgVoltar" style="margin-top:22px;">Voltar</button>`;
+        document.getElementById('lgVoltar').onclick = () => { this.modo = 'entrar'; this.ver(); };
+        return;
+      }
+
+      let r;
+      if(this.modo === 'criar'){
+        r = await Rede.correr('criar_conta', {email, senha, nome});
+        // O criar_conta não devolve token — entramos logo a seguir para o obter
+        if(!Rede.token()){
+          try{ await Rede.correr('entrar', {email, senha}); }catch(err){}
+        }
+      }else{
+        r = await Rede.correr('entrar', {email, senha});
+      }
+
+      if(r && r.erro) return falhar(r.erro);
+
+      // Conta criada mas email por confirmar
+      if(this.modo === 'criar' || (r && r.confirmado === 'nao')){
+        try{ localStorage.setItem('linguai:porConfirmar', email); }catch(err){}
+        return this.verConfirmar(email);
+      }
+
+      this.fechar();
+      await Nucleo.carregarUtilizador();
+      if(Entrada.precisa()) Entrada.abrir();
+      else{ Nucleo.pintarPar(); Nucleo.pintarNav(); Rota.ir('inicio'); }
+
+    }catch(e){
+      falhar(this.modo === 'criar'
+        ? 'Não consegui criar a conta. Talvez este email já esteja registado.'
+        : 'Email ou palavra-passe errados.');
+    }
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: CONVERSAÇÃO
+   Dois modos: falar ao vivo com a professora, ou ver um
+   diálogo de exemplo gerado na hora.
+   ══════════════════════════════════════════════════════════ */
+const TEMAS_CONVERSA = [
+  {t:'Saudações',            d:'Cumprimentar alguém',        n:'Iniciante'},
+  {t:'Apresentações',        d:'Dizer o teu nome',           n:'Iniciante'},
+  {t:'No restaurante',       d:'Pedir comida',               n:'Intermédio'},
+  {t:'Pedir direções',       d:'Encontrar um sítio',         n:'Intermédio'},
+  {t:'Nas compras',          d:'Comprar roupa',              n:'Iniciante'},
+  {t:'No aeroporto',         d:'Fazer o check-in',           n:'Intermédio'},
+  {t:'Marcar consulta',      d:'Falar com a clínica',        n:'Intermédio'},
+  {t:'Falar ao telefone',    d:'Uma chamada simples',        n:'Intermédio'},
+  {t:'Convidar um amigo',    d:'Combinar um encontro',       n:'Iniciante'},
+  {t:'No trabalho',          d:'Pedir algo a um colega',     n:'Avançado'},
+  {t:'No hotel',             d:'Fazer o check-in',           n:'Intermédio'},
+  {t:'No supermercado',      d:'Encontrar produtos',         n:'Iniciante'},
+  {t:'Numa emergência',      d:'Pedir ajuda depressa',       n:'Avançado'},
+  {t:'Falar do tempo',       d:'Conversa de circunstância',  n:'Iniciante'},
+  {t:'Numa entrevista',      d:'Falar de ti profissionalmente', n:'Avançado'},
+  {t:'Fazer uma reclamação', d:'Resolver um problema',       n:'Avançado'},
+  {t:'No banco',             d:'Abrir conta ou levantar',    n:'Avançado'},
+  {t:'Numa festa',           d:'Conhecer gente nova',        n:'Intermédio'}
+];
+
+const Conversa = {
+  modo:'vivo',                 // 'vivo' | 'modelos'
+  tema:null, nivel:'Intermédio',
+  historico:[], aFalar:false, aPensar:false,
+  gravador:null, pedacos:[], fluxo:null,
+  dialogos:{}, abertoIdx:-1,
+
+  abrir(){
+    Rota.mostrarModulo();
+    try{ this.modo = localStorage.getItem('linguai:convModo') || 'vivo'; }catch(e){}
+    this.ver();
+  },
+
+  guardarModo(){ try{ localStorage.setItem('linguai:convModo', this.modo); }catch(e){} },
+
+  cabeca(){
+    return `
+      <button class="voltar" id="cvSair">← ${t('voltar')}</button>
+      <div class="cv-abas">
+        <button class="cv-aba ${this.modo === 'vivo' ? 'on' : ''}" data-modo="vivo">💬 Ao vivo</button>
+        <button class="cv-aba ${this.modo === 'modelos' ? 'on' : ''}" data-modo="modelos">📖 Exemplos</button>
+      </div>`;
+  },
+
+  ligarCabeca(){
+    document.getElementById('cvSair').onclick = () => {
+      this.pararTudo();
+      if(this.tema && this.historico.length) { this.tema = null; this.historico = []; this.ver(); }
+      else Rota.ir('praticar');
+    };
+    document.querySelectorAll('#v-modulo [data-modo]').forEach(b => {
+      b.onclick = () => { this.modo = b.dataset.modo; this.guardarModo(); this.ver(); };
+    });
+  },
+
+  ver(){
+    if(this.modo === 'modelos') return this.verModelos();
+    if(this.tema) return this.verSala();
+    this.verTemas();
+  },
+
+  // ── Escolher tema (ao vivo) ───────────────────────────
+  verTemas(){
+    document.getElementById('v-modulo').innerHTML = this.cabeca() + `
+      <h1 style="font-size:22px;margin-bottom:6px;">Sobre o que queres falar?</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:16px;">
+        Tu falas, a professora responde por voz.</p>
+
+      <div class="cv-niveis">
+        ${['Iniciante','Intermédio','Avançado'].map(n =>
+          `<button class="cv-nivel ${this.nivel===n?'on':''}" data-nv="${n}">${n}</button>`).join('')}
+      </div>
+
+      <div class="escolhas" style="margin-top:16px;">
+        ${TEMAS_CONVERSA.map((x,i) => `
+          <button class="escolha" data-tema="${i}">
+            <span><span style="display:block;">${x.t}</span>
+            <span style="display:block;font-size:12px;color:var(--texto-suave);font-weight:400;margin-top:2px;">${x.d}</span></span>
+            <span class="n">${x.n}</span>
+          </button>`).join('')}
+      </div>`;
+
+    this.ligarCabeca();
+    document.querySelectorAll('#v-modulo [data-nv]').forEach(b => {
+      b.onclick = () => { this.nivel = b.dataset.nv; this.ver(); };
+    });
+    document.querySelectorAll('#v-modulo [data-tema]').forEach(b => {
+      b.onclick = () => {
+        this.tema = TEMAS_CONVERSA[Number(b.dataset.tema)].t;
+        this.historico = [];
+        this.verSala();
+      };
+    });
+  },
+
+  // ── Sala de conversa ──────────────────────────────────
+  verSala(){
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="cvSair">← Escolher outro tema</button>
+      <div class="cv-topo">
+        <div>
+          <div class="cv-tema">${this.tema}</div>
+          <div class="cv-sub">${this.nivel} · ${acharIdioma(Estado.destino, IDIOMAS[1]).n}</div>
+        </div>
+        ${this.historico.length >= 3 ? '<button class="cv-fim" id="cvTerminar">Terminar</button>' : ''}
+      </div>
+
+      <div class="cv-fio" id="cvFio"></div>
+
+      <div class="cv-palco">
+        <button class="gr-botao" id="cvMic" aria-label="Falar">
+          <svg viewBox="0 0 24 24" fill="#fff" width="26" height="26">
+            <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3z"/>
+            <path d="M18 11a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.9V22h2v-3.1A8 8 0 0 0 20 11z"/>
+          </svg>
+        </button>
+        <div class="gr-dica" id="cvDica">Toca e fala</div>
+      </div>`;
+
+    document.getElementById('cvSair').onclick = () => {
+      this.pararTudo(); this.tema = null; this.historico = []; this.ver();
+    };
+    const bt = document.getElementById('cvTerminar');
+    if(bt) bt.onclick = () => this.terminar();
+    document.getElementById('cvMic').onclick = () => this.alternarMic();
+    this.pintarFio();
+  },
+
+  pintarFio(){
+    const fio = document.getElementById('cvFio');
+    if(!fio) return;
+
+    if(!this.historico.length && !this.aPensar){
+      fio.innerHTML = `<div class="cv-vazio">
+        Toca no microfone e diz alguma coisa sobre <b>${this.tema.toLowerCase()}</b>.
+      </div>`;
+      return;
+    }
+
+    fio.innerHTML = this.historico.map(h => `
+      ${h.eu ? `<div class="asst-linha eu"><div class="asst-bolha">${h.eu}</div></div>` : ''}
+      ${h.ela ? `<div class="asst-linha ia">
+        <div class="asst-bolha">${h.ela}</div>
+        ${h.traducao ? `<div class="cv-trad">${h.traducao}</div>` : ''}
+        ${h.audio ? `<button class="asst-ouvir" data-aud="${h.audio}">
+          <svg viewBox="0 0 24 24" fill="var(--teal)" width="10" height="10"><path d="M8 5v14l11-7z"/></svg> Ouvir</button>` : ''}
+      </div>` : ''}`).join('') +
+      (this.aPensar ? '<div class="asst-linha ia"><div class="asst-bolha"><span class="pontos"><i></i><i></i><i></i></span></div></div>' : '');
+
+    fio.querySelectorAll('[data-aud]').forEach(b => {
+      b.onclick = () => { const a = new Audio(b.dataset.aud); a.play(); };
+    });
+    fio.scrollTop = fio.scrollHeight;
+  },
+
+  // ── Microfone ─────────────────────────────────────────
+  async alternarMic(){
+    const bt = document.getElementById('cvMic');
+    const dica = document.getElementById('cvDica');
+
+    if(this.aFalar){
+      if(this.gravador && this.gravador.state !== 'inactive') this.gravador.stop();
+      if(this.fluxo) this.fluxo.getTracks().forEach(t => t.stop());
+      this.aFalar = false;
+      bt.classList.remove('a-gravar');
+      dica.textContent = 'A enviar…';
+      return;
+    }
+
+    try{ this.fluxo = await navigator.mediaDevices.getUserMedia({audio:true}); }
+    catch(e){ dica.textContent = 'Sem acesso ao microfone.'; dica.classList.add('gr-dica-erro'); return; }
+
+    this.pedacos = [];
+    this.gravador = new MediaRecorder(this.fluxo);
+    this.gravador.ondataavailable = ev => { if(ev.data.size) this.pedacos.push(ev.data); };
+    this.gravador.onstop = () => this.enviarVoz();
+    this.gravador.start();
+    this.aFalar = true;
+    bt.classList.add('a-gravar');
+    dica.classList.remove('gr-dica-erro');
+    dica.textContent = 'A ouvir… toca para parar';
+  },
+
+  pararTudo(){
+    if(this.gravador && this.gravador.state !== 'inactive'){ this.gravador.onstop = null; this.gravador.stop(); }
+    if(this.fluxo){ this.fluxo.getTracks().forEach(t => t.stop()); this.fluxo = null; }
+    this.aFalar = false;
+  },
+
+  async enviarVoz(){
+    const dica = document.getElementById('cvDica');
+    this.aPensar = true;
+    this.pintarFio();
+
+    try{
+      const blob = new Blob(this.pedacos, {type:'audio/webm'});
+      const base64 = await new Promise((ok,f) => {
+        const l = new FileReader();
+        l.onload = () => ok(String(l.result).split(',')[1]);
+        l.onerror = () => f(new Error('erro'));
+        l.readAsDataURL(blob);
+      });
+
+      const r = await Rede.correr('conversar', {
+        audio_base64:base64,
+        historico:JSON.stringify(this.historico),
+        tema:this.tema, nivel:this.nivel,
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+
+      this.aPensar = false;
+      const turno = {
+        eu:r.transcricao || '…',
+        ela:r.resposta || '',
+        traducao:r.traducao || '',
+        audio:r.audio || ''
+      };
+      this.historico.push(turno);
+
+      if(dica){ dica.textContent = 'Toca e fala'; }
+      this.verSala();
+
+      if(r.audio){
+        setTimeout(() => { const a = new Audio(r.audio); a.play().catch(()=>{}); }, 260);
+      }else{
+        // A voz vem à parte, para não atrasar a resposta
+        this.pedirVoz(turno);
+      }
+      if(r.sugerir_terminar === 'sim' || r.sugerir_terminar === true) this.sugerirFim(r.motivo || '');
+
+    }catch(e){
+      this.aPensar = false;
+      this.pintarFio();
+      if(dica){ dica.textContent = 'Não consegui enviar. Tenta de novo.'; dica.classList.add('gr-dica-erro'); }
+    }
+  },
+
+  // Pede a voz da professora depois de a resposta já estar no ecrã
+  async pedirVoz(turno){
+    if(!turno.ela) return;
+    try{
+      const r = await Rede.correr('gerar_voz', {
+        texto:turno.ela,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+      if(r && r.audio){
+        turno.audio = r.audio;
+        if(this.historico.includes(turno)){
+          this.pintarFio();
+          const a = new Audio(r.audio);
+          a.play().catch(()=>{});
+        }
+      }
+    }catch(e){}
+  },
+
+  sugerirFim(motivo){
+    const fio = document.getElementById('cvFio');
+    if(!fio) return;
+    fio.insertAdjacentHTML('beforeend',
+      `<div class="cv-sugestao">
+        <div style="font-weight:600;margin-bottom:4px;">Já falaste bastante</div>
+        ${motivo ? `<div style="font-size:12.5px;color:var(--texto-suave);line-height:1.5;">${motivo}</div>` : ''}
+        <button class="btn" id="cvFecharJa" style="margin-top:12px;">Ver a minha avaliação</button>
+      </div>`);
+    fio.scrollTop = fio.scrollHeight;
+    document.getElementById('cvFecharJa').onclick = () => this.terminar();
+  },
+
+  // ── Avaliação final ───────────────────────────────────
+  async terminar(){
+    this.pararTudo();
+    document.getElementById('v-modulo').innerHTML =
+      '<div class="carregar" style="padding:80px 0;">A avaliar a tua conversa<span class="pontos"><i></i><i></i><i></i></span></div>';
+
+    try{
+      const r = await Rede.correr('avaliar_conversa_final', {
+        historico:JSON.stringify(this.historico),
+        tema:this.tema,
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+      this.verAvaliacao(Number(r.pontuacao)||0, r.pontos_fortes||'', r.pontos_melhorar||'', r.avaliacao||'');
+    }catch(e){
+      this.verAvaliacao(0, '', '', 'Não consegui avaliar esta conversa, mas o treino conta na mesma.');
+    }
+  },
+
+  verAvaliacao(pontuacao, fortes, melhorar, geral){
+    const xp = Jogo.premiar('conversa', {pontuacao});
+    document.getElementById('v-modulo').innerHTML = `
+      <div style="text-align:center;padding:18px 6px;">
+        <div style="font-size:48px;margin-bottom:10px;">🗣</div>
+        <h1 style="font-size:22px;margin-bottom:6px;">Conversa terminada</h1>
+        <p style="color:var(--texto-suave);font-size:13.5px;">${this.tema} · ${this.historico.length} trocas</p>
+
+        ${pontuacao ? `<div class="ex-anel">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--linha)" stroke-width="11"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--lima)" stroke-width="11"
+              stroke-linecap="round" transform="rotate(-90 60 60)"
+              stroke-dasharray="314" stroke-dashoffset="${314 - 314*pontuacao/100}"/>
+          </svg>
+          <div class="ex-anel-n">${pontuacao}</div>
+        </div>` : '<div style="height:16px;"></div>'}
+
+        <div class="ex-xp">+${xp} XP</div>
+      </div>
+
+      ${fortes ? `<div class="cartao" style="border-color:rgba(43,122,111,.4);background:rgba(43,122,111,.05);">
+        <div class="mini-rotulo" style="color:var(--teal);">Pontos fortes</div>
+        <p style="font-size:14px;line-height:1.6;">${fortes}</p></div>` : ''}
+
+      ${melhorar ? `<div class="cartao" style="border-color:#F0C88A;background:#FFF7EC;">
+        <div class="mini-rotulo" style="color:#B8860B;">A melhorar</div>
+        <p style="font-size:14px;line-height:1.6;">${melhorar}</p></div>` : ''}
+
+      ${geral ? `<div class="cartao" style="background:#F3EFFB;border-color:#DCD2F2;">
+        <p style="font-size:14px;line-height:1.6;">${geral}</p></div>` : ''}
+
+      <button class="btn" id="cvNova" style="margin-top:8px;">Nova conversa</button>
+      <button class="btn btn-calmo" id="cvFim" style="margin-top:10px;">Voltar</button>`;
+
+    document.getElementById('cvNova').onclick = () => {
+      this.tema = null; this.historico = []; this.ver();
+    };
+    document.getElementById('cvFim').onclick = () => Rota.ir('praticar');
+  },
+
+  // ── Exemplos prontos ──────────────────────────────────
+  verModelos(){
+    document.getElementById('v-modulo').innerHTML = this.cabeca() + `
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:16px;line-height:1.55;">
+        Diálogos curtos para veres como soa antes de arriscares ao vivo.</p>
+      <div id="cvListaModelos">
+        ${TEMAS_CONVERSA.map((x,i) => `
+          <div class="cv-modelo" data-mod="${i}">
+            <div class="cv-modelo-topo">
+              <div style="flex:1;min-width:0;">
+                <div class="cv-modelo-t">${x.t}</div>
+                <div class="cv-modelo-d">${x.d}</div>
+                <span class="cv-modelo-n">${x.n}</span>
+              </div>
+              <span class="vb-seta" style="${this.abertoIdx===i?'transform:rotate(180deg);':''}">⌄</span>
+            </div>
+            <div class="cv-modelo-corpo" id="cvCorpo${i}">
+              ${this.abertoIdx === i ? this.pintarDialogo(i) : ''}
+            </div>
+          </div>`).join('')}
+      </div>`;
+
+    this.ligarCabeca();
+    document.querySelectorAll('#v-modulo [data-mod]').forEach(el => {
+      el.querySelector('.cv-modelo-topo').onclick = () => this.abrirModelo(Number(el.dataset.mod));
+    });
+    this.ligarOuvirDialogo();
+  },
+
+  pintarDialogo(i){
+    const d = this.dialogos[i];
+    if(!d) return '<div class="carregar" style="padding:22px 0;">A preparar o diálogo<span class="pontos"><i></i><i></i><i></i></span></div>';
+    return d.map(f => `
+      <div class="cv-fala ${f.q === 'a' ? 'fa' : 'fb'}">
+        <div class="cv-fala-alvo">${f.alvo || ''}
+          <button class="cv-fala-ouvir" data-txt="${(f.alvo||'').replace(/"/g,'&quot;')}">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="9" height="9"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+        <div class="cv-fala-orig">${f.origem || ''}</div>
+        ${f.pronuncia ? `<div class="cv-fala-pron">🗣 ${f.pronuncia}</div>` : ''}
+      </div>`).join('');
+  },
+
+  ligarOuvirDialogo(){
+    document.querySelectorAll('#v-modulo .cv-fala-ouvir').forEach(b => {
+      b.onclick = ev => { ev.stopPropagation(); Licoes.falar(b.dataset.txt); };
+    });
+  },
+
+  async abrirModelo(i){
+    if(this.abertoIdx === i){ this.abertoIdx = -1; return this.verModelos(); }
+    this.abertoIdx = i;
+    this.verModelos();
+
+    if(this.dialogos[i]) return;
+
+    try{
+      const r = await Rede.correr('gerar_dialogo', {
+        tema:TEMAS_CONVERSA[i].t,
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+      let d = r.dialogo;
+      if(typeof d === 'string'){
+        let s = d.slice(d.indexOf('['));
+        const f = s.lastIndexOf(']'); if(f>-1) s = s.slice(0,f+1);
+        d = JSON.parse(s);
+      }
+      this.dialogos[i] = d || [];
+      if(this.abertoIdx === i){
+        const corpo = document.getElementById('cvCorpo' + i);
+        if(corpo){ corpo.innerHTML = this.pintarDialogo(i); this.ligarOuvirDialogo(); }
+      }
+    }catch(e){
+      const corpo = document.getElementById('cvCorpo' + i);
+      if(corpo) corpo.innerHTML = '<div class="aviso" style="margin:10px 0 0;">Não consegui preparar este diálogo.</div>';
+    }
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: VOCABULÁRIO
+   As 154 imagens vivem num ficheiro à parte, carregado
+   só quando abres este módulo — não pesa no arranque.
+   ══════════════════════════════════════════════════════════ */
+const CATEGORIAS = {
+  casa:'Casa e divisões', emocoes:'Emoções', natureza:'Natureza',
+  transportes:'Transportes', formas:'Formas e objetos', escola:'Escola e escritório',
+  profissoes:'Profissões', desporto:'Desporto e lazer', eletronica:'Eletrónica',
+  corpo_humano:'Corpo humano'
+};
+
+const Vocabulario = {
+  banco:null, pool:[], ordem:[], idx:0, acertos:0, TOTAL:10, respondeu:false,
+
+  async abrir(){
+    Rota.mostrarModulo();
+    if(this.banco) return this.verCategorias();
+
+    document.getElementById('v-modulo').innerHTML =
+      '<div class="carregar" style="padding:80px 0;">A carregar as palavras<span class="pontos"><i></i><i></i><i></i></span></div>';
+    try{
+      const r = await fetch(CFG.vocabulario);
+      this.banco = await r.json();
+      this.verCategorias();
+    }catch(e){
+      document.getElementById('v-modulo').innerHTML =
+        '<button class="voltar" id="vcSair">← ' + t('voltar') + '</button>' +
+        '<div class="aviso">Não consegui carregar o vocabulário. Confirma que o ficheiro está no mesmo sítio da app.</div>';
+      document.getElementById('vcSair').onclick = () => Rota.ir('praticar');
+    }
+  },
+
+  lingua(cod){ return ['pt','en','es','fr','de','it'].includes(cod) ? cod : 'en'; },
+  alvo(o){ return o.t[this.lingua(Estado.destino)]; },
+  origem(o){ return o.t[this.lingua(Estado.origem)]; },
+
+  verCategorias(){
+    const conta = {};
+    this.banco.forEach(o => { conta[o.c] = (conta[o.c] || 0) + 1; });
+
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="vcSair">← ${t('voltar')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">Vocabulário</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;">Escolhe uma categoria para praticar.</p>
+      <div class="escolhas">
+        <button class="escolha" data-cat="todas">Todas misturadas<span class="n">${this.banco.length}</span></button>
+        ${Object.keys(CATEGORIAS).filter(k => conta[k]).map(k =>
+          `<button class="escolha" data-cat="${k}">${CATEGORIAS[k]}<span class="n">${conta[k]}</span></button>`).join('')}
+      </div>`;
+
+    document.getElementById('vcSair').onclick = () => Rota.ir('praticar');
+    document.querySelectorAll('#v-modulo [data-cat]').forEach(b => {
+      b.onclick = () => this.comecar(b.dataset.cat);
+    });
+  },
+
+  baralhar(a){
+    const c = a.slice();
+    for(let i = c.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [c[i], c[j]] = [c[j], c[i]];
+    }
+    return c;
+  },
+
+  comecar(cat){
+    this.pool = cat === 'todas' ? this.banco : this.banco.filter(o => o.c === cat);
+    if(this.pool.length < 4) return;
+    this.ordem = this.baralhar(this.pool).slice(0, this.TOTAL);
+    this.idx = 0; this.acertos = 0;
+    this.ver();
+  },
+
+  ver(){
+    this.respondeu = false;
+    const o = this.ordem[this.idx];
+    const certa = this.alvo(o);
+    const erradas = this.baralhar(this.pool.filter(x => this.alvo(x) !== certa)).slice(0,3).map(x => this.alvo(x));
+    const opcoes = this.baralhar([certa, ...erradas]);
+
+    document.getElementById('v-modulo').innerHTML = `
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:18px;">
+        <button class="ex-sair" id="vcSair" aria-label="Sair">✕</button>
+        <div style="flex:1;height:6px;background:var(--linha);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${this.idx/this.ordem.length*100}%;background:var(--lima);transition:width .3s;"></div>
+        </div>
+        <span style="font-size:12px;color:var(--texto-suave);font-weight:600;">${this.idx+1}/${this.ordem.length}</span>
+      </div>
+
+      <div class="ex-etiqueta">Que objeto é este?</div>
+      <div class="vc-imagem">
+        <img src="data:image/jpeg;base64,${o.i}" alt="">
+      </div>
+
+      <div class="escolhas" id="vcOpcoes">
+        ${opcoes.map((op,i) => `<button class="escolha" data-op="${i}" data-txt="${op.replace(/"/g,'&quot;')}">${op}</button>`).join('')}
+      </div>
+      <div id="vcReacao"></div>`;
+
+    document.getElementById('vcSair').onclick = () => this.verCategorias();
+    document.querySelectorAll('#vcOpcoes [data-op]').forEach(b => {
+      b.onclick = () => this.responder(b.dataset.txt, certa, b, o);
+    });
+  },
+
+  responder(escolha, certa, botao, objeto){
+    if(this.respondeu) return;
+    this.respondeu = true;
+    const acertou = escolha === certa;
+    if(acertou) this.acertos++;
+
+    document.querySelectorAll('#vcOpcoes [data-op]').forEach(b => {
+      b.disabled = true;
+      if(b.dataset.txt === certa) b.classList.add('op-certa');
+      else if(b === botao) b.classList.add('op-errada');
+    });
+
+    document.getElementById('vcReacao').innerHTML = `
+      <div class="ex-reacao ${acertou ? 'boa' : 'ma'}">
+        <div class="ex-reacao-t">${acertou ? 'Certo!' : 'Era: ' + certa}</div>
+        <div class="ex-reacao-d" style="font-weight:400;font-size:13.5px;color:var(--texto-suave);">${this.origem(objeto)}</div>
+      </div>
+      <button class="btn btn-calmo" id="vcOuvir" style="margin-bottom:10px;">🔊 Ouvir</button>
+      <button class="btn" id="vcProx">${this.idx + 1 < this.ordem.length ? 'Seguinte' : 'Ver resultado'}</button>`;
+
+    document.getElementById('vcOuvir').onclick = () => Licoes.falar(certa);
+    document.getElementById('vcProx').onclick = () => {
+      this.idx++;
+      if(this.idx < this.ordem.length) this.ver(); else this.resultado();
+    };
+  },
+
+  resultado(){
+    const pct = Math.round(this.acertos / this.ordem.length * 100);
+    const xp = Jogo.premiar('vocabulario', {acertos:this.acertos, total:this.ordem.length});
+    let emoji = '💪', titulo = 'Continua a praticar';
+    if(pct >= 90){ emoji = '🏆'; titulo = 'Impecável!'; }
+    else if(pct >= 70){ emoji = '🎉'; titulo = 'Muito bem!'; }
+    else if(pct >= 50){ emoji = '👍'; titulo = 'Estás quase lá'; }
+
+    document.getElementById('v-modulo').innerHTML = `
+      <div style="text-align:center;padding:24px 6px;">
+        <div style="font-size:52px;margin-bottom:12px;">${emoji}</div>
+        <h1 style="font-size:23px;margin-bottom:8px;">${titulo}</h1>
+        <p style="color:var(--texto-suave);font-size:14px;">Acertaste ${this.acertos} de ${this.ordem.length}</p>
+        <div class="ex-anel">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--linha)" stroke-width="11"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--lima)" stroke-width="11"
+              stroke-linecap="round" transform="rotate(-90 60 60)"
+              stroke-dasharray="314" stroke-dashoffset="${314 - 314*pct/100}"/>
+          </svg>
+          <div class="ex-anel-n">${pct}%</div>
+        </div>
+        <div class="ex-xp">+${xp} XP</div>
+      </div>
+      <button class="btn" id="vcOutra" style="margin-bottom:10px;">Outra ronda</button>
+      <button class="btn btn-calmo" id="vcCats">Trocar de categoria</button>`;
+
+    document.getElementById('vcOutra').onclick = () => {
+      this.ordem = this.baralhar(this.pool).slice(0, this.TOTAL);
+      this.idx = 0; this.acertos = 0; this.ver();
+    };
+    document.getElementById('vcCats').onclick = () => this.verCategorias();
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: ESCRITA
+   ══════════════════════════════════════════════════════════ */
+const TEMAS_ESCRITA = [
+  'Descreve o teu dia de ontem, do pequeno-almoço até à noite.',
+  'Fala sobre um lugar que gostavas de visitar e porquê.',
+  'Conta o que fazes num fim de semana perfeito.',
+  'Descreve alguém importante na tua vida.',
+  'O que mudarias na tua cidade, se pudesses?',
+  'Conta uma memória de infância de que te lembres bem.'
+];
+
+const Escrita = {
+  nivel:null, tema:'',
+
+  abrir(){
+    Rota.mostrarModulo();
+    try{ this.nivel = localStorage.getItem('linguai:nivel'); }catch(e){}
+    if(this.nivel) this.verEscrever(); else this.verNiveis();
+  },
+
+  verNiveis(){
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="esSair">← ${t('voltar')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">${t('qual_nivel')}</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;">Para corrigirmos ao teu nível.</p>
+      <div class="escolhas">
+        ${[['Iniciante','iniciante'],['Intermédio','intermedio'],['Avançado','avancado']]
+          .map(([v,k]) => `<button class="escolha" data-n="${v}">${t(k)}<span style="color:var(--indigo-40)">→</span></button>`).join('')}
+      </div>`;
+    document.getElementById('esSair').onclick = () => Rota.ir('praticar');
+    document.querySelectorAll('#v-modulo [data-n]').forEach(b => {
+      b.onclick = () => {
+        this.nivel = b.dataset.n;
+        try{ localStorage.setItem('linguai:nivel', this.nivel); }catch(e){}
+        this.verEscrever();
+      };
+    });
+  },
+
+  verEscrever(){
+    if(!this.tema) this.tema = TEMAS_ESCRITA[Math.floor(Math.random()*TEMAS_ESCRITA.length)];
+    const dest = acharIdioma(Estado.destino, IDIOMAS[1]);
+
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="esNivel">← ${t('qual_nivel')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">Escreve em ${dest.n}</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:18px;">${this.nivel} · a professora corrige e explica.</p>
+
+      <div class="cartao" style="background:#F3EFFB;border-color:#DCD2F2;">
+        <div class="mini-rotulo">Sugestão de tema</div>
+        <p style="font-size:14.5px;line-height:1.55;">${this.tema}</p>
+        <button class="gr-ouvir" id="esTrocarTema" style="margin-top:12px;">↻ Outro tema</button>
+      </div>
+
+      <textarea id="esTexto" class="es-area" placeholder="Escreve aqui…"></textarea>
+      <div class="es-conta"><span id="esN">0</span> palavras</div>
+      <button class="btn" id="esAvaliar">Avaliar a minha escrita</button>`;
+
+    document.getElementById('esNivel').onclick = () => {
+      try{ localStorage.removeItem('linguai:nivel'); }catch(e){}
+      this.verNiveis();
+    };
+    document.getElementById('esTrocarTema').onclick = () => {
+      let novo = this.tema;
+      while(novo === this.tema) novo = TEMAS_ESCRITA[Math.floor(Math.random()*TEMAS_ESCRITA.length)];
+      this.tema = novo;
+      this.verEscrever();
+    };
+
+    const area = document.getElementById('esTexto');
+    area.oninput = () => {
+      const n = area.value.trim() ? area.value.trim().split(/\s+/).length : 0;
+      document.getElementById('esN').textContent = n;
+    };
+    document.getElementById('esAvaliar').onclick = e => this.avaliar(e.currentTarget);
+  },
+
+  async avaliar(botao){
+    const texto = document.getElementById('esTexto').value.trim();
+    if(!texto) return;
+    botao.disabled = true;
+    botao.innerHTML = 'A corrigir <span class="pontos"><i></i><i></i><i></i></span>';
+
+    try{
+      const r = await Rede.correr('avaliar_escrita', {
+        texto, nivel:this.nivel,
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+      let erros = r.erros;
+      if(typeof erros === 'string'){
+        try{
+          let s = erros.slice(erros.indexOf('['));
+          const f = s.lastIndexOf(']'); if(f>-1) s = s.slice(0,f+1);
+          erros = JSON.parse(s);
+        }catch(e){ erros = []; }
+      }
+      this.verResultado(Number(r.pontuacao)||0, r.versao_corrigida||'', erros||[], r.feedback||'');
+    }catch(e){
+      botao.disabled = false;
+      botao.textContent = 'Avaliar a minha escrita';
+      alert('Não consegui avaliar. Tenta outra vez.');
+    }
+  },
+
+  verResultado(pontuacao, corrigida, erros, feedback){
+    const xp = Jogo.premiar('escrita', {pontuacao});
+    document.getElementById('v-modulo').innerHTML = `
+      <div style="text-align:center;padding:16px 6px;">
+        <div class="ex-anel">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--linha)" stroke-width="11"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--lima)" stroke-width="11"
+              stroke-linecap="round" transform="rotate(-90 60 60)"
+              stroke-dasharray="314" stroke-dashoffset="${314 - 314*pontuacao/100}"/>
+          </svg>
+          <div class="ex-anel-n">${pontuacao}</div>
+        </div>
+        <div class="ex-xp">+${xp} XP</div>
+      </div>
+
+      ${corrigida ? `<div class="cartao">
+        <div class="mini-rotulo">Versão corrigida</div>
+        <p style="font-size:14.5px;line-height:1.6;">${corrigida}</p>
+      </div>` : ''}
+
+      ${erros.length ? `<div class="seccao-titulo">Erros a melhorar</div>
+        ${erros.map(e => `<div class="es-erro">
+          <div class="es-erro-l"><span class="es-x">${e.errado||''}</span> → <span class="es-v">${e.certo||''}</span></div>
+          ${e.explicacao ? `<div class="es-erro-p">${e.explicacao}</div>` : ''}
+        </div>`).join('')}` : ''}
+
+      ${feedback ? `<div class="cartao" style="background:#F3EFFB;border-color:#DCD2F2;margin-top:14px;">
+        <div class="mini-rotulo">Comentário da professora</div>
+        <p style="font-size:14px;line-height:1.6;">${feedback}</p>
+      </div>` : ''}
+
+      <button class="btn" id="esOutra" style="margin-top:8px;">Escrever outro</button>
+      <button class="btn btn-calmo" id="esFim" style="margin-top:10px;">Voltar</button>`;
+
+    document.getElementById('esOutra').onclick = () => { this.tema = ''; this.verEscrever(); };
+    document.getElementById('esFim').onclick = () => Rota.ir('praticar');
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: VERBOS
+   ══════════════════════════════════════════════════════════ */
+const Verbos = {
+  nivel:null, lista:[], pagina:0, POR_PAG:5, aberto:-1,
+
+  abrir(){
+    Rota.mostrarModulo();
+    this.lista = []; this.pagina = 0; this.aberto = -1;
+    try{ this.nivel = localStorage.getItem('linguai:nivel'); }catch(e){}
+    if(this.nivel) this.carregar(); else this.verNiveis();
+  },
+
+  verNiveis(){
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="vbSair">← ${t('voltar')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">${t('qual_nivel')}</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;">Verbos adequados ao teu nível.</p>
+      <div class="escolhas">
+        ${[['Iniciante','iniciante'],['Intermédio','intermedio'],['Avançado','avancado']]
+          .map(([v,k]) => `<button class="escolha" data-n="${v}">${t(k)}<span style="color:var(--indigo-40)">→</span></button>`).join('')}
+      </div>`;
+    document.getElementById('vbSair').onclick = () => Rota.ir('praticar');
+    document.querySelectorAll('#v-modulo [data-n]').forEach(b => {
+      b.onclick = () => {
+        this.nivel = b.dataset.n;
+        try{ localStorage.setItem('linguai:nivel', this.nivel); }catch(e){}
+        this.carregar();
+      };
+    });
+  },
+
+  async carregar(mais){
+    document.getElementById('v-modulo').innerHTML = `
+      <div class="carregar" style="padding:70px 0;">${mais ? 'A procurar mais verbos' : 'A preparar os verbos'}
+        <span class="pontos"><i></i><i></i><i></i></span></div>`;
+    try{
+      const r = await Rede.correr('gerar_verbos', {
+        nivel:this.nivel,
+        existentes:JSON.stringify(this.lista.map(v => v.infinitivo)),
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+      let novos = r.verbos;
+      if(typeof novos === 'string'){
+        let s = novos.slice(novos.indexOf('['));
+        const f = s.lastIndexOf(']'); if(f>-1) s = s.slice(0,f+1);
+        novos = JSON.parse(s);
+      }
+      this.lista = this.lista.concat(novos || []);
+      if(mais) this.pagina = Math.floor((this.lista.length - 1) / this.POR_PAG);
+      this.ver();
+    }catch(e){
+      document.getElementById('v-modulo').innerHTML = `
+        <button class="voltar" id="vbSair">← ${t('voltar')}</button>
+        <div class="aviso">Não consegui trazer os verbos. ${e.message}</div>`;
+      document.getElementById('vbSair').onclick = () => Rota.ir('praticar');
+    }
+  },
+
+  ver(){
+    const total = Math.max(1, Math.ceil(this.lista.length / this.POR_PAG));
+    const ini = this.pagina * this.POR_PAG;
+    const lote = this.lista.slice(ini, ini + this.POR_PAG);
+
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="vbNivel">← ${t('qual_nivel')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">Conjugação</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:18px;">${this.nivel} · ${this.lista.length} verbos</p>
+
+      ${lote.map((v,i) => this.cartaoVerbo(v, ini+i)).join('')}
+
+      ${total > 1 ? `<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0;">
+        <button class="btn btn-calmo" style="width:auto;padding:11px 16px;font-size:13px;" data-vp="-1" ${this.pagina===0?'disabled':''}>←</button>
+        <span style="font-size:12.5px;color:var(--texto-suave);font-weight:600;">${this.pagina+1} / ${total}</span>
+        <button class="btn btn-calmo" style="width:auto;padding:11px 16px;font-size:13px;" data-vp="1" ${this.pagina>=total-1?'disabled':''}>→</button>
+      </div>` : ''}
+
+      <button class="btn" id="vbMais" style="margin-top:8px;">Gerar mais verbos</button>`;
+
+    document.getElementById('vbNivel').onclick = () => {
+      try{ localStorage.removeItem('linguai:nivel'); }catch(e){}
+      this.lista = []; this.verNiveis();
+    };
+    document.getElementById('vbMais').onclick = () => this.carregar(true);
+    document.querySelectorAll('#v-modulo [data-vp]').forEach(b => {
+      b.onclick = () => { this.pagina += Number(b.dataset.vp); this.aberto = -1; this.ver(); };
+    });
+    document.querySelectorAll('#v-modulo [data-vb]').forEach(b => {
+      b.onclick = ev => {
+        if(ev.target.closest('.vb-ouvir')) return;
+        const i = Number(b.dataset.vb);
+        this.aberto = this.aberto === i ? -1 : i;
+        this.ver();
+      };
+    });
+    document.querySelectorAll('#v-modulo .vb-ouvir').forEach(b => {
+      b.onclick = () => Licoes.falar(b.dataset.txt);
+    });
+  },
+
+  cartaoVerbo(v, idx){
+    const aberto = this.aberto === idx;
+    const tempos = v.tempos || [];
+    return `
+      <div class="cartao vb-cartao" data-vb="${idx}" style="${aberto?'border-color:var(--teal);':''}">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="flex:1;min-width:0;">
+            <div class="vb-inf">${v.infinitivo||''}</div>
+            <div class="vb-sig">${v.significado||''}</div>
+            ${v.pronuncia_infinitivo ? `<div class="vb-pron">🗣 ${v.pronuncia_infinitivo}</div>` : ''}
+          </div>
+          <span class="vb-seta" style="${aberto?'transform:rotate(180deg);':''}">⌄</span>
+        </div>
+        ${aberto && tempos.length ? `<div class="vb-tempos">
+          ${tempos.map(tp => `<div class="vb-tempo">
+            <div class="vb-tempo-n">${tp.nome||''}</div>
+            <div class="vb-forma">${tp.forma||''}</div>
+            ${tp.frase_alvo ? `<div class="vb-frase">
+              <div style="flex:1;min-width:0;">
+                <div class="vb-fa">${tp.frase_alvo}</div>
+                <div class="vb-fo">${tp.frase_origem||''}</div>
+              </div>
+              <button class="vb-ouvir" data-txt="${(tp.frase_alvo||'').replace(/"/g,'&quot;')}">
+                <svg viewBox="0 0 24 24" fill="var(--teal)" width="10" height="10"><path d="M8 5v14l11-7z"/></svg>
+              </button></div>` : ''}
+          </div>`).join('')}
+        </div>` : ''}
+      </div>`;
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: TRADUTOR
+   ══════════════════════════════════════════════════════════ */
+const Tradutor = {
+  invertido:false, gravador:null, pedacos:[], fluxo:null, aGravar:false,
+
+  abrir(){ Rota.mostrarModulo(); this.ver(); },
+
+  de(){ return this.invertido ? acharIdioma(Estado.destino, IDIOMAS[1]) : acharIdioma(Estado.origem, IDIOMAS[0]); },
+  para(){ return this.invertido ? acharIdioma(Estado.origem, IDIOMAS[0]) : acharIdioma(Estado.destino, IDIOMAS[1]); },
+
+  ver(){
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="trSair">← ${t('voltar')}</button>
+      <h1 style="font-size:22px;margin-bottom:18px;">Tradutor</h1>
+
+      <div class="tr-direcao">
+        <span class="tr-lado">${this.de().b} ${this.de().n}</span>
+        <button class="tr-troca" id="trTroca" aria-label="Inverter">⇄</button>
+        <span class="tr-lado">${this.para().b} ${this.para().n}</span>
+      </div>
+
+      <textarea id="trTexto" class="es-area" style="min-height:110px;" placeholder="Escreve ou grava…"></textarea>
+
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <button class="btn btn-calmo" id="trGravar" style="flex:0 0 auto;width:58px;padding:14px 0;">🎤</button>
+        <button class="btn" id="trTraduzir" style="flex:1;">Traduzir</button>
+      </div>
+      <div class="gr-dica" id="trDica" style="text-align:center;"></div>
+
+      <div id="trSaida"></div>`;
+
+    document.getElementById('trSair').onclick = () => Rota.ir('praticar');
+    document.getElementById('trTroca').onclick = () => { this.invertido = !this.invertido; this.ver(); };
+    document.getElementById('trTraduzir').onclick = e => this.traduzir(e.currentTarget);
+    document.getElementById('trGravar').onclick = () => this.microfone();
+  },
+
+  async microfone(){
+    const b = document.getElementById('trGravar');
+    const dica = document.getElementById('trDica');
+
+    if(this.aGravar){
+      if(this.gravador && this.gravador.state !== 'inactive') this.gravador.stop();
+      if(this.fluxo) this.fluxo.getTracks().forEach(t => t.stop());
+      this.aGravar = false;
+      b.classList.remove('a-gravar');
+      dica.textContent = 'A transcrever…';
+      return;
+    }
+
+    try{ this.fluxo = await navigator.mediaDevices.getUserMedia({audio:true}); }
+    catch(e){ dica.textContent = 'Sem acesso ao microfone.'; return; }
+
+    this.pedacos = [];
+    this.gravador = new MediaRecorder(this.fluxo);
+    this.gravador.ondataavailable = ev => { if(ev.data.size) this.pedacos.push(ev.data); };
+    this.gravador.onstop = () => this.transcrever();
+    this.gravador.start();
+    this.aGravar = true;
+    b.classList.add('a-gravar');
+    dica.textContent = 'A gravar… toca para parar';
+  },
+
+  async transcrever(){
+    const dica = document.getElementById('trDica');
+    try{
+      const blob = new Blob(this.pedacos, {type:'audio/webm'});
+      const base64 = await new Promise((ok,f) => {
+        const l = new FileReader();
+        l.onload = () => ok(String(l.result).split(',')[1]);
+        l.onerror = () => f(new Error('erro'));
+        l.readAsDataURL(blob);
+      });
+      const r = await Rede.correr('transcrever', {audio_base64:base64});
+      document.getElementById('trTexto').value = r.texto || '';
+      dica.textContent = '';
+    }catch(e){ dica.textContent = 'Não consegui transcrever.'; }
+  },
+
+  async traduzir(botao){
+    const texto = document.getElementById('trTexto').value.trim();
+    if(!texto) return;
+    botao.disabled = true;
+    botao.innerHTML = 'A traduzir <span class="pontos"><i></i><i></i><i></i></span>';
+
+    try{
+      const r = await Rede.correr('traduzir', {
+        texto, de:this.de().n, para:this.para().n
+      });
+      document.getElementById('trSaida').innerHTML = `
+        <div class="cartao" style="margin-top:18px;">
+          <div class="mini-rotulo">${this.para().b} ${this.para().n}</div>
+          <p style="font-size:16px;line-height:1.55;">${r.traducao || ''}</p>
+          <button class="gr-ouvir" id="trOuvir" style="margin-top:12px;">
+            <svg viewBox="0 0 24 24" fill="var(--teal)" width="12" height="12"><path d="M8 5v14l11-7z"/></svg>
+            Ouvir
+          </button>
+        </div>`;
+      const ou = document.getElementById('trOuvir');
+      if(ou) ou.onclick = () => {
+        if(!window.speechSynthesis) return;
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(r.traducao || '');
+        const mapa = {pt:'pt-PT',en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',
+                      zh:'zh-CN',ja:'ja-JP',ko:'ko-KR',ar:'ar-SA',ru:'ru-RU',hi:'hi-IN',
+                      nl:'nl-NL',sv:'sv-SE',tr:'tr-TR'};
+        u.lang = mapa[this.para().c] || 'en-US';
+        speechSynthesis.speak(u);
+      };
+    }catch(e){
+      document.getElementById('trDica').textContent = 'Não consegui traduzir.';
+    }
+    botao.disabled = false;
+    botao.textContent = 'Traduzir';
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO: GRAVAÇÃO
+   Repetir a frase, gravar, ouvir, enviar e receber nota.
+   ══════════════════════════════════════════════════════════ */
+const Gravacao = {
+  frase:null, licao:null,
+  gravador:null, pedacos:[], blob:null,
+  fluxo:null, contexto:null, analisador:null, animacao:null,
+  aGravar:false, segundos:0, relogio:null,
+
+  abrir(frase, licao){
+    this.frase = frase;
+    this.licao = licao;
+    this.blob = null; this.segundos = 0;
+    Rota.mostrarModulo();
+    this.verPronto();
+  },
+
+  alvoTxt(){ return this.frase.alvo || this.frase.en || ''; },
+  origTxt(){ return this.frase.origem || this.frase.pt || ''; },
+
+  // ── Ecrã inicial ──────────────────────────────────────
+  verPronto(){
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="grVoltar">← ${t('voltar')}</button>
+      <div class="gr-etiqueta">Repete a frase</div>
+
+      <div class="gr-frase">
+        <div class="gr-alvo">${this.alvoTxt()}</div>
+        <div class="gr-origem">${this.origTxt()}</div>
+        ${this.frase.pronuncia ? `<div class="gr-pron">🗣 ${this.frase.pronuncia}</div>` : ''}
+        <button class="gr-ouvir" id="grOuvir">
+          <svg viewBox="0 0 24 24" fill="var(--teal)" width="12" height="12"><path d="M8 5v14l11-7z"/></svg>
+          Ouvir a frase
+        </button>
+      </div>
+
+      <div class="gr-palco">
+        <canvas id="grOnda" class="gr-onda"></canvas>
+        <button class="gr-botao" id="grBotao" aria-label="Gravar">
+          <svg viewBox="0 0 24 24" fill="#fff" width="26" height="26">
+            <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3z"/>
+            <path d="M18 11a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.9V22h2v-3.1A8 8 0 0 0 20 11z"/>
+          </svg>
+        </button>
+        <div class="gr-dica" id="grDica">Toca para gravar</div>
+      </div>
+
+      <div id="grRever"></div>`;
+
+    document.getElementById('grVoltar').onclick = () => this.sair();
+    document.getElementById('grOuvir').onclick = () => Licoes.falar(this.alvoTxt());
+    document.getElementById('grBotao').onclick = () => this.alternar();
+  },
+
+  sair(){
+    this.parar(true);
+    if(this.licao) Licoes.verLicao(); else Rota.ir('praticar');
+  },
+
+  // ── Gravar ────────────────────────────────────────────
+  async alternar(){
+    if(this.aGravar) this.parar();
+    else await this.comecar();
+  },
+
+  async comecar(){
+    const dica = document.getElementById('grDica');
+    try{
+      this.fluxo = await navigator.mediaDevices.getUserMedia({audio:true});
+    }catch(e){
+      dica.textContent = 'Não consegui aceder ao microfone.';
+      dica.classList.add('gr-dica-erro');
+      return;
+    }
+
+    this.pedacos = [];
+    this.gravador = new MediaRecorder(this.fluxo);
+    this.gravador.ondataavailable = ev => { if(ev.data.size) this.pedacos.push(ev.data); };
+    this.gravador.onstop = () => this.aoParar();
+    this.gravador.start();
+
+    this.aGravar = true;
+    this.segundos = 0;
+    document.getElementById('grBotao').classList.add('a-gravar');
+    dica.classList.remove('gr-dica-erro');
+    dica.textContent = 'A gravar… 0s';
+
+    this.relogio = setInterval(() => {
+      this.segundos++;
+      dica.textContent = `A gravar… ${this.segundos}s`;
+      if(this.segundos >= 30) this.parar();
+    }, 1000);
+
+    this.desenharOnda();
+  },
+
+  parar(silencioso){
+    if(this.relogio){ clearInterval(this.relogio); this.relogio = null; }
+    if(this.animacao){ cancelAnimationFrame(this.animacao); this.animacao = null; }
+    if(this.contexto){ this.contexto.close().catch(()=>{}); this.contexto = null; }
+
+    if(this.gravador && this.gravador.state !== 'inactive'){
+      if(silencioso) this.gravador.onstop = null;
+      this.gravador.stop();
+    }
+    if(this.fluxo){ this.fluxo.getTracks().forEach(t => t.stop()); this.fluxo = null; }
+    this.aGravar = false;
+
+    const b = document.getElementById('grBotao');
+    if(b) b.classList.remove('a-gravar');
+  },
+
+  aoParar(){
+    this.blob = new Blob(this.pedacos, {type:'audio/webm'});
+    const dica = document.getElementById('grDica');
+    if(dica) dica.textContent = 'Ouve antes de enviares';
+    this.verRever();
+  },
+
+  // ── Onda enquanto grava ───────────────────────────────
+  desenharOnda(){
+    const tela = document.getElementById('grOnda');
+    if(!tela || !this.fluxo) return;
+    const ctx = tela.getContext('2d');
+    const L = tela.width = tela.offsetWidth * 2;
+    const A = tela.height = tela.offsetHeight * 2;
+
+    this.contexto = new (window.AudioContext || window.webkitAudioContext)();
+    const fonte = this.contexto.createMediaStreamSource(this.fluxo);
+    this.analisador = this.contexto.createAnalyser();
+    this.analisador.fftSize = 256;
+    fonte.connect(this.analisador);
+
+    const dados = new Uint8Array(this.analisador.frequencyBinCount);
+    const barras = 34;
+    const larg = L / barras * 0.55;
+    const vao  = L / barras;
+
+    const pinta = () => {
+      this.animacao = requestAnimationFrame(pinta);
+      this.analisador.getByteFrequencyData(dados);
+      ctx.clearRect(0, 0, L, A);
+      ctx.fillStyle = '#CAD012';
+      for(let i = 0; i < barras; i++){
+        const v = dados[Math.floor(i * dados.length / barras)] / 255;
+        const h = Math.max(A * 0.06, v * A * 0.85);
+        const y = (A - h) / 2;
+        ctx.beginPath();
+        if(ctx.roundRect) ctx.roundRect(i * vao + (vao - larg)/2, y, larg, h, larg/2);
+        else ctx.rect(i * vao + (vao - larg)/2, y, larg, h);
+        ctx.fill();
+      }
+    };
+    pinta();
+  },
+
+  // ── Rever antes de enviar ─────────────────────────────
+  verRever(){
+    const url = URL.createObjectURL(this.blob);
+    document.getElementById('grRever').innerHTML = `
+      <div class="gr-rever">
+        <audio id="grAudio" src="${url}" preload="metadata"></audio>
+        <button class="btn btn-calmo" id="grTocar">▶︎ Ouvir a minha voz</button>
+        <button class="btn" id="grEnviar" style="margin-top:10px;">Enviar para avaliação</button>
+        <button class="gr-refazer" id="grRefazer">Gravar de novo</button>
+      </div>`;
+
+    const a = document.getElementById('grAudio');
+    const bt = document.getElementById('grTocar');
+    bt.onclick = () => {
+      if(a.paused){ a.play(); bt.textContent = '❚❚ A ouvir…'; }
+      else{ a.pause(); bt.textContent = '▶︎ Ouvir a minha voz'; }
+    };
+    a.onended = () => { bt.textContent = '▶︎ Ouvir a minha voz'; };
+
+    document.getElementById('grRefazer').onclick = () => {
+      this.blob = null;
+      document.getElementById('grRever').innerHTML = '';
+      document.getElementById('grDica').textContent = 'Toca para gravar';
+    };
+    document.getElementById('grEnviar').onclick = e => this.enviar(e.currentTarget);
+  },
+
+  // ── Enviar e avaliar ──────────────────────────────────
+  async enviar(botao){
+    botao.disabled = true;
+    botao.innerHTML = 'A avaliar <span class="pontos"><i></i><i></i><i></i></span>';
+
+    try{
+      const base64 = await new Promise((ok, falha) => {
+        const l = new FileReader();
+        l.onload = () => ok(String(l.result).split(',')[1]);
+        l.onerror = () => falha(new Error('não consegui ler o áudio'));
+        l.readAsDataURL(this.blob);
+      });
+
+      const r = await Rede.correr('avaliar_gravacao', {
+        audio_base64:base64,
+        frase:this.alvoTxt(),
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+
+      this.verNota(Number(r.pontuacao) || 0, r.feedback || '', r.transcricao || '');
+    }catch(e){
+      botao.disabled = false;
+      botao.textContent = 'Enviar para avaliação';
+      const d = document.getElementById('grDica');
+      d.textContent = 'Não consegui avaliar. Tenta outra vez.';
+      d.classList.add('gr-dica-erro');
+    }
+  },
+
+  verNota(pontuacao, feedback, transcricao){
+    const xp = Jogo.premiar('gravacao', {pontuacao});
+    let emoji = '💪', titulo = 'Vamos treinar mais';
+    if(pontuacao >= 90){ emoji = '🌟'; titulo = 'Pronúncia impecável'; }
+    else if(pontuacao >= 70){ emoji = '🎉'; titulo = 'Muito bem'; }
+    else if(pontuacao >= 50){ emoji = '👍'; titulo = 'Estás quase'; }
+
+    document.getElementById('v-modulo').innerHTML = `
+      <div style="text-align:center;padding:20px 6px;">
+        <div style="font-size:50px;margin-bottom:10px;">${emoji}</div>
+        <h1 style="font-size:22px;margin-bottom:18px;">${titulo}</h1>
+
+        <div class="ex-anel">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--linha)" stroke-width="11"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--lima)" stroke-width="11"
+              stroke-linecap="round" transform="rotate(-90 60 60)"
+              stroke-dasharray="314" stroke-dashoffset="${314 - 314*pontuacao/100}"/>
+          </svg>
+          <div class="ex-anel-n">${pontuacao}</div>
+        </div>
+
+        <div class="ex-xp" style="margin-bottom:20px;">+${xp} XP</div>
+      </div>
+
+      ${transcricao ? `<div class="gr-ouvido">
+        <div class="gr-ouvido-r">O que ouvi</div>
+        <div class="gr-ouvido-t">${transcricao}</div>
+      </div>` : ''}
+
+      ${feedback ? `<div class="cartao" style="background:#F3EFFB;border-color:#DCD2F2;">
+        <p style="font-size:14px;line-height:1.6;">${feedback}</p>
+      </div>` : ''}
+
+      <button class="btn" id="grOutra" style="margin-top:6px;">Tentar de novo</button>
+      <button class="btn btn-calmo" id="grFim" style="margin-top:10px;">Voltar à lição</button>`;
+
+    document.getElementById('grOutra').onclick = () => this.abrir(this.frase, this.licao);
+    document.getElementById('grFim').onclick = () => this.sair();
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
+   8. ARRANQUE
+   ══════════════════════════════════════════════════════════ */
+const Nucleo = {
+  pintarPar(){
+    document.getElementById('flagDe').textContent   = acharIdioma(Estado.origem, IDIOMAS[0]).b;
+    document.getElementById('flagPara').textContent = acharIdioma(Estado.destino, IDIOMAS[1]).b;
+  },
+
+  pintarNav(){
+    const itens = [
+      {v:'inicio', r:'inicio'}, {v:'perfil', r:'perfil'},
+      {v:'praticar', r:'praticar'}, {v:'planos', r:'planos'},
+      {v:'assistente', r:'assistente'}
+    ];
+    document.getElementById('navInt').innerHTML = itens.map(i => `
+      <button class="nav-btn ${i.v === 'inicio' ? 'on' : ''}" data-vista="${i.v}">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">${ICONES[i.v]}</svg>
+        <span>${t(i.r)}</span>
+      </button>`).join('');
+
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      b.onclick = () => Rota.ir(b.dataset.vista);
+    });
+  },
+
+  // Vai buscar a interface traduzida para a língua da pessoa
+  async carregarTextos(){
+    if(Estado.origem === 'pt'){ Estado.textos = {}; return; }
+
+    // Já a temos guardada?
+    try{
+      const guardado = localStorage.getItem('linguai:textos:' + Estado.origem);
+      if(guardado){ Estado.textos = JSON.parse(guardado); return; }
+    }catch(e){}
+
+    try{
+      const r = await Rede.correr('textos_interface', {
+        idioma: Estado.origem,
+        idioma_nome: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        base: JSON.stringify(RESERVA)
+      });
+      let tx = r.textos;
+      if(typeof tx === 'string'){
+        let s = tx.slice(tx.indexOf('{'));
+        const f = s.lastIndexOf('}'); if(f > -1) s = s.slice(0, f + 1);
+        tx = JSON.parse(s);
+      }
+      if(tx && Object.keys(tx).length){
+        Estado.textos = tx;
+        try{ localStorage.setItem('linguai:textos:' + Estado.origem, JSON.stringify(tx)); }catch(e){}
+      }
+    }catch(e){
+      console.warn('[Lingu.AI] Interface fica em português:', e.message);
+    }
+  },
+
+  // Textos fixos dos ecrãs, pintados de cada vez que a língua muda
+  pintarTextos(){
+    const pares = [
+      ['txPraticarT','praticar_hoje'], ['txPraticarD','praticar_sub'],
+      ['txAsstT','tira_duvidas'],      ['txAsstD','assistente_sub'],
+      ['txPlanosT','planos'],
+      ['txPwaT','instalar_t'],         ['txPwaD','instalar_d'],
+      ['pwaSim','instalar']
+    ];
+    pares.forEach(([id, chave]) => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = t(chave);
+    });
+  },
+
+  async carregarUtilizador(){
+    try{
+      const r = await Rede.correr('me');
+      if(r && r.nome !== undefined){
+        Estado.utilizador = r;
+        if(r.lingua_origem_codigo)  Estado.origem  = r.lingua_origem_codigo;
+        if(r.lingua_destino_codigo) Estado.destino = r.lingua_destino_codigo;
+        if(r.traducoes){
+          try{ Estado.textos = typeof r.traducoes === 'string' ? JSON.parse(r.traducoes) : r.traducoes; }catch(e){}
+        }
+        Estado.guardar();
+      }
+    }catch(e){
+      // Sem sessão: não deixar vestígios de quem usou antes
+      Rede.guardarToken('');
+      Estado.utilizador = null;
+      Estado.textos = {};
+      Estado.origem = 'pt';
+      Estado.destino = 'en';
+      try{
+        localStorage.removeItem('linguai:estado');
+        localStorage.removeItem('linguai:jogo');
+        localStorage.removeItem('linguai:nivel');
+        localStorage.removeItem('linguai:convModo');
+        Object.keys(localStorage).forEach(k => {
+          if(k.indexOf('linguai:textos:') === 0) localStorage.removeItem(k);
+        });
+        // 'linguai:porConfirmar' fica — é o que permite voltar ao ecrã do código
+      }catch(err){}
+      console.warn('[Lingu.AI] Sem sessão iniciada.');
+    }
+  },
+
+  async guardarIdiomas(){
+    try{
+      await Rede.correr('definir_idiomas', {
+        origem_codigo: Estado.origem,
+        origem_nome:   acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino_codigo:Estado.destino,
+        destino_nome:  acharIdioma(Estado.destino, IDIOMAS[1]).n,
+        // Mantém o nível que já tinha — senão seria apagado
+        nivel: (Estado.utilizador && Estado.utilizador.nivel) || ''
+      });
+    }catch(e){
+      console.warn('[Lingu.AI] Idiomas não guardados:', e.message);
+    }
+  },
+
+  async arrancar(){
+    // Primeiro confirmar quem é; só depois usar o que está no aparelho
+    await this.carregarUtilizador();
+
+    if(!Estado.utilizador){
+      let pendente = null;
+      try{ pendente = localStorage.getItem('linguai:porConfirmar'); }catch(e){}
+      Login.abrir();
+      if(pendente) Login.verConfirmar(pendente);
+      return;
+    }
+
+    Estado.repor();
+    Jogo.repor();
+
+    if(Estado.utilizador.confirmado === 'nao'){
+      document.body.classList.add('em-login');
+      document.querySelectorAll('.vista').forEach(v => v.classList.remove('on'));
+      document.getElementById('v-login').classList.add('on');
+      Login.verConfirmar(Estado.utilizador.email || 'o teu email');
+      return;
+    }
+
+    if(Entrada.precisa()){ Entrada.abrir(); return; }
+
+    await this.carregarTextos();
+    this.pintarPar();
+    this.pintarNav();
+    this.pintarTextos();
+    Rota.ir(Estado.vista);
+  }
+};
+
+/* ── Instalação no ecrã principal ──────────────────────── */
+let convitePWA = null;
+
+window.addEventListener('beforeinstallprompt', ev => {
+  ev.preventDefault();
+  convitePWA = ev;
+  try{ if(localStorage.getItem('linguai:semPwa') === 'sim') return; }catch(e){}
+  setTimeout(() => {
+    const b = document.getElementById('pwaBarra');
+    if(b) b.classList.add('on');
+  }, 12000);
+});
+
+document.getElementById('pwaSim').onclick = async () => {
+  const b = document.getElementById('pwaBarra');
+  b.classList.remove('on');
+  if(!convitePWA) return;
+  convitePWA.prompt();
+  await convitePWA.userChoice;
+  convitePWA = null;
+};
+
+document.getElementById('pwaNao').onclick = () => {
+  document.getElementById('pwaBarra').classList.remove('on');
+  try{ localStorage.setItem('linguai:semPwa', 'sim'); }catch(e){}
+};
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+document.getElementById('btnPar').onclick = () => Seletor.abrir('origem');
+Nucleo.arrancar();
+</script>
+</body>
+</html>
