@@ -94,7 +94,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 
 /* ── Progresso do plano ───────────────────────────────── */
 .plano-nota{
-  text-align:center;font-size:13.5px;color:#CFC7E4;
+  text-align:center;font-size:13.5px;color:#D5DDEA;
   margin-bottom:18px;line-height:1.45;
 }
 .perfil-linha{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
@@ -106,12 +106,12 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 }
 .perfil-nome{flex:1 1 130px;min-width:0;}
 .perfil-nome .nome{font-size:16px;color:var(--lima);line-height:1.25;}
-.perfil-nome .meta{font-size:12.5px;color:#CFC7E4;margin-top:2px;}
+.perfil-nome .meta{font-size:12.5px;color:#D5DDEA;margin-top:2px;}
 
 .estatisticas{display:flex;gap:8px;flex:1 1 180px;}
 .estat{flex:1;text-align:center;}
 .estat .n{font-family:'Yusei Magic',cursive;font-size:21px;color:#fff;line-height:1;}
-.estat .r{font-size:11px;color:#CFC7E4;margin-top:5px;line-height:1.2;}
+.estat .r{font-size:11px;color:#D5DDEA;margin-top:5px;line-height:1.2;}
 
 .barra-zona{display:flex;align-items:center;gap:12px;}
 .barra{flex:1;position:relative;height:11px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden;}
@@ -223,10 +223,10 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 .pwa-barra.on{display:flex;}
 .pwa-txt{flex:1;min-width:0;}
 .pwa-t{font-family:'Yusei Magic',cursive;font-size:14.5px;}
-.pwa-d{font-size:12px;color:#CFC7E4;margin-top:2px;line-height:1.35;}
+.pwa-d{font-size:12px;color:#D5DDEA;margin-top:2px;line-height:1.35;}
 .pwa-sim{flex:0 0 auto;background:var(--lima);color:var(--indigo);border-radius:999px;
   padding:10px 18px;font-weight:700;font-size:13px;}
-.pwa-nao{flex:0 0 auto;width:28px;height:28px;color:#CFC7E4;font-size:13px;}
+.pwa-nao{flex:0 0 auto;width:28px;height:28px;color:#D5DDEA;font-size:13px;}
 body.em-login .pwa-barra,body.em-entrada .pwa-barra{bottom:16px;}
 
 /* ── Login ────────────────────────────────────────────── */
@@ -1189,7 +1189,7 @@ const Licoes = {
             <svg width="17" height="17" viewBox="0 0 24 24" fill="#071B41"><path d="M8 5v14l11-7z"/></svg>
           </button>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:13px;color:#CFC7E4;">Ouvir as ${L.frases.length} frases</div>
+            <div style="font-size:13px;color:#D5DDEA;">Ouvir as ${L.frases.length} frases</div>
             <div id="licTempo" style="font-size:12px;color:var(--lima);margin-top:2px;">0:00</div>
           </div>
           <button id="licVel" class="btn btn-calmo" style="width:auto;padding:8px 13px;font-size:12px;background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2);">1×</button>
@@ -4025,8 +4025,6 @@ const Nucleo = {
       const el = document.getElementById(id);
       if(el) el.textContent = t(chave);
     });
-    const pwa = document.getElementById('pwaSim');
-    if(pwa) pwa.textContent = 'Instalar aplicativo';
   },
 
   async carregarUtilizador(){
