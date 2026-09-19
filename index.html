@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#071B41">
+<meta name="theme-color" content="#081B44">
 <title>Lingu.AI</title>
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,21 +19,21 @@
    LINGU.AI — sistema de design
    ══════════════════════════════════════════════════════════ */
 :root{
-  --indigo:#071B41;
-  --indigo-80:#17345F;
-  --indigo-40:#49658F;
+  --indigo:#081B44;
+  --indigo-80:#17366F;
+  --indigo-40:#496B9F;
   --lima:#7CFF00;
-  --coral:#F21E48;
-  --teal:#0FA968;
-  --papel:#F7F9F5;
+  --coral:#F51F47;
+  --teal:#16B8A6;
+  --papel:#F7FAFC;
   --branco:#FFFFFF;
-  --linha:#DCE5DC;
-  --texto:#071B41;
-  --texto-suave:#66738A;
+  --linha:#DCE5EF;
+  --texto:#081B44;
+  --texto-suave:#5E6B80;
 
   --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px;
-  --sombra:0 2px 14px rgba(30,13,66,.07);
-  --sombra-alta:0 12px 34px rgba(30,13,66,.16);
+  --sombra:0 2px 14px rgba(8,27,68,.07);
+  --sombra-alta:0 12px 34px rgba(8,27,68,.16);
   --nav-h:76px;
 }
 
@@ -94,7 +94,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 
 /* ── Progresso do plano ───────────────────────────────── */
 .plano-nota{
-  text-align:center;font-size:13.5px;color:#D5DDEA;
+  text-align:center;font-size:13.5px;color:#CFC7E4;
   margin-bottom:18px;line-height:1.45;
 }
 .perfil-linha{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
@@ -106,12 +106,12 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 }
 .perfil-nome{flex:1 1 130px;min-width:0;}
 .perfil-nome .nome{font-size:16px;color:var(--lima);line-height:1.25;}
-.perfil-nome .meta{font-size:12.5px;color:#D5DDEA;margin-top:2px;}
+.perfil-nome .meta{font-size:12.5px;color:#CFC7E4;margin-top:2px;}
 
 .estatisticas{display:flex;gap:8px;flex:1 1 180px;}
 .estat{flex:1;text-align:center;}
 .estat .n{font-family:'Yusei Magic',cursive;font-size:21px;color:#fff;line-height:1;}
-.estat .r{font-size:11px;color:#D5DDEA;margin-top:5px;line-height:1.2;}
+.estat .r{font-size:11px;color:#CFC7E4;margin-top:5px;line-height:1.2;}
 
 .barra-zona{display:flex;align-items:center;gap:12px;}
 .barra{flex:1;position:relative;height:11px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden;}
@@ -223,10 +223,10 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 .pwa-barra.on{display:flex;}
 .pwa-txt{flex:1;min-width:0;}
 .pwa-t{font-family:'Yusei Magic',cursive;font-size:14.5px;}
-.pwa-d{font-size:12px;color:#D5DDEA;margin-top:2px;line-height:1.35;}
+.pwa-d{font-size:12px;color:#CFC7E4;margin-top:2px;line-height:1.35;}
 .pwa-sim{flex:0 0 auto;background:var(--lima);color:var(--indigo);border-radius:999px;
   padding:10px 18px;font-weight:700;font-size:13px;}
-.pwa-nao{flex:0 0 auto;width:28px;height:28px;color:#D5DDEA;font-size:13px;}
+.pwa-nao{flex:0 0 auto;width:28px;height:28px;color:#CFC7E4;font-size:13px;}
 body.em-login .pwa-barra,body.em-entrada .pwa-barra{bottom:16px;}
 
 /* ── Login ────────────────────────────────────────────── */
@@ -256,7 +256,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .cv-aba.on{background:var(--indigo);color:#fff;border-color:var(--indigo);}
 .cv-niveis{display:flex;gap:8px;}
 .cv-nivel{flex:1;padding:10px 6px;border-radius:999px;background:var(--branco);border:1.5px solid var(--linha);font-size:12.5px;font-weight:600;}
-.cv-nivel.on{background:rgba(43,122,111,.1);border-color:var(--teal);color:var(--teal);}
+.cv-nivel.on{background:rgba(22,184,166,.1);border-color:var(--teal);color:var(--teal);}
 .cv-topo{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;}
 .cv-tema{font-family:'Yusei Magic',cursive;font-size:19px;}
 .cv-sub{font-size:12.5px;color:var(--texto-suave);margin-top:2px;}
@@ -320,7 +320,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .gr-alvo{font-family:'Yusei Magic',cursive;font-size:21px;line-height:1.38;margin-bottom:8px;}
 .gr-origem{font-size:14px;color:var(--texto-suave);line-height:1.45;}
 .gr-pron{font-size:12.5px;color:var(--teal);font-style:italic;margin-top:8px;}
-.gr-ouvir{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:9px 17px;border-radius:999px;background:rgba(43,122,111,.1);font-size:12.5px;font-weight:600;color:var(--teal);}
+.gr-ouvir{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:9px 17px;border-radius:999px;background:rgba(22,184,166,.1);font-size:12.5px;font-weight:600;color:var(--teal);}
 .gr-palco{text-align:center;padding:10px 0 4px;}
 .gr-onda{width:100%;height:76px;margin-bottom:14px;display:block;}
 .gr-botao{width:82px;height:82px;border-radius:50%;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(226,87,76,.32);transition:transform .16s;}
@@ -343,7 +343,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .escolha.op-certa{border-color:var(--teal);background:rgba(43,122,111,.12);}
 .escolha.op-errada{border-color:var(--coral);background:rgba(226,87,76,.1);}
 .ex-reacao{border-radius:var(--r-md);padding:14px 16px;margin:16px 0 12px;}
-.ex-reacao.boa{background:rgba(43,122,111,.1);}
+.ex-reacao.boa{background:rgba(22,184,166,.1);}
 .ex-reacao.ma{background:rgba(226,87,76,.09);}
 .ex-reacao-t{font-family:'Yusei Magic',cursive;font-size:15px;}
 .ex-reacao-d{font-size:14.5px;font-weight:600;margin-top:4px;}
@@ -410,7 +410,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .asst-bolha{max-width:84%;padding:13px 15px;border-radius:17px;font-size:14.5px;line-height:1.55;white-space:pre-wrap;}
 .asst-linha.eu .asst-bolha{background:var(--indigo);color:#fff;border-bottom-right-radius:5px;}
 .asst-linha.ia .asst-bolha{background:var(--branco);border:1.5px solid var(--linha);border-bottom-left-radius:5px;}
-.asst-ouvir{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 12px;border-radius:999px;background:rgba(43,122,111,.1);font-size:11.5px;font-weight:600;color:var(--teal);}
+.asst-ouvir{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 12px;border-radius:999px;background:rgba(22,184,166,.1);font-size:11.5px;font-weight:600;color:var(--teal);}
 .asst-vazio{text-align:center;padding:36px 14px;color:var(--texto-suave);}
 .asst-vazio .t{font-family:'Yusei Magic',cursive;font-size:18px;color:var(--texto);margin-bottom:8px;}
 .asst-vazio p{font-size:13.5px;line-height:1.6;}
@@ -434,9 +434,9 @@ body.em-entrada #ecra{padding-top:30px;padding-bottom:40px;}
     <div class="topo">
       <div class="marca">
         <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#071B41" stroke-width="2.4" stroke-linejoin="round"/>
-          <circle cx="12" cy="12" r="1.9" fill="#071B41"/>
-          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#F21E48" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#081B44" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="1.9" fill="#081B44"/>
+          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#F51F47" stroke-width="2.4" stroke-linecap="round"/>
         </svg>
         <span>Lingu<b>.AI</b></span>
       </div>
@@ -663,7 +663,7 @@ const RESERVA = {
   ola:'Olá!', assistente_vazio:'Pergunta-me o que quiseres — posso explicar, dar exemplos, e até propor um exercício.',
   sug_gramatica:'Regra de gramática', sug_diferenca:'Diferença de palavras', sug_pronuncia:'Como pronunciar',
   // PWA
-  instalar:'Instalar aplicativo', instalar_t:'Instalar o Lingual.top',
+  instalar:'Instalar', instalar_t:'Instalar a Lingu.AI',
   instalar_d:'Fica no teu ecrã principal, como uma app.'
 };
 const t = ch => Estado.textos[ch] || RESERVA[ch] || ch;
@@ -899,7 +899,7 @@ const Seletor = {
   abrir(qual){
     const atual = qual === 'origem' ? Estado.origem : Estado.destino;
     const fundo = document.createElement('div');
-    fundo.style.cssText = 'position:fixed;inset:0;background:rgba(30,13,66,.46);z-index:90;display:flex;align-items:flex-end;justify-content:center;';
+    fundo.style.cssText = 'position:fixed;inset:0;background:rgba(8,27,68,.46);z-index:90;display:flex;align-items:flex-end;justify-content:center;';
     fundo.innerHTML = `
       <div style="background:var(--papel);border-radius:24px 24px 0 0;padding:22px 18px calc(28px + env(safe-area-inset-bottom));width:100%;max-width:520px;max-height:78vh;overflow-y:auto;">
         <h3 style="font-size:17px;margin-bottom:4px;">${qual === 'origem' ? 'Explicações em' : 'Queres aprender'}</h3>
@@ -908,7 +908,7 @@ const Seletor = {
         </p>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
           ${IDIOMAS.map(l => `
-            <button data-cod="${l.c}" style="display:flex;align-items:center;gap:8px;padding:12px 11px;border-radius:13px;background:${l.c === atual ? 'rgba(43,122,111,.1)' : 'var(--branco)'};border:1.5px solid ${l.c === atual ? 'var(--teal)' : 'var(--linha)'};font-weight:600;font-size:13.5px;width:calc(50% - 4px);text-align:left;">
+            <button data-cod="${l.c}" style="display:flex;align-items:center;gap:8px;padding:12px 11px;border-radius:13px;background:${l.c === atual ? 'rgba(22,184,166,.1)' : 'var(--branco)'};border:1.5px solid ${l.c === atual ? 'var(--teal)' : 'var(--linha)'};font-weight:600;font-size:13.5px;width:calc(50% - 4px);text-align:left;">
               <span style="font-size:17px;">${l.b}</span><span>${l.n}</span>
             </button>`).join('')}
         </div>
@@ -1186,10 +1186,10 @@ const Licoes = {
       ${L.audio ? `<div class="cartao-escuro" style="padding:16px 18px;margin-bottom:18px;">
         <div style="display:flex;align-items:center;gap:14px;">
           <button id="licPlay" style="width:46px;height:46px;flex:0 0 auto;border-radius:50%;background:var(--lima);display:flex;align-items:center;justify-content:center;">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="#071B41"><path d="M8 5v14l11-7z"/></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#081B44"><path d="M8 5v14l11-7z"/></svg>
           </button>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:13px;color:#D5DDEA;">Ouvir as ${L.frases.length} frases</div>
+            <div style="font-size:13px;color:#CFC7E4;">Ouvir as ${L.frases.length} frases</div>
             <div id="licTempo" style="font-size:12px;color:var(--lima);margin-top:2px;">0:00</div>
           </div>
           <button id="licVel" class="btn btn-calmo" style="width:auto;padding:8px 13px;font-size:12px;background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2);">1×</button>
@@ -1266,14 +1266,14 @@ const Licoes = {
       const vel = raiz.querySelector('#licVel');
 
       play.onclick = () => {
-        if(a.paused){ a.play(); play.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="#071B41"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
-        else{ a.pause(); play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#071B41"><path d="M8 5v14l11-7z"/></svg>'; }
+        if(a.paused){ a.play(); play.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="#081B44"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
+        else{ a.pause(); play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#081B44"><path d="M8 5v14l11-7z"/></svg>'; }
       };
       a.ontimeupdate = () => {
         const s = Math.floor(a.currentTime);
         tempo.textContent = Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
       };
-      a.onended = () => { play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#071B41"><path d="M8 5v14l11-7z"/></svg>'; };
+      a.onended = () => { play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#081B44"><path d="M8 5v14l11-7z"/></svg>'; };
       vel.onclick = () => {
         this.lento = !this.lento;
         a.playbackRate = this.lento ? 0.72 : 1;
@@ -1481,7 +1481,7 @@ const Entrada = {
         <div style="display:flex;flex-wrap:wrap;gap:9px;">
           ${IDIOMAS.filter(l => l.c !== excluir).map(l => `
             <button data-cod="${l.c}" style="display:flex;align-items:center;gap:9px;padding:14px 12px;border-radius:14px;
-              background:${escolhido && escolhido.c===l.c ? 'rgba(43,122,111,.1)' : 'var(--branco)'};
+              background:${escolhido && escolhido.c===l.c ? 'rgba(22,184,166,.1)' : 'var(--branco)'};
               border:1.5px solid ${escolhido && escolhido.c===l.c ? 'var(--teal)' : 'var(--linha)'};
               font-weight:600;font-size:13.5px;width:calc(50% - 5px);text-align:${rtl?'right':'left'};">
               <span style="font-size:19px;">${l.b}</span><span style="min-width:0;">${l.n}</span>
@@ -1695,7 +1695,7 @@ const PLANOS = [
 ];
 
 const METODOS = [
-  {id:'mpesa', nome:'M-Pesa',            sub:'Vodacom · 84 ou 85', cor:'#F21E48', tipo:'telefone'},
+  {id:'mpesa', nome:'M-Pesa',            sub:'Vodacom · 84 ou 85', cor:'#F51F47', tipo:'telefone'},
   {id:'emola', nome:'e-Mola',            sub:'Movitel · 86 ou 87', cor:'#F5A623', tipo:'telefone'},
   {id:'cartao',nome:'Visa / Mastercard', sub:'Cartão de crédito ou débito', cor:'#2F5E9E', tipo:'cartao'}
 ];
@@ -2484,9 +2484,9 @@ const Login = {
     document.getElementById('v-login').innerHTML = `
       <div class="lg-topo">
         <svg viewBox="0 0 32 32" fill="none" class="lg-marca">
-          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#071B41" stroke-width="2.4" stroke-linejoin="round"/>
-          <circle cx="12" cy="12" r="1.9" fill="#071B41"/>
-          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#F21E48" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#081B44" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="1.9" fill="#081B44"/>
+          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#F51F47" stroke-width="2.4" stroke-linecap="round"/>
         </svg>
         <div class="lg-nome">Lingu<b>.AI</b></div>
         <p class="lg-lema">${esqueci
