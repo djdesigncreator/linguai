@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#081B44">
+<meta name="theme-color" content="#1E0D42">
 <title>Lingu.AI</title>
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,12 +28,12 @@
   --papel:#F7FAFC;
   --branco:#FFFFFF;
   --linha:#DCE5EF;
-  --texto:#081B44;
-  --texto-suave:#5E6B80;
+  --texto:#1E0D42;
+  --texto-suave:5E6B80;
 
   --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px;
-  --sombra:0 2px 14px rgba(8,27,68,.07);
-  --sombra-alta:0 12px 34px rgba(8,27,68,.16);
+  --sombra:0 2px 14px rgba(30,13,66,.07);
+  --sombra-alta:0 12px 34px rgba(30,13,66,.16);
   --nav-h:76px;
 }
 
@@ -256,7 +256,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .cv-aba.on{background:var(--indigo);color:#fff;border-color:var(--indigo);}
 .cv-niveis{display:flex;gap:8px;}
 .cv-nivel{flex:1;padding:10px 6px;border-radius:999px;background:var(--branco);border:1.5px solid var(--linha);font-size:12.5px;font-weight:600;}
-.cv-nivel.on{background:rgba(22,184,166,.1);border-color:var(--teal);color:var(--teal);}
+.cv-nivel.on{background:rgba(43,122,111,.1);border-color:var(--teal);color:var(--teal);}
 .cv-topo{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;}
 .cv-tema{font-family:'Yusei Magic',cursive;font-size:19px;}
 .cv-sub{font-size:12.5px;color:var(--texto-suave);margin-top:2px;}
@@ -320,7 +320,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .gr-alvo{font-family:'Yusei Magic',cursive;font-size:21px;line-height:1.38;margin-bottom:8px;}
 .gr-origem{font-size:14px;color:var(--texto-suave);line-height:1.45;}
 .gr-pron{font-size:12.5px;color:var(--teal);font-style:italic;margin-top:8px;}
-.gr-ouvir{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:9px 17px;border-radius:999px;background:rgba(22,184,166,.1);font-size:12.5px;font-weight:600;color:var(--teal);}
+.gr-ouvir{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:9px 17px;border-radius:999px;background:rgba(43,122,111,.1);font-size:12.5px;font-weight:600;color:var(--teal);}
 .gr-palco{text-align:center;padding:10px 0 4px;}
 .gr-onda{width:100%;height:76px;margin-bottom:14px;display:block;}
 .gr-botao{width:82px;height:82px;border-radius:50%;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(226,87,76,.32);transition:transform .16s;}
@@ -343,7 +343,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .escolha.op-certa{border-color:var(--teal);background:rgba(43,122,111,.12);}
 .escolha.op-errada{border-color:var(--coral);background:rgba(226,87,76,.1);}
 .ex-reacao{border-radius:var(--r-md);padding:14px 16px;margin:16px 0 12px;}
-.ex-reacao.boa{background:rgba(22,184,166,.1);}
+.ex-reacao.boa{background:rgba(43,122,111,.1);}
 .ex-reacao.ma{background:rgba(226,87,76,.09);}
 .ex-reacao-t{font-family:'Yusei Magic',cursive;font-size:15px;}
 .ex-reacao-d{font-size:14.5px;font-weight:600;margin-top:4px;}
@@ -410,7 +410,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .asst-bolha{max-width:84%;padding:13px 15px;border-radius:17px;font-size:14.5px;line-height:1.55;white-space:pre-wrap;}
 .asst-linha.eu .asst-bolha{background:var(--indigo);color:#fff;border-bottom-right-radius:5px;}
 .asst-linha.ia .asst-bolha{background:var(--branco);border:1.5px solid var(--linha);border-bottom-left-radius:5px;}
-.asst-ouvir{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 12px;border-radius:999px;background:rgba(22,184,166,.1);font-size:11.5px;font-weight:600;color:var(--teal);}
+.asst-ouvir{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 12px;border-radius:999px;background:rgba(43,122,111,.1);font-size:11.5px;font-weight:600;color:var(--teal);}
 .asst-vazio{text-align:center;padding:36px 14px;color:var(--texto-suave);}
 .asst-vazio .t{font-family:'Yusei Magic',cursive;font-size:18px;color:var(--texto);margin-bottom:8px;}
 .asst-vazio p{font-size:13.5px;line-height:1.6;}
@@ -434,9 +434,9 @@ body.em-entrada #ecra{padding-top:30px;padding-bottom:40px;}
     <div class="topo">
       <div class="marca">
         <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#081B44" stroke-width="2.4" stroke-linejoin="round"/>
-          <circle cx="12" cy="12" r="1.9" fill="#081B44"/>
-          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#F51F47" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#1E0D42" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="1.9" fill="#1E0D42"/>
+          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#E2574C" stroke-width="2.4" stroke-linecap="round"/>
         </svg>
         <span>Lingu<b>.AI</b></span>
       </div>
@@ -678,6 +678,23 @@ const ACOES_PAGAS = [
   'traduzir','transcrever','assistente'
 ];
 
+/* ══════════════════════════════════════════════════════════
+   VIGIA — bloqueia assim que o tempo acaba
+   ══════════════════════════════════════════════════════════ */
+const Vigia = {
+  tique:null,
+
+  comecar(){
+    if(this.tique) return;
+    this.tique = setInterval(() => {
+      if(Rota.podeUsar()) return;
+      // Acabou o tempo a meio de uma prática
+      if(Estado.vista === 'modulo') Rota.barrar();
+      else if(Estado.vista === 'inicio') Rota.ir('inicio');   // refresca o cartão
+    }, 20000);
+  }
+};
+
 const Rede = {
   token(){
     try{ return localStorage.getItem('linguai:token') || ''; }catch(e){ return ''; }
@@ -693,7 +710,6 @@ const Rede = {
 
     const r = await fetch(url, {
       ...opcoes,
-      credentials:'include',
       headers:cabecalhos
     });
     if(!r.ok){
@@ -769,7 +785,11 @@ const Ecras = {
 
     alvo.innerHTML = `
       <div class="cartao-escuro">
-        <p class="plano-nota">Tens <b style="color:var(--lima)">${u.minutos ?? 0} minutos</b> neste plano</p>
+        <p class="plano-nota">${(() => {
+          const r = Rota.restante();
+          if(!r) return u.plano ? 'Plano terminado' : 'O teu tempo gratuito terminou';
+          return 'Faltam <b style="color:var(--lima)">' + r + '</b>' + (u.plano ? ' neste plano' : ' de teste');
+        })()}</p>
 
         <div class="perfil-linha">
           <div class="avatar">${inicial}</div>
@@ -899,7 +919,7 @@ const Seletor = {
   abrir(qual){
     const atual = qual === 'origem' ? Estado.origem : Estado.destino;
     const fundo = document.createElement('div');
-    fundo.style.cssText = 'position:fixed;inset:0;background:rgba(8,27,68,.46);z-index:90;display:flex;align-items:flex-end;justify-content:center;';
+    fundo.style.cssText = 'position:fixed;inset:0;background:rgba(30,13,66,.46);z-index:90;display:flex;align-items:flex-end;justify-content:center;';
     fundo.innerHTML = `
       <div style="background:var(--papel);border-radius:24px 24px 0 0;padding:22px 18px calc(28px + env(safe-area-inset-bottom));width:100%;max-width:520px;max-height:78vh;overflow-y:auto;">
         <h3 style="font-size:17px;margin-bottom:4px;">${qual === 'origem' ? 'Explicações em' : 'Queres aprender'}</h3>
@@ -908,7 +928,7 @@ const Seletor = {
         </p>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
           ${IDIOMAS.map(l => `
-            <button data-cod="${l.c}" style="display:flex;align-items:center;gap:8px;padding:12px 11px;border-radius:13px;background:${l.c === atual ? 'rgba(22,184,166,.1)' : 'var(--branco)'};border:1.5px solid ${l.c === atual ? 'var(--teal)' : 'var(--linha)'};font-weight:600;font-size:13.5px;width:calc(50% - 4px);text-align:left;">
+            <button data-cod="${l.c}" style="display:flex;align-items:center;gap:8px;padding:12px 11px;border-radius:13px;background:${l.c === atual ? 'rgba(43,122,111,.1)' : 'var(--branco)'};border:1.5px solid ${l.c === atual ? 'var(--teal)' : 'var(--linha)'};font-weight:600;font-size:13.5px;width:calc(50% - 4px);text-align:left;">
               <span style="font-size:17px;">${l.b}</span><span>${l.n}</span>
             </button>`).join('')}
         </div>
@@ -992,8 +1012,25 @@ const Rota = {
   // Uma só verificação, usada em todo o lado
   podeUsar(){
     const u = Estado.utilizador || {};
-    if(u.plano) return true;
-    return Number(u.minutos_usados || 0) < MINUTOS_GRATIS;
+    if(!u.expira) return true;                 // sem data, deixa passar
+    return new Date(u.expira).getTime() > Date.now();
+  },
+
+  // Quanto falta, em texto curto
+  restante(){
+    const u = Estado.utilizador || {};
+    if(!u.expira) return '';
+    const ms = new Date(u.expira).getTime() - Date.now();
+    if(ms <= 0) return '';
+
+    const min = Math.floor(ms / 60000);
+    if(min < 60) return min + (min === 1 ? ' minuto' : ' minutos');
+
+    const horas = Math.floor(min / 60);
+    if(horas < 24) return horas + (horas === 1 ? ' hora' : ' horas');
+
+    const dias = Math.floor(horas / 24);
+    return dias + (dias === 1 ? ' dia' : ' dias');
   },
 
   barrar(){
@@ -1186,7 +1223,7 @@ const Licoes = {
       ${L.audio ? `<div class="cartao-escuro" style="padding:16px 18px;margin-bottom:18px;">
         <div style="display:flex;align-items:center;gap:14px;">
           <button id="licPlay" style="width:46px;height:46px;flex:0 0 auto;border-radius:50%;background:var(--lima);display:flex;align-items:center;justify-content:center;">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="#081B44"><path d="M8 5v14l11-7z"/></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#1E0D42"><path d="M8 5v14l11-7z"/></svg>
           </button>
           <div style="flex:1;min-width:0;">
             <div style="font-size:13px;color:#CFC7E4;">Ouvir as ${L.frases.length} frases</div>
@@ -1266,14 +1303,14 @@ const Licoes = {
       const vel = raiz.querySelector('#licVel');
 
       play.onclick = () => {
-        if(a.paused){ a.play(); play.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="#081B44"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
-        else{ a.pause(); play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#081B44"><path d="M8 5v14l11-7z"/></svg>'; }
+        if(a.paused){ a.play(); play.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="#1E0D42"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
+        else{ a.pause(); play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#1E0D42"><path d="M8 5v14l11-7z"/></svg>'; }
       };
       a.ontimeupdate = () => {
         const s = Math.floor(a.currentTime);
         tempo.textContent = Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
       };
-      a.onended = () => { play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#081B44"><path d="M8 5v14l11-7z"/></svg>'; };
+      a.onended = () => { play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#1E0D42"><path d="M8 5v14l11-7z"/></svg>'; };
       vel.onclick = () => {
         this.lento = !this.lento;
         a.playbackRate = this.lento ? 0.72 : 1;
@@ -1481,7 +1518,7 @@ const Entrada = {
         <div style="display:flex;flex-wrap:wrap;gap:9px;">
           ${IDIOMAS.filter(l => l.c !== excluir).map(l => `
             <button data-cod="${l.c}" style="display:flex;align-items:center;gap:9px;padding:14px 12px;border-radius:14px;
-              background:${escolhido && escolhido.c===l.c ? 'rgba(22,184,166,.1)' : 'var(--branco)'};
+              background:${escolhido && escolhido.c===l.c ? 'rgba(43,122,111,.1)' : 'var(--branco)'};
               border:1.5px solid ${escolhido && escolhido.c===l.c ? 'var(--teal)' : 'var(--linha)'};
               font-weight:600;font-size:13.5px;width:calc(50% - 5px);text-align:${rtl?'right':'left'};">
               <span style="font-size:19px;">${l.b}</span><span style="min-width:0;">${l.n}</span>
@@ -1695,7 +1732,7 @@ const PLANOS = [
 ];
 
 const METODOS = [
-  {id:'mpesa', nome:'M-Pesa',            sub:'Vodacom · 84 ou 85', cor:'#F51F47', tipo:'telefone'},
+  {id:'mpesa', nome:'M-Pesa',            sub:'Vodacom · 84 ou 85', cor:'#E2574C', tipo:'telefone'},
   {id:'emola', nome:'e-Mola',            sub:'Movitel · 86 ou 87', cor:'#F5A623', tipo:'telefone'},
   {id:'cartao',nome:'Visa / Mastercard', sub:'Cartão de crédito ou débito', cor:'#2F5E9E', tipo:'cartao'}
 ];
@@ -1709,18 +1746,30 @@ const Planos = {
     const bloqueado = !atual && restam <= 0;
 
     document.getElementById('planosConteudo').innerHTML = `
-      ${!atual ? `
-        <div class="cartao" style="margin-bottom:20px;${bloqueado ? 'border-color:#F0C88A;background:#FFF7EC;' : ''}">
-          <div style="font-family:'Yusei Magic',cursive;font-size:15.5px;margin-bottom:6px;">
-            ${bloqueado ? 'Os teus 20 minutos terminaram' : 'Estás no plano gratuito'}
-          </div>
-          <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;">
-            ${bloqueado
-              ? 'Escolhe um plano abaixo para continuares a praticar.'
-              : 'Restam-te <b style="color:var(--coral)">' + restam + ' minutos</b> de ' + MINUTOS_GRATIS + '.'}
-          </p>
-          ${!bloqueado ? '<div class="barra-livre"><div style="width:' + (usados/MINUTOS_GRATIS*100) + '%"></div></div>' : ''}
-        </div>` : ''}
+      ${(() => {
+        const resta = Rota.restante();
+        const acabou = !!u.expira && !resta;
+        if(!acabou && atual && resta){
+          return `<div class="cartao" style="margin-bottom:20px;border-color:var(--teal);background:rgba(43,122,111,.05);">
+            <div style="font-family:'Yusei Magic',cursive;font-size:15.5px;margin-bottom:6px;">O teu plano está ativo</div>
+            <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;">
+              Faltam <b style="color:var(--teal)">${resta}</b>.</p>
+          </div>`;
+        }
+        if(!atual){
+          return `<div class="cartao" style="margin-bottom:20px;${acabou ? 'border-color:#F0C88A;background:#FFF7EC;' : ''}">
+            <div style="font-family:'Yusei Magic',cursive;font-size:15.5px;margin-bottom:6px;">
+              ${acabou ? 'O teu tempo gratuito terminou' : 'Estás no plano gratuito'}
+            </div>
+            <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;">
+              ${acabou
+                ? 'Escolhe um plano abaixo para continuares a praticar.'
+                : (resta ? 'Ainda tens <b style="color:var(--coral)">' + resta + '</b>.' : '')}
+            </p>
+          </div>`;
+        }
+        return '';
+      })()}
 
       <p style="color:var(--texto-suave);font-size:14px;line-height:1.6;margin-bottom:20px;">
         Assina de qualquer parte do mundo. Estuda onde estiveres, a qualquer hora.
@@ -2484,9 +2533,9 @@ const Login = {
     document.getElementById('v-login').innerHTML = `
       <div class="lg-topo">
         <svg viewBox="0 0 32 32" fill="none" class="lg-marca">
-          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#081B44" stroke-width="2.4" stroke-linejoin="round"/>
-          <circle cx="12" cy="12" r="1.9" fill="#081B44"/>
-          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#F51F47" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#1E0D42" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="1.9" fill="#1E0D42"/>
+          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#E2574C" stroke-width="2.4" stroke-linecap="round"/>
         </svg>
         <div class="lg-nome">Lingu<b>.AI</b></div>
         <p class="lg-lema">${esqueci
@@ -3842,7 +3891,7 @@ const Gravacao = {
       this.animacao = requestAnimationFrame(pinta);
       this.analisador.getByteFrequencyData(dados);
       ctx.clearRect(0, 0, L, A);
-      ctx.fillStyle = '#7CFF00';
+      ctx.fillStyle = '#CAD012';
       for(let i = 0; i < barras; i++){
         const v = dados[Math.floor(i * dados.length / barras)] / 255;
         const h = Math.max(A * 0.06, v * A * 0.85);
@@ -4105,6 +4154,7 @@ const Nucleo = {
     this.pintarNav();
     this.pintarTextos();
     Rota.ir(Estado.vista);
+    Vigia.comecar();
   }
 };
 
