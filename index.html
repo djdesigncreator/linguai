@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1E0D42">
+<meta name="theme-color" content="#071A3D">
 <title>Lingu.AI</title>
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,21 +19,21 @@
    LINGU.AI — sistema de design
    ══════════════════════════════════════════════════════════ */
 :root{
-  --indigo:#1E0D42;
-  --indigo-80:#3A2A63;
-  --indigo-40:#6B5A9E;
-  --lima:#CAD012;
-  --coral:#E2574C;
-  --teal:#2B7A6F;
-  --papel:#FAF6EF;
+  --indigo:#071A3D;
+  --indigo-80:#12305C;
+  --indigo-40:#5C6F95;
+  --lima:#8AFF00;
+  --coral:#FF1744;
+  --teal:#11B5A5;
+  --papel:#FFFFFF;
   --branco:#FFFFFF;
-  --linha:#E6DFD2;
-  --texto:#1E0D42;
-  --texto-suave:#6B6480;
+  --linha:#DCE6D8;
+  --texto:#071A3D;
+  --texto-suave:#52607A;
 
   --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px;
-  --sombra:0 2px 14px rgba(30,13,66,.07);
-  --sombra-alta:0 12px 34px rgba(30,13,66,.16);
+  --sombra:0 2px 14px rgba(7,26,61,.07);
+  --sombra-alta:0 12px 34px rgba(7,26,61,.16);
   --nav-h:76px;
 }
 
@@ -94,7 +94,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 
 /* ── Progresso do plano ───────────────────────────────── */
 .plano-nota{
-  text-align:center;font-size:13.5px;color:#CFC7E4;
+  text-align:center;font-size:13.5px;color:#CFE6D8;
   margin-bottom:18px;line-height:1.45;
 }
 .perfil-linha{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
@@ -106,12 +106,12 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 }
 .perfil-nome{flex:1 1 130px;min-width:0;}
 .perfil-nome .nome{font-size:16px;color:var(--lima);line-height:1.25;}
-.perfil-nome .meta{font-size:12.5px;color:#CFC7E4;margin-top:2px;}
+.perfil-nome .meta{font-size:12.5px;color:#CFE6D8;margin-top:2px;}
 
 .estatisticas{display:flex;gap:8px;flex:1 1 180px;}
 .estat{flex:1;text-align:center;}
 .estat .n{font-family:'Yusei Magic',cursive;font-size:21px;color:#fff;line-height:1;}
-.estat .r{font-size:11px;color:#CFC7E4;margin-top:5px;line-height:1.2;}
+.estat .r{font-size:11px;color:#CFE6D8;margin-top:5px;line-height:1.2;}
 
 .barra-zona{display:flex;align-items:center;gap:12px;}
 .barra{flex:1;position:relative;height:11px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden;}
@@ -145,7 +145,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 .p-licoes {background:#8B7BF0;color:#1B1040;}
 .p-conversa{background:#A5E3C0;color:#12503A;}
 .p-verbos {background:#F5B5AB;color:#6E2D25;}
-.p-escrita {background:#F9D08B;color:#6B4413;}
+.p-escrita {background:#F9D08B;color:#42621F;}
 .p-vocab  {background:#A9C5E8;color:#1B3A63;}
 .p-traduz {background:#D9C6F0;color:#3B2159;}
 
@@ -179,8 +179,8 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 .vazio .d{font-size:13.5px;line-height:1.55;}
 
 .aviso{
-  background:#FFF4E5;border:1.5px solid #F0C88A;border-radius:var(--r-md);
-  padding:14px 16px;margin-bottom:14px;font-size:13.5px;line-height:1.55;color:#6B4413;
+  background:#F3FFE8;border:1.5px solid #BDEB8A;border-radius:var(--r-md);
+  padding:14px 16px;margin-bottom:14px;font-size:13.5px;line-height:1.55;color:#42621F;
 }
 
 /* ── Botões ───────────────────────────────────────────── */
@@ -208,7 +208,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
   background:var(--branco);border:1.5px solid var(--linha);
   font-weight:600;font-size:14.5px;text-align:left;
 }
-.escolha:active{border-color:var(--teal);background:rgba(43,122,111,.05);}
+.escolha:active{border-color:var(--teal);background:rgba(17,181,165,.05);}
 
 
 
@@ -223,10 +223,10 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 .pwa-barra.on{display:flex;}
 .pwa-txt{flex:1;min-width:0;}
 .pwa-t{font-family:'Yusei Magic',cursive;font-size:14.5px;}
-.pwa-d{font-size:12px;color:#CFC7E4;margin-top:2px;line-height:1.35;}
+.pwa-d{font-size:12px;color:#CFE6D8;margin-top:2px;line-height:1.35;}
 .pwa-sim{flex:0 0 auto;background:var(--lima);color:var(--indigo);border-radius:999px;
   padding:10px 18px;font-weight:700;font-size:13px;}
-.pwa-nao{flex:0 0 auto;width:28px;height:28px;color:#CFC7E4;font-size:13px;}
+.pwa-nao{flex:0 0 auto;width:28px;height:28px;color:#CFE6D8;font-size:13px;}
 body.em-login .pwa-barra,body.em-entrada .pwa-barra{bottom:16px;}
 
 /* ── Login ────────────────────────────────────────────── */
@@ -240,7 +240,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .cod-caixa{display:flex;gap:8px;justify-content:center;margin:6px 0 4px;}
 .cod-d{width:46px;height:56px;text-align:center;font-family:'Yusei Magic',cursive;font-size:24px;
   border:1.5px solid var(--linha);border-radius:var(--r-md);background:var(--branco);color:var(--texto);}
-.cod-d:focus{outline:none;border-color:var(--teal);background:rgba(43,122,111,.04);}
+.cod-d:focus{outline:none;border-color:var(--teal);background:rgba(17,181,165,.04);}
 .lg-senha{position:relative;}
 .lg-senha .campo{padding-right:48px;}
 .lg-olho{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;font-size:15px;}
@@ -256,7 +256,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .cv-aba.on{background:var(--indigo);color:#fff;border-color:var(--indigo);}
 .cv-niveis{display:flex;gap:8px;}
 .cv-nivel{flex:1;padding:10px 6px;border-radius:999px;background:var(--branco);border:1.5px solid var(--linha);font-size:12.5px;font-weight:600;}
-.cv-nivel.on{background:rgba(43,122,111,.1);border-color:var(--teal);color:var(--teal);}
+.cv-nivel.on{background:rgba(17,181,165,.1);border-color:var(--teal);color:var(--teal);}
 .cv-topo{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;}
 .cv-tema{font-family:'Yusei Magic',cursive;font-size:19px;}
 .cv-sub{font-size:12.5px;color:var(--texto-suave);margin-top:2px;}
@@ -265,7 +265,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .cv-vazio{text-align:center;padding:44px 20px;color:var(--texto-suave);font-size:13.5px;line-height:1.6;}
 .cv-trad{font-size:12.5px;color:var(--texto-suave);margin-top:5px;padding:0 4px;line-height:1.45;}
 .cv-palco{text-align:center;padding-top:10px;border-top:1.5px solid var(--linha);}
-.cv-sugestao{background:#FFF7EC;border:1.5px solid #F0C88A;border-radius:var(--r-md);padding:15px 16px;margin-top:14px;font-size:13.5px;}
+.cv-sugestao{background:#FFF7EC;border:1.5px solid #BDEB8A;border-radius:var(--r-md);padding:15px 16px;margin-top:14px;font-size:13.5px;}
 .cv-modelo{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-lg);margin-bottom:11px;overflow:hidden;}
 .cv-modelo-topo{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;}
 .cv-modelo-t{font-family:'Yusei Magic',cursive;font-size:15.5px;line-height:1.3;}
@@ -273,10 +273,10 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .cv-modelo-n{display:inline-block;margin-top:7px;font-size:10.5px;font-weight:600;color:var(--texto-suave);background:var(--papel);padding:3px 9px;border-radius:999px;}
 .cv-modelo-corpo:not(:empty){padding:0 16px 16px;}
 .cv-fala{padding:12px 14px;border-radius:var(--r-md);margin-bottom:8px;}
-.cv-fala.fa{background:rgba(43,122,111,.07);margin-right:20px;}
+.cv-fala.fa{background:rgba(17,181,165,.07);margin-right:20px;}
 .cv-fala.fb{background:rgba(226,87,76,.07);margin-left:20px;}
 .cv-fala-alvo{font-size:14.5px;font-weight:600;line-height:1.45;}
-.cv-fala-ouvir{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(30,13,66,.08);margin-left:6px;vertical-align:middle;color:var(--indigo);}
+.cv-fala-ouvir{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(7,26,61,.08);margin-left:6px;vertical-align:middle;color:var(--indigo);}
 .cv-fala-orig{font-size:12.5px;color:var(--texto-suave);margin-top:3px;line-height:1.4;}
 .cv-fala-pron{font-size:11.5px;color:var(--teal);font-style:italic;margin-top:4px;}
 /* ── Vocabulário ──────────────────────────────────────── */
@@ -307,7 +307,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .vb-frase{display:flex;align-items:center;gap:10px;background:var(--papel);border-radius:var(--r-sm);padding:10px 12px;}
 .vb-fa{font-size:13.5px;font-weight:600;}
 .vb-fo{font-size:12.5px;color:var(--texto-suave);margin-top:2px;}
-.vb-ouvir{width:28px;height:28px;flex:0 0 auto;border-radius:50%;background:rgba(43,122,111,.12);display:flex;align-items:center;justify-content:center;}
+.vb-ouvir{width:28px;height:28px;flex:0 0 auto;border-radius:50%;background:rgba(17,181,165,.12);display:flex;align-items:center;justify-content:center;}
 
 /* ── Tradutor ─────────────────────────────────────────── */
 .tr-direcao{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
@@ -320,13 +320,13 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .gr-alvo{font-family:'Yusei Magic',cursive;font-size:21px;line-height:1.38;margin-bottom:8px;}
 .gr-origem{font-size:14px;color:var(--texto-suave);line-height:1.45;}
 .gr-pron{font-size:12.5px;color:var(--teal);font-style:italic;margin-top:8px;}
-.gr-ouvir{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:9px 17px;border-radius:999px;background:rgba(43,122,111,.1);font-size:12.5px;font-weight:600;color:var(--teal);}
+.gr-ouvir{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:9px 17px;border-radius:999px;background:rgba(17,181,165,.1);font-size:12.5px;font-weight:600;color:var(--teal);}
 .gr-palco{text-align:center;padding:10px 0 4px;}
 .gr-onda{width:100%;height:76px;margin-bottom:14px;display:block;}
 .gr-botao{width:82px;height:82px;border-radius:50%;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(226,87,76,.32);transition:transform .16s;}
 .gr-botao:active{transform:scale(.94);}
 .gr-botao.a-gravar{background:var(--indigo);animation:pulsa 1.4s ease-in-out infinite;}
-@keyframes pulsa{0%,100%{box-shadow:0 0 0 0 rgba(30,13,66,.34);}50%{box-shadow:0 0 0 17px rgba(30,13,66,0);}}
+@keyframes pulsa{0%,100%{box-shadow:0 0 0 0 rgba(7,26,61,.34);}50%{box-shadow:0 0 0 17px rgba(30,13,66,0);}}
 .gr-dica{font-size:13px;color:var(--texto-suave);margin-top:14px;}
 .gr-dica-erro{color:var(--coral);font-weight:600;}
 .gr-rever{margin-top:22px;}
@@ -340,10 +340,10 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .ex-caixa{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-xl);padding:26px 20px;margin-bottom:18px;text-align:center;}
 .ex-enunciado{font-family:'Yusei Magic',cursive;font-size:21px;line-height:1.4;margin-bottom:8px;}
 .ex-apoio{font-size:13.5px;color:var(--texto-suave);line-height:1.45;}
-.escolha.op-certa{border-color:var(--teal);background:rgba(43,122,111,.12);}
+.escolha.op-certa{border-color:var(--teal);background:rgba(17,181,165,.12);}
 .escolha.op-errada{border-color:var(--coral);background:rgba(226,87,76,.1);}
 .ex-reacao{border-radius:var(--r-md);padding:14px 16px;margin:16px 0 12px;}
-.ex-reacao.boa{background:rgba(43,122,111,.1);}
+.ex-reacao.boa{background:rgba(17,181,165,.1);}
 .ex-reacao.ma{background:rgba(226,87,76,.09);}
 .ex-reacao-t{font-family:'Yusei Magic',cursive;font-size:15px;}
 .ex-reacao-d{font-size:14.5px;font-weight:600;margin-top:4px;}
@@ -360,7 +360,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .jogo-selo .n{font-family:'Yusei Magic',cursive;font-size:21px;line-height:1;}
 .jogo-selo .r{font-size:10.5px;color:var(--texto-suave);margin-top:5px;}
 .meta-cartao{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-md);padding:14px 16px;margin-bottom:16px;cursor:pointer;}
-.meta-cartao.meta-feita{border-color:var(--teal);background:rgba(43,122,111,.05);}
+.meta-cartao.meta-feita{border-color:var(--teal);background:rgba(17,181,165,.05);}
 .meta-barra{height:8px;border-radius:999px;background:var(--linha);overflow:hidden;}
 .meta-barra div{height:100%;background:var(--lima);border-radius:999px;transition:width .6s;}
 .conq-selo{width:86px;height:86px;margin:0 auto 18px;border-radius:50%;background:var(--papel);border:2px solid var(--lima);display:flex;align-items:center;justify-content:center;font-size:40px;}
@@ -385,7 +385,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .barra-livre div{height:100%;background:var(--coral);border-radius:999px;}
 
 /* ── Folha de pagamento ───────────────────────────────── */
-.folha-fundo{position:fixed;inset:0;background:rgba(30,13,66,.5);z-index:95;display:flex;align-items:flex-end;justify-content:center;}
+.folha-fundo{position:fixed;inset:0;background:rgba(7,26,61,.5);z-index:95;display:flex;align-items:flex-end;justify-content:center;}
 .folha{background:var(--papel);border-radius:26px 26px 0 0;padding:20px 18px calc(26px + env(safe-area-inset-bottom));width:100%;max-width:520px;max-height:88vh;overflow-y:auto;}
 .folha-topo{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
 .folha-x{width:34px;height:34px;flex:0 0 auto;border-radius:50%;background:var(--branco);border:1.5px solid var(--linha);font-size:15px;color:var(--texto-suave);}
@@ -410,7 +410,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .asst-bolha{max-width:84%;padding:13px 15px;border-radius:17px;font-size:14.5px;line-height:1.55;white-space:pre-wrap;}
 .asst-linha.eu .asst-bolha{background:var(--indigo);color:#fff;border-bottom-right-radius:5px;}
 .asst-linha.ia .asst-bolha{background:var(--branco);border:1.5px solid var(--linha);border-bottom-left-radius:5px;}
-.asst-ouvir{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 12px;border-radius:999px;background:rgba(43,122,111,.1);font-size:11.5px;font-weight:600;color:var(--teal);}
+.asst-ouvir{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 12px;border-radius:999px;background:rgba(17,181,165,.1);font-size:11.5px;font-weight:600;color:var(--teal);}
 .asst-vazio{text-align:center;padding:36px 14px;color:var(--texto-suave);}
 .asst-vazio .t{font-family:'Yusei Magic',cursive;font-size:18px;color:var(--texto);margin-bottom:8px;}
 .asst-vazio p{font-size:13.5px;line-height:1.6;}
@@ -434,9 +434,9 @@ body.em-entrada #ecra{padding-top:30px;padding-bottom:40px;}
     <div class="topo">
       <div class="marca">
         <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#1E0D42" stroke-width="2.4" stroke-linejoin="round"/>
-          <circle cx="12" cy="12" r="1.9" fill="#1E0D42"/>
-          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#E2574C" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#071A3D" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="1.9" fill="#071A3D"/>
+          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#FF1744" stroke-width="2.4" stroke-linecap="round"/>
         </svg>
         <span>Lingu<b>.AI</b></span>
       </div>
@@ -678,23 +678,6 @@ const ACOES_PAGAS = [
   'traduzir','transcrever','assistente'
 ];
 
-/* ══════════════════════════════════════════════════════════
-   VIGIA — bloqueia assim que o tempo acaba
-   ══════════════════════════════════════════════════════════ */
-const Vigia = {
-  tique:null,
-
-  comecar(){
-    if(this.tique) return;
-    this.tique = setInterval(() => {
-      if(Rota.podeUsar()) return;
-      // Acabou o tempo a meio de uma prática
-      if(Estado.vista === 'modulo') Rota.barrar();
-      else if(Estado.vista === 'inicio') Rota.ir('inicio');   // refresca o cartão
-    }, 20000);
-  }
-};
-
 const Rede = {
   token(){
     try{ return localStorage.getItem('linguai:token') || ''; }catch(e){ return ''; }
@@ -710,6 +693,7 @@ const Rede = {
 
     const r = await fetch(url, {
       ...opcoes,
+      credentials:'include',
       headers:cabecalhos
     });
     if(!r.ok){
@@ -785,11 +769,7 @@ const Ecras = {
 
     alvo.innerHTML = `
       <div class="cartao-escuro">
-        <p class="plano-nota">${(() => {
-          const r = Rota.restante();
-          if(!r) return u.plano ? 'Plano terminado' : 'O teu tempo gratuito terminou';
-          return 'Faltam <b style="color:var(--lima)">' + r + '</b>' + (u.plano ? ' neste plano' : ' de teste');
-        })()}</p>
+        <p class="plano-nota">Tens <b style="color:var(--lima)">${u.minutos ?? 0} minutos</b> neste plano</p>
 
         <div class="perfil-linha">
           <div class="avatar">${inicial}</div>
@@ -919,7 +899,7 @@ const Seletor = {
   abrir(qual){
     const atual = qual === 'origem' ? Estado.origem : Estado.destino;
     const fundo = document.createElement('div');
-    fundo.style.cssText = 'position:fixed;inset:0;background:rgba(30,13,66,.46);z-index:90;display:flex;align-items:flex-end;justify-content:center;';
+    fundo.style.cssText = 'position:fixed;inset:0;background:rgba(7,26,61,.46);z-index:90;display:flex;align-items:flex-end;justify-content:center;';
     fundo.innerHTML = `
       <div style="background:var(--papel);border-radius:24px 24px 0 0;padding:22px 18px calc(28px + env(safe-area-inset-bottom));width:100%;max-width:520px;max-height:78vh;overflow-y:auto;">
         <h3 style="font-size:17px;margin-bottom:4px;">${qual === 'origem' ? 'Explicações em' : 'Queres aprender'}</h3>
@@ -928,7 +908,7 @@ const Seletor = {
         </p>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
           ${IDIOMAS.map(l => `
-            <button data-cod="${l.c}" style="display:flex;align-items:center;gap:8px;padding:12px 11px;border-radius:13px;background:${l.c === atual ? 'rgba(43,122,111,.1)' : 'var(--branco)'};border:1.5px solid ${l.c === atual ? 'var(--teal)' : 'var(--linha)'};font-weight:600;font-size:13.5px;width:calc(50% - 4px);text-align:left;">
+            <button data-cod="${l.c}" style="display:flex;align-items:center;gap:8px;padding:12px 11px;border-radius:13px;background:${l.c === atual ? 'rgba(17,181,165,.1)' : 'var(--branco)'};border:1.5px solid ${l.c === atual ? 'var(--teal)' : 'var(--linha)'};font-weight:600;font-size:13.5px;width:calc(50% - 4px);text-align:left;">
               <span style="font-size:17px;">${l.b}</span><span>${l.n}</span>
             </button>`).join('')}
         </div>
@@ -1012,25 +992,8 @@ const Rota = {
   // Uma só verificação, usada em todo o lado
   podeUsar(){
     const u = Estado.utilizador || {};
-    if(!u.expira) return true;                 // sem data, deixa passar
-    return new Date(u.expira).getTime() > Date.now();
-  },
-
-  // Quanto falta, em texto curto
-  restante(){
-    const u = Estado.utilizador || {};
-    if(!u.expira) return '';
-    const ms = new Date(u.expira).getTime() - Date.now();
-    if(ms <= 0) return '';
-
-    const min = Math.floor(ms / 60000);
-    if(min < 60) return min + (min === 1 ? ' minuto' : ' minutos');
-
-    const horas = Math.floor(min / 60);
-    if(horas < 24) return horas + (horas === 1 ? ' hora' : ' horas');
-
-    const dias = Math.floor(horas / 24);
-    return dias + (dias === 1 ? ' dia' : ' dias');
+    if(u.plano) return true;
+    return Number(u.minutos_usados || 0) < MINUTOS_GRATIS;
   },
 
   barrar(){
@@ -1223,10 +1186,10 @@ const Licoes = {
       ${L.audio ? `<div class="cartao-escuro" style="padding:16px 18px;margin-bottom:18px;">
         <div style="display:flex;align-items:center;gap:14px;">
           <button id="licPlay" style="width:46px;height:46px;flex:0 0 auto;border-radius:50%;background:var(--lima);display:flex;align-items:center;justify-content:center;">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="#1E0D42"><path d="M8 5v14l11-7z"/></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#071A3D"><path d="M8 5v14l11-7z"/></svg>
           </button>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:13px;color:#CFC7E4;">Ouvir as ${L.frases.length} frases</div>
+            <div style="font-size:13px;color:#CFE6D8;">Ouvir as ${L.frases.length} frases</div>
             <div id="licTempo" style="font-size:12px;color:var(--lima);margin-top:2px;">0:00</div>
           </div>
           <button id="licVel" class="btn btn-calmo" style="width:auto;padding:8px 13px;font-size:12px;background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2);">1×</button>
@@ -1257,14 +1220,14 @@ const Licoes = {
     const pron = f.pronuncia || '';
     const sel = idx === this.fraseSel;
     return `
-      <div class="cartao" data-frase="${idx}" style="padding:15px 16px;margin-bottom:9px;cursor:pointer;${sel?'border-color:var(--teal);background:rgba(43,122,111,.05);':''}">
+      <div class="cartao" data-frase="${idx}" style="padding:15px 16px;margin-bottom:9px;cursor:pointer;${sel?'border-color:var(--teal);background:rgba(17,181,165,.05);':''}">
         <div style="display:flex;align-items:flex-start;gap:12px;">
           <div style="flex:1;min-width:0;">
             <div style="font-weight:600;font-size:15px;">${alvo}</div>
             <div style="font-size:13px;color:var(--texto-suave);margin-top:2px;">${orig}</div>
             ${pron ? `<div style="font-size:12px;color:var(--teal);font-style:italic;margin-top:4px;">🗣 ${pron}</div>` : ''}
           </div>
-          <button class="ouvir-frase" data-texto="${alvo.replace(/"/g,'&quot;')}" style="width:32px;height:32px;flex:0 0 auto;border-radius:50%;background:rgba(43,122,111,.12);display:flex;align-items:center;justify-content:center;">
+          <button class="ouvir-frase" data-texto="${alvo.replace(/"/g,'&quot;')}" style="width:32px;height:32px;flex:0 0 auto;border-radius:50%;background:rgba(17,181,165,.12);display:flex;align-items:center;justify-content:center;">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="var(--teal)"><path d="M8 5v14l11-7z"/></svg>
           </button>
         </div>
@@ -1303,14 +1266,14 @@ const Licoes = {
       const vel = raiz.querySelector('#licVel');
 
       play.onclick = () => {
-        if(a.paused){ a.play(); play.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="#1E0D42"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
-        else{ a.pause(); play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#1E0D42"><path d="M8 5v14l11-7z"/></svg>'; }
+        if(a.paused){ a.play(); play.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="#071A3D"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
+        else{ a.pause(); play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#071A3D"><path d="M8 5v14l11-7z"/></svg>'; }
       };
       a.ontimeupdate = () => {
         const s = Math.floor(a.currentTime);
         tempo.textContent = Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
       };
-      a.onended = () => { play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#1E0D42"><path d="M8 5v14l11-7z"/></svg>'; };
+      a.onended = () => { play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#071A3D"><path d="M8 5v14l11-7z"/></svg>'; };
       vel.onclick = () => {
         this.lento = !this.lento;
         a.playbackRate = this.lento ? 0.72 : 1;
@@ -1518,7 +1481,7 @@ const Entrada = {
         <div style="display:flex;flex-wrap:wrap;gap:9px;">
           ${IDIOMAS.filter(l => l.c !== excluir).map(l => `
             <button data-cod="${l.c}" style="display:flex;align-items:center;gap:9px;padding:14px 12px;border-radius:14px;
-              background:${escolhido && escolhido.c===l.c ? 'rgba(43,122,111,.1)' : 'var(--branco)'};
+              background:${escolhido && escolhido.c===l.c ? 'rgba(17,181,165,.1)' : 'var(--branco)'};
               border:1.5px solid ${escolhido && escolhido.c===l.c ? 'var(--teal)' : 'var(--linha)'};
               font-weight:600;font-size:13.5px;width:calc(50% - 5px);text-align:${rtl?'right':'left'};">
               <span style="font-size:19px;">${l.b}</span><span style="min-width:0;">${l.n}</span>
@@ -1732,7 +1695,7 @@ const PLANOS = [
 ];
 
 const METODOS = [
-  {id:'mpesa', nome:'M-Pesa',            sub:'Vodacom · 84 ou 85', cor:'#E2574C', tipo:'telefone'},
+  {id:'mpesa', nome:'M-Pesa',            sub:'Vodacom · 84 ou 85', cor:'#FF1744', tipo:'telefone'},
   {id:'emola', nome:'e-Mola',            sub:'Movitel · 86 ou 87', cor:'#F5A623', tipo:'telefone'},
   {id:'cartao',nome:'Visa / Mastercard', sub:'Cartão de crédito ou débito', cor:'#2F5E9E', tipo:'cartao'}
 ];
@@ -1746,30 +1709,18 @@ const Planos = {
     const bloqueado = !atual && restam <= 0;
 
     document.getElementById('planosConteudo').innerHTML = `
-      ${(() => {
-        const resta = Rota.restante();
-        const acabou = !!u.expira && !resta;
-        if(!acabou && atual && resta){
-          return `<div class="cartao" style="margin-bottom:20px;border-color:var(--teal);background:rgba(43,122,111,.05);">
-            <div style="font-family:'Yusei Magic',cursive;font-size:15.5px;margin-bottom:6px;">O teu plano está ativo</div>
-            <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;">
-              Faltam <b style="color:var(--teal)">${resta}</b>.</p>
-          </div>`;
-        }
-        if(!atual){
-          return `<div class="cartao" style="margin-bottom:20px;${acabou ? 'border-color:#F0C88A;background:#FFF7EC;' : ''}">
-            <div style="font-family:'Yusei Magic',cursive;font-size:15.5px;margin-bottom:6px;">
-              ${acabou ? 'O teu tempo gratuito terminou' : 'Estás no plano gratuito'}
-            </div>
-            <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;">
-              ${acabou
-                ? 'Escolhe um plano abaixo para continuares a praticar.'
-                : (resta ? 'Ainda tens <b style="color:var(--coral)">' + resta + '</b>.' : '')}
-            </p>
-          </div>`;
-        }
-        return '';
-      })()}
+      ${!atual ? `
+        <div class="cartao" style="margin-bottom:20px;${bloqueado ? 'border-color:#BDEB8A;background:#FFF7EC;' : ''}">
+          <div style="font-family:'Yusei Magic',cursive;font-size:15.5px;margin-bottom:6px;">
+            ${bloqueado ? 'Os teus 20 minutos terminaram' : 'Estás no plano gratuito'}
+          </div>
+          <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;">
+            ${bloqueado
+              ? 'Escolhe um plano abaixo para continuares a praticar.'
+              : 'Restam-te <b style="color:var(--coral)">' + restam + ' minutos</b> de ' + MINUTOS_GRATIS + '.'}
+          </p>
+          ${!bloqueado ? '<div class="barra-livre"><div style="width:' + (usados/MINUTOS_GRATIS*100) + '%"></div></div>' : ''}
+        </div>` : ''}
 
       <p style="color:var(--texto-suave);font-size:14px;line-height:1.6;margin-bottom:20px;">
         Assina de qualquer parte do mundo. Estuda onde estiveres, a qualquer hora.
@@ -2029,7 +1980,7 @@ const Pagamento = {
   sucesso(transacao){
     this.folha(`
       <div style="text-align:center;padding:26px 6px 10px;">
-        <div style="width:62px;height:62px;margin:0 auto 18px;border-radius:50%;background:rgba(43,122,111,.12);display:flex;align-items:center;justify-content:center;">
+        <div style="width:62px;height:62px;margin:0 auto 18px;border-radius:50%;background:rgba(17,181,165,.12);display:flex;align-items:center;justify-content:center;">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg>
         </div>
         <div style="font-family:'Yusei Magic',cursive;font-size:19px;margin-bottom:8px;">Pagamento recebido</div>
@@ -2492,7 +2443,7 @@ const Jogo = {
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;">
           ${METAS.map(m => `
-            <button class="escolha" data-meta="${m.id}" style="${m.id === this.e.meta ? 'border-color:var(--teal);background:rgba(43,122,111,.06);' : ''}">
+            <button class="escolha" data-meta="${m.id}" style="${m.id === this.e.meta ? 'border-color:var(--teal);background:rgba(17,181,165,.06);' : ''}">
               <span><span style="display:block;">${m.nome}</span>
               <span style="display:block;font-size:12px;color:var(--texto-suave);font-weight:400;margin-top:2px;">${m.xp} XP · ${m.d}</span></span>
             </button>`).join('')}
@@ -2533,9 +2484,9 @@ const Login = {
     document.getElementById('v-login').innerHTML = `
       <div class="lg-topo">
         <svg viewBox="0 0 32 32" fill="none" class="lg-marca">
-          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#1E0D42" stroke-width="2.4" stroke-linejoin="round"/>
-          <circle cx="12" cy="12" r="1.9" fill="#1E0D42"/>
-          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#E2574C" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M16 3C9 3 4 7.7 4 13.5c0 3 1.4 5.6 3.7 7.5L6.5 27l5.8-3.2c1.2.3 2.4.4 3.7.4 7 0 12-4.7 12-10.7S23 3 16 3z" stroke="#071A3D" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="1.9" fill="#071A3D"/>
+          <path d="M17 15c1.8 0 3.2 1 3.2 2.4S18.8 20 17 20" stroke="#FF1744" stroke-width="2.4" stroke-linecap="round"/>
         </svg>
         <div class="lg-nome">Lingu<b>.AI</b></div>
         <p class="lg-lema">${esqueci
@@ -3083,11 +3034,11 @@ const Conversa = {
         <div class="ex-xp">+${xp} XP</div>
       </div>
 
-      ${fortes ? `<div class="cartao" style="border-color:rgba(43,122,111,.4);background:rgba(43,122,111,.05);">
+      ${fortes ? `<div class="cartao" style="border-color:rgba(17,181,165,.4);background:rgba(17,181,165,.05);">
         <div class="mini-rotulo" style="color:var(--teal);">Pontos fortes</div>
         <p style="font-size:14px;line-height:1.6;">${fortes}</p></div>` : ''}
 
-      ${melhorar ? `<div class="cartao" style="border-color:#F0C88A;background:#FFF7EC;">
+      ${melhorar ? `<div class="cartao" style="border-color:#BDEB8A;background:#FFF7EC;">
         <div class="mini-rotulo" style="color:#B8860B;">A melhorar</div>
         <p style="font-size:14px;line-height:1.6;">${melhorar}</p></div>` : ''}
 
@@ -3891,7 +3842,7 @@ const Gravacao = {
       this.animacao = requestAnimationFrame(pinta);
       this.analisador.getByteFrequencyData(dados);
       ctx.clearRect(0, 0, L, A);
-      ctx.fillStyle = '#CAD012';
+      ctx.fillStyle = '#8AFF00';
       for(let i = 0; i < barras; i++){
         const v = dados[Math.floor(i * dados.length / barras)] / 255;
         const h = Math.max(A * 0.06, v * A * 0.85);
@@ -4154,7 +4105,6 @@ const Nucleo = {
     this.pintarNav();
     this.pintarTextos();
     Rota.ir(Estado.vista);
-    Vigia.comecar();
   }
 };
 
