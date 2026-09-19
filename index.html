@@ -678,6 +678,23 @@ const ACOES_PAGAS = [
   'traduzir','transcrever','assistente'
 ];
 
+/* ══════════════════════════════════════════════════════════
+   VIGIA — bloqueia assim que o tempo acaba
+   ══════════════════════════════════════════════════════════ */
+const Vigia = {
+  tique:null,
+
+  comecar(){
+    if(this.tique) return;
+    this.tique = setInterval(() => {
+      if(Rota.podeUsar()) return;
+      // Acabou o tempo a meio de uma prática
+      if(Estado.vista === 'modulo') Rota.barrar();
+      else if(Estado.vista === 'inicio') Rota.ir('inicio');   // refresca o cartão
+    }, 20000);
+  }
+};
+
 const Rede = {
   token(){
     try{ return localStorage.getItem('linguai:token') || ''; }catch(e){ return ''; }
@@ -768,7 +785,11 @@ const Ecras = {
 
     alvo.innerHTML = `
       <div class="cartao-escuro">
-        <p class="plano-nota">Tens <b style="color:var(--lima)">${u.minutos ?? 0} minutos</b> neste plano</p>
+        <p class="plano-nota">${(() => {
+          const r = Rota.restante();
+          if(!r) return u.plano ? 'Plano terminado' : 'O teu tempo gratuito terminou';
+          return 'Faltam <b style="color:var(--lima)">' + r + '</b>' + (u.plano ? ' neste plano' : ' de teste');
+        })()}</p>
 
         <div class="perfil-linha">
           <div class="avatar">${inicial}</div>
@@ -991,8 +1012,25 @@ const Rota = {
   // Uma só verificação, usada em todo o lado
   podeUsar(){
     const u = Estado.utilizador || {};
-    if(u.plano) return true;
-    return Number(u.minutos_usados || 0) < MINUTOS_GRATIS;
+    if(!u.expira) return true;                 // sem data, deixa passar
+    return new Date(u.expira).getTime() > Date.now();
+  },
+
+  // Quanto falta, em texto curto
+  restante(){
+    const u = Estado.utilizador || {};
+    if(!u.expira) return '';
+    const ms = new Date(u.expira).getTime() - Date.now();
+    if(ms <= 0) return '';
+
+    const min = Math.floor(ms / 60000);
+    if(min < 60) return min + (min === 1 ? ' minuto' : ' minutos');
+
+    const horas = Math.floor(min / 60);
+    if(horas < 24) return horas + (horas === 1 ? ' hora' : ' horas');
+
+    const dias = Math.floor(horas / 24);
+    return dias + (dias === 1 ? ' dia' : ' dias');
   },
 
   barrar(){
@@ -1708,18 +1746,30 @@ const Planos = {
     const bloqueado = !atual && restam <= 0;
 
     document.getElementById('planosConteudo').innerHTML = `
-      ${!atual ? `
-        <div class="cartao" style="margin-bottom:20px;${bloqueado ? 'border-color:#F0C88A;background:#FFF7EC;' : ''}">
-          <div style="font-family:'Yusei Magic',cursive;font-size:15.5px;margin-bottom:6px;">
-            ${bloqueado ? 'Os teus 20 minutos terminaram' : 'Estás no plano gratuito'}
-          </div>
-          <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;">
-            ${bloqueado
-              ? 'Escolhe um plano abaixo para continuares a praticar.'
-              : 'Restam-te <b style="color:var(--coral)">' + restam + ' minutos</b> de ' + MINUTOS_GRATIS + '.'}
-          </p>
-          ${!bloqueado ? '<div class="barra-livre"><div style="width:' + (usados/MINUTOS_GRATIS*100) + '%"></div></div>' : ''}
-        </div>` : ''}
+      ${(() => {
+        const resta = Rota.restante();
+        const acabou = !!u.expira && !resta;
+        if(!acabou && atual && resta){
+          return `<div class="cartao" style="margin-bottom:20px;border-color:var(--teal);background:rgba(43,122,111,.05);">
+            <div style="font-family:'Yusei Magic',cursive;font-size:15.5px;margin-bottom:6px;">O teu plano está ativo</div>
+            <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;">
+              Faltam <b style="color:var(--teal)">${resta}</b>.</p>
+          </div>`;
+        }
+        if(!atual){
+          return `<div class="cartao" style="margin-bottom:20px;${acabou ? 'border-color:#F0C88A;background:#FFF7EC;' : ''}">
+            <div style="font-family:'Yusei Magic',cursive;font-size:15.5px;margin-bottom:6px;">
+              ${acabou ? 'O teu tempo gratuito terminou' : 'Estás no plano gratuito'}
+            </div>
+            <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.55;">
+              ${acabou
+                ? 'Escolhe um plano abaixo para continuares a praticar.'
+                : (resta ? 'Ainda tens <b style="color:var(--coral)">' + resta + '</b>.' : '')}
+            </p>
+          </div>`;
+        }
+        return '';
+      })()}
 
       <p style="color:var(--texto-suave);font-size:14px;line-height:1.6;margin-bottom:20px;">
         Assina de qualquer parte do mundo. Estuda onde estiveres, a qualquer hora.
@@ -4104,6 +4154,7 @@ const Nucleo = {
     this.pintarNav();
     this.pintarTextos();
     Rota.ir(Estado.vista);
+    Vigia.comecar();
   }
 };
 
