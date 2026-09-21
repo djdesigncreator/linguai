@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-3 · motor de tradução · live -->
+<!-- LINGUAI-VERSAO-4 · estatísticas · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -121,6 +121,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
   background:var(--lima);border-radius:999px;
   transition:width .9s cubic-bezier(.2,.7,.3,1);
 }
+.barra-rotulo{font-size:12px;color:#CFC7E4;margin-top:8px;}
 .barra-txt{font-family:'Yusei Magic',cursive;font-size:17px;color:var(--lima);flex:0 0 auto;}
 
 /* ── Menu de práticas ─────────────────────────────────── */
@@ -1031,7 +1032,10 @@ const Ecras = {
     }
 
     const inicial = (u.nome || '?').trim().charAt(0).toUpperCase();
-    const pct = Math.max(0, Math.min(100, Math.round(u.progresso || 0)));
+    Jogo.verificarDia();
+    const meta = Jogo.metaAtual();
+    const pct = Math.max(0, Math.min(100, Math.round(Jogo.e.xpHoje / meta.xp * 100)));
+    const metaFeita = Jogo.e.xpHoje >= meta.xp;
     const dest = acharIdioma(Estado.destino, IDIOMAS[1]);
 
     alvo.innerHTML = `
@@ -1055,10 +1059,13 @@ const Ecras = {
           </div>
         </div>
 
-        <div class="barra-zona">
+        <div class="barra-zona" id="barraMeta" role="button" style="cursor:pointer;">
           <div class="barra"><div class="barra-fill" id="barraFill"></div></div>
           <div class="barra-txt">${pct}%</div>
         </div>
+        <div class="barra-rotulo">${metaFeita
+          ? '✓ ' + t('meta_feita')
+          : t('meta_hoje') + ' · ' + Jogo.e.xpHoje + '/' + meta.xp + ' XP'}</div>
       </div>
 
       ${Jogo.cartao()}
@@ -1071,8 +1078,8 @@ const Ecras = {
       if(f) f.style.width = pct + '%';
     });
 
-    const mc = alvo.querySelector('.meta-cartao');
-    if(mc) mc.onclick = () => Jogo.escolherMeta();
+    const bm = alvo.querySelector('#barraMeta');
+    if(bm) bm.onclick = () => Jogo.escolherMeta();
 
     document.getElementById('atalhoRapido').innerHTML = this.botaoPratica(PRATICAS[0]);
     this.ligarPraticas();
@@ -2391,6 +2398,24 @@ const Assistente = {
   }
 };
 
+
+/* ══════════════════════════════════════════════════════════
+   ESTATÍSTICAS — soma lições, conversas e escritas no Bubble
+   ══════════════════════════════════════════════════════════ */
+const Estatisticas = {
+  campo:{licao:'licoes', conversa:'conversas', escrita:'escritas'},
+
+  registar(tipo){
+    const campo = this.campo[tipo];
+    if(!campo) return;
+    // Mostra já no ecrã, sem esperar pelo servidor
+    const u = Estado.utilizador;
+    if(u) u[campo] = Number(u[campo] || 0) + 1;
+    Rede.correr('registar_atividade', {tipo}).catch(e =>
+      console.warn('[Lingu.AI] Estatística não gravada:', e.message));
+  }
+};
+
 /* ══════════════════════════════════════════════════════════
    MÓDULO: EXERCÍCIOS
    Gerados a partir das frases da própria lição.
@@ -2466,6 +2491,7 @@ const Exercicios = {
   abrir(licao){
     if(!this.montar(licao)){
       Jogo.premiar('licao', {tema:licao.tema});
+      if(!licao._contada){ licao._contada = true; Estatisticas.registar('licao'); }
       return Licoes.verLicao();
     }
     Rota.mostrarModulo();
@@ -2533,6 +2559,7 @@ const Exercicios = {
     const total = this.lista.length;
     const pct = Math.round(this.acertos / total * 100);
     const xp = Jogo.premiar('exercicio', {acertos:this.acertos, total, tema:this.licao.tema});
+    if(!this.licao._contada){ this.licao._contada = true; Estatisticas.registar('licao'); }
 
     let titulo = 'Continua a praticar', emoji = '💪';
     if(pct >= 90){ titulo = 'Impecável!'; emoji = '🏆'; }
@@ -2699,15 +2726,7 @@ const Jogo = {
         </div>
       </div>
 
-      <div class="meta-cartao ${feito ? 'meta-feita' : ''}">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
-          <span style="font-size:13.5px;font-weight:600;">
-            ${feito ? '✓ Meta de hoje cumprida' : 'Meta de hoje · ' + meta.nome}
-          </span>
-          <span style="font-size:12.5px;color:var(--texto-suave);">${this.e.xpHoje}/${meta.xp} XP</span>
-        </div>
-        <div class="meta-barra"><div style="width:${pct}%"></div></div>
-      </div>`;
+`;
   },
 
   // Ecrã de conquistas, para o Perfil
@@ -3309,6 +3328,7 @@ const Conversa = {
 
   verAvaliacao(pontuacao, fortes, melhorar, geral){
     const xp = Jogo.premiar('conversa', {pontuacao});
+    Estatisticas.registar('conversa');
     document.getElementById('v-modulo').innerHTML = `
       <div style="text-align:center;padding:18px 6px;">
         <div style="font-size:48px;margin-bottom:10px;">🗣</div>
@@ -3705,6 +3725,7 @@ const Escrita = {
 
   verResultado(pontuacao, corrigida, erros, feedback){
     const xp = Jogo.premiar('escrita', {pontuacao});
+    Estatisticas.registar('escrita');
     document.getElementById('v-modulo').innerHTML = `
       <div style="text-align:center;padding:16px 6px;">
         <div class="ex-anel">
