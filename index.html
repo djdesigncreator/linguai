@@ -2151,8 +2151,7 @@ const Pagamento = {
     try{
       // O Bubble cobra, lê a resposta da MozPayment e ativa o plano.
       // O telemóvel só pede — nunca confirma.
-      const r = await Rede.correr('pagar_movel', {
-        metodo: metodo.id,
+      const r = await Rede.correr(metodo.id === 'mpesa' ? 'pagar_mpesa' : 'pagar_emola', {
         plano:  this.plano.id,
         numero,
         cliente: nome
