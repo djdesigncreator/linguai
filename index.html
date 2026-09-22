@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-5 · pagamentos pelo Bubble · live -->
+<!-- LINGUAI-VERSAO-6 · tradutor em tempo real · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -316,6 +316,22 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .tr-lado{flex:1;background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-md);padding:12px 10px;text-align:center;font-size:13.5px;font-weight:600;}
 .tr-troca{width:40px;height:40px;flex:0 0 auto;border-radius:50%;background:var(--indigo);color:#fff;font-size:17px;}
 #trGravar.a-gravar{background:var(--coral);color:#fff;border-color:var(--coral);}
+/* ── Tradutor em tempo real ──────────────────────────── */
+.tv-saida{margin:16px 0 4px;}
+.tv-saida-r{font-size:12.5px;font-weight:600;color:var(--texto-suave);margin-bottom:7px;}
+.tv-saida-op{display:flex;gap:6px;}
+.tv-saida-op button{flex:1;padding:10px 4px;border-radius:var(--r-sm);background:var(--branco);border:1.5px solid var(--linha);font-size:12.5px;font-weight:600;color:var(--texto);}
+.tv-saida-op button.on{border-color:var(--teal);background:rgba(22,184,166,.08);color:var(--teal);}
+.tv-saida-n{font-size:11.5px;color:var(--texto-suave);margin-top:7px;line-height:1.45;}
+.tv-fio{margin-top:12px;max-height:46vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.tv-seg{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-md);padding:13px 15px;}
+.tv-trad{font-size:17px;font-weight:600;line-height:1.45;color:var(--texto);}
+.tv-orig{font-size:12.5px;color:var(--texto-suave);margin-top:5px;line-height:1.4;}
+.tv-parcial{font-size:14px;color:var(--texto-suave);font-style:italic;min-height:20px;margin-top:10px;}
+.tv-vazio{text-align:center;padding:28px 16px;font-size:13.5px;color:var(--texto-suave);line-height:1.6;}
+.tv-acoes{display:flex;gap:10px;margin-top:12px;}
+.tv-acoes .btn{flex:1;padding:12px;font-size:13px;}
+
 /* ── Gravação ─────────────────────────────────────────── */
 .gr-etiqueta{font-size:11.5px;font-weight:600;color:var(--teal);letter-spacing:1.4px;text-transform:uppercase;margin-bottom:12px;}
 .gr-frase{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-xl);padding:24px 20px;text-align:center;margin-bottom:22px;}
@@ -779,6 +795,15 @@ const EXTRA_PT = {
 };
 Object.assign(RESERVA, EXTRA_PT);
 RESERVA.x_confirma_telemovel = 'Confirma o pagamento no teu telemóvel';
+Object.assign(RESERVA, {
+  x_tv_normal:'Normal', x_tv_tempo_real:'Em tempo real',
+  x_tv_comecar:'Toca para começar a ouvir', x_tv_a_ouvir:'A ouvir — fala à vontade',
+  x_tv_voz:'Voz da tradução', x_tv_desligada:'Desligada', x_tv_auric:'Auriculares', x_tv_altif:'Altifalante',
+  x_tv_nota_altif:'Com o altifalante, o microfone pausa enquanto a tradução fala.',
+  x_tv_copiar:'Copiar tudo', x_tv_copiado:'Copiado ✓', x_tv_limpar:'Limpar',
+  x_tv_vazio:'Toca no microfone e fala. A tradução aparece aqui, frase a frase.',
+  x_tv_sem_rede:'Sem ligação — tenta outra vez.'
+});
 const t = ch => Estado.textos[ch] || RESERVA[ch] || ch;
 
 
@@ -1240,6 +1265,7 @@ const Seletor = {
    ══════════════════════════════════════════════════════════ */
 const Rota = {
   ir(vista){
+    if(typeof Tradutor !== 'undefined' && Tradutor.vivo) Tradutor.pararVivo();
     Estado.vista = vista;
     document.querySelectorAll('.vista').forEach(v => v.classList.remove('on'));
     const alvo = document.getElementById('v-' + vista);
@@ -2053,6 +2079,20 @@ const Planos = {
 };
 
 /* ── Pagamento ──────────────────────────────────────────── */
+/* ── Onde está a pessoa? ────────────────────────────────
+   M-Pesa e e-Mola só fazem sentido em Moçambique.
+   O fuso 'Africa/Maputo' é exclusivo do país. */
+const Regiao = {
+  emMocambique(){
+    try{
+      const fuso = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      if(fuso === 'Africa/Maputo') return true;
+    }catch(e){}
+    const linguas = (navigator.languages || [navigator.language || '']).join(',').toLowerCase();
+    return /-mz\b/.test(linguas);
+  }
+};
+
 const Pagamento = {
   plano:null, fundo:null,
 
@@ -2092,7 +2132,7 @@ const Pagamento = {
       this.topo(this.plano.nome, this.plano.preco + ' · ' + this.plano.periodo, false) +
       `<p style="font-size:13px;color:var(--texto-suave);margin-bottom:14px;">Como queres pagar?</p>
        <div style="display:flex;flex-direction:column;gap:10px;">
-       ${METODOS.map(m => `
+       ${(Regiao.emMocambique() ? METODOS : METODOS.filter(m => m.tipo === 'cartao')).map(m => `
          <button class="metodo" data-metodo="${m.id}">
            <span class="metodo-ponto" style="background:${m.cor}"></span>
            <span style="flex:1;min-width:0;">
@@ -3896,10 +3936,30 @@ const Tradutor = {
   de(){ return this.invertido ? acharIdioma(Estado.destino, IDIOMAS[1]) : acharIdioma(Estado.origem, IDIOMAS[0]); },
   para(){ return this.invertido ? acharIdioma(Estado.origem, IDIOMAS[0]) : acharIdioma(Estado.destino, IDIOMAS[1]); },
 
+  abas(){
+    return `<div class="cv-abas">
+      <button class="cv-aba ${this.modo !== 'vivo' ? 'on' : ''}" data-trmodo="normal">✍️ Normal</button>
+      <button class="cv-aba ${this.modo === 'vivo' ? 'on' : ''}" data-trmodo="vivo">🎙 Em tempo real</button>
+    </div>`;
+  },
+
+  ligarAbas(){
+    document.querySelectorAll('#v-modulo [data-trmodo]').forEach(b => {
+      b.onclick = () => {
+        if(b.dataset.trmodo === this.modo) return;
+        this.pararVivo();
+        this.modo = b.dataset.trmodo;
+        this.ver();
+      };
+    });
+  },
+
   ver(){
+    if(this.modo === 'vivo') return this.verVivo();
     document.getElementById('v-modulo').innerHTML = `
       <button class="voltar" id="trSair">← ${t('voltar')}</button>
       <h1 style="font-size:22px;margin-bottom:18px;">Tradutor</h1>
+      ${this.abas()}
 
       <div class="tr-direcao">
         <span class="tr-lado">${this.de().b} ${this.de().n}</span>
@@ -3919,8 +3979,283 @@ const Tradutor = {
 
     document.getElementById('trSair').onclick = () => Rota.ir('praticar');
     document.getElementById('trTroca').onclick = () => { this.invertido = !this.invertido; this.ver(); };
+    this.ligarAbas();
     document.getElementById('trTraduzir').onclick = e => this.traduzir(e.currentTarget);
     document.getElementById('trGravar').onclick = () => this.microfone();
+  },
+
+
+  /* ── Tempo real ─────────────────────────────────────────
+     Usa o reconhecimento de voz do telemóvel (contínuo e grátis).
+     Se o browser não o tiver, grava blocos de 6 s e transcreve-os. */
+  modo:'normal', vivo:false, rec:null, segmentos:[], saida:'nenhuma', teveFala:false,
+  bloqueio:null, fluxoVivo:null, gravadorVivo:null, temporizador:null,
+  fila:null, aFalar:false,
+
+  LOCALES:{pt:'pt-PT',en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',zh:'zh-CN',ja:'ja-JP',
+           ko:'ko-KR',ar:'ar-SA',ru:'ru-RU',hi:'hi-IN',nl:'nl-NL',sv:'sv-SE',tr:'tr-TR'},
+
+  verVivo(){
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="trSair">← ${t('voltar')}</button>
+      <h1 style="font-size:22px;margin-bottom:18px;">Tradutor</h1>
+      ${this.abas()}
+
+      <div class="tr-direcao">
+        <span class="tr-lado">${this.de().b} ${this.de().n}</span>
+        <button class="tr-troca" id="trTroca" aria-label="Inverter">⇄</button>
+        <span class="tr-lado">${this.para().b} ${this.para().n}</span>
+      </div>
+
+      <div class="gr-palco" style="padding-top:4px;">
+        <button class="gr-botao" id="tvBotao" aria-label="Ouvir">
+          <svg viewBox="0 0 24 24" fill="#fff" width="26" height="26">
+            <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3z"/>
+            <path d="M18 11a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.9V22h2v-3.1A8 8 0 0 0 20 11z"/>
+          </svg>
+        </button>
+        <div class="gr-dica" id="tvEstado">Toca para começar a ouvir</div>
+      </div>
+
+      <div class="tv-saida">
+        <div class="tv-saida-r">Voz da tradução</div>
+        <div class="tv-saida-op">
+          <button data-saida="nenhuma" class="${this.saida === 'nenhuma' ? 'on' : ''}">Desligada</button>
+          <button data-saida="auriculares" class="${this.saida === 'auriculares' ? 'on' : ''}">🎧 Auriculares</button>
+          <button data-saida="altifalante" class="${this.saida === 'altifalante' ? 'on' : ''}">🔊 Altifalante</button>
+        </div>
+        ${this.saida === 'altifalante'
+          ? '<div class="tv-saida-n">Com o altifalante, o microfone pausa enquanto a tradução fala.</div>' : ''}
+      </div>
+
+      <div class="tv-fio" id="tvFio"></div>
+      <div class="tv-parcial" id="tvParcial" data-conteudo></div>
+
+      <div class="tv-acoes">
+        <button class="btn btn-calmo" id="tvCopiar">Copiar tudo</button>
+        <button class="btn btn-calmo" id="tvLimpar">Limpar</button>
+      </div>`;
+
+    document.getElementById('trSair').onclick = () => { this.pararVivo(); Rota.ir('praticar'); };
+    document.getElementById('trTroca').onclick = () => {
+      const estava = this.vivo;
+      this.pararVivo();
+      this.invertido = !this.invertido;
+      this.verVivo();
+      if(estava) this.comecarVivo();
+    };
+    this.ligarAbas();
+    document.getElementById('tvBotao').onclick = () => this.vivo ? this.pararVivo() : this.comecarVivo();
+    document.querySelectorAll('#v-modulo [data-saida]').forEach(b => {
+      b.onclick = () => {
+        this.saida = b.dataset.saida;
+        document.querySelectorAll('#v-modulo [data-saida]').forEach(x => x.classList.toggle('on', x === b));
+        const n = document.querySelector('#v-modulo .tv-saida-n');
+        if(this.saida === 'altifalante' && !n){
+          b.closest('.tv-saida').insertAdjacentHTML('beforeend',
+            '<div class="tv-saida-n">Com o altifalante, o microfone pausa enquanto a tradução fala.</div>');
+        }else if(this.saida !== 'altifalante' && n){ n.remove(); }
+        // Trocar de modo cala o que estiver a ser dito e reabre o microfone
+        if(window.speechSynthesis) speechSynthesis.cancel();
+        this.aFalar = false; this.teveFala = false;
+      };
+    });
+    document.getElementById('tvCopiar').onclick = e => this.copiarTudo(e.currentTarget);
+    document.getElementById('tvLimpar').onclick = () => { this.segmentos = []; this.pintarFio(); };
+
+    this.pintarFio();
+    this.pintarEstadoVivo();
+  },
+
+  pintarFio(){
+    const fio = document.getElementById('tvFio');
+    if(!fio) return;
+    fio.innerHTML = '';
+    if(!this.segmentos.length){
+      fio.innerHTML = '<div class="tv-vazio">Toca no microfone e fala. A tradução aparece aqui, frase a frase.</div>';
+      return;
+    }
+    this.segmentos.forEach(s => this.pintarSegmento(s));
+  },
+
+  pintarSegmento(seg){
+    const fio = document.getElementById('tvFio');
+    if(!fio) return;
+    const vazio = fio.querySelector('.tv-vazio');
+    if(vazio) vazio.remove();
+    const el = document.createElement('div');
+    el.className = 'tv-seg';
+    el.setAttribute('data-conteudo', '');
+    const tr = document.createElement('div');
+    tr.className = 'tv-trad';
+    tr.textContent = seg.trad || (seg.falhou ? '—' : '…');
+    const og = document.createElement('div');
+    og.className = 'tv-orig';
+    og.textContent = seg.orig;
+    el.appendChild(tr); el.appendChild(og);
+    fio.appendChild(el);
+    seg.el = el;
+    fio.scrollTop = fio.scrollHeight;
+  },
+
+  atualizarSegmento(seg){
+    if(!seg.el || !seg.el.isConnected) return;
+    seg.el.querySelector('.tv-trad').textContent = seg.trad || (seg.falhou ? '—' : '…');
+    const fio = document.getElementById('tvFio');
+    if(fio) fio.scrollTop = fio.scrollHeight;
+  },
+
+  mostrarParcial(txt){
+    const p = document.getElementById('tvParcial');
+    if(p) p.textContent = txt || '';
+  },
+
+  pintarEstadoVivo(msgErro){
+    const b = document.getElementById('tvBotao');
+    const e = document.getElementById('tvEstado');
+    if(b) b.classList.toggle('a-gravar', this.vivo);
+    if(!e) return;
+    e.classList.toggle('gr-dica-erro', !!msgErro);
+    e.textContent = msgErro || (this.vivo ? 'A ouvir — fala à vontade' : 'Toca para começar a ouvir');
+  },
+
+  async comecarVivo(){
+    this.vivo = true;
+    this.pintarEstadoVivo();
+    await this.manterEcraLigado();
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(SR) this.iniciarReconhecimento(SR);
+    else await this.iniciarBlocos();
+  },
+
+  iniciarReconhecimento(SR){
+    const rec = new SR();
+    rec.lang = this.LOCALES[this.de().c] || 'pt-PT';
+    rec.continuous = true;
+    rec.interimResults = true;
+
+    rec.onresult = ev => {
+      // Só com o altifalante é que o microfone ouviria a própria tradução
+      if(this.aFalar && this.saida === 'altifalante') return;
+      let parcial = '';
+      for(let i = ev.resultIndex; i < ev.results.length; i++){
+        const r = ev.results[i];
+        const txt = (r[0] && r[0].transcript || '').trim();
+        if(r.isFinal){ if(txt) this.novoSegmento(txt); }
+        else parcial += txt + ' ';
+      }
+      this.mostrarParcial(parcial.trim());
+    };
+    rec.onerror = ev => {
+      if(ev.error === 'not-allowed' || ev.error === 'service-not-allowed'){
+        this.pararVivo(); this.pintarEstadoVivo('Sem acesso ao microfone.');
+      }else if(ev.error === 'network'){
+        this.pararVivo(); this.pintarEstadoVivo('Sem ligação — tenta outra vez.');
+      }
+    };
+    // O reconhecimento pára sozinho depois de um silêncio: recomeçar
+    rec.onend = () => {
+      if(this.vivo && !document.hidden){
+        setTimeout(() => { if(this.vivo && this.rec === rec){ try{ rec.start(); }catch(e){} } }, 250);
+      }
+    };
+    this.rec = rec;
+    try{ rec.start(); }catch(e){}
+  },
+
+  async iniciarBlocos(){
+    try{ this.fluxoVivo = await navigator.mediaDevices.getUserMedia({audio:true}); }
+    catch(e){ this.pararVivo(); this.pintarEstadoVivo('Sem acesso ao microfone.'); return; }
+
+    const ciclo = () => {
+      if(!this.vivo || !this.fluxoVivo) return;
+      const pedacos = [];
+      const g = new MediaRecorder(this.fluxoVivo);
+      g.ondataavailable = ev => { if(ev.data.size) pedacos.push(ev.data); };
+      g.onstop = () => {
+        const blob = new Blob(pedacos, {type:'audio/webm'});
+        const apanhouVoz = this.teveFala && this.saida === 'altifalante';
+        this.teveFala = this.aFalar;
+        if(blob.size > 2000 && !apanhouVoz){
+          this.fila = (this.fila || Promise.resolve()).then(() => this.blocoParaTexto(blob));
+        }
+        ciclo();
+      };
+      g.start();
+      this.gravadorVivo = g;
+      this.temporizador = setTimeout(() => { if(g.state !== 'inactive') g.stop(); }, 6000);
+    };
+    ciclo();
+  },
+
+  async blocoParaTexto(blob){
+    try{
+      const base64 = await new Promise((ok, falha) => {
+        const l = new FileReader();
+        l.onload = () => ok(String(l.result).split(',')[1]);
+        l.onerror = () => falha(new Error('erro'));
+        l.readAsDataURL(blob);
+      });
+      const r = await Rede.correr('transcrever', {audio_base64:base64});
+      const txt = (r && r.texto || '').trim();
+      if(txt) await this.novoSegmento(txt);
+    }catch(e){}
+  },
+
+  async novoSegmento(orig){
+    // Com altifalante, o que se ouve enquanto a tradução fala é eco
+    if(this.aFalar && this.saida === 'altifalante') return;
+    const seg = {orig, trad:''};
+    this.segmentos.push(seg);
+    this.pintarSegmento(seg);
+    this.mostrarParcial('');
+    try{
+      const r = await Rede.correr('traduzir', {texto:orig, de:this.de().n, para:this.para().n});
+      seg.trad = (r && r.traducao || '').trim();
+    }catch(e){ seg.falhou = true; }
+    this.atualizarSegmento(seg);
+    if(seg.trad && this.saida !== 'nenhuma' && this.vivo) this.dizer(seg.trad);
+  },
+
+  dizer(texto){
+    if(!window.speechSynthesis) return;
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = this.LOCALES[this.para().c] || 'en-US';
+    u.onstart = () => { this.aFalar = true; this.teveFala = true; };
+    u.onend = u.onerror = () => { setTimeout(() => { this.aFalar = false; }, 350); };
+    speechSynthesis.speak(u);
+  },
+
+  async manterEcraLigado(){
+    if(!('wakeLock' in navigator)) return;
+    try{ this.bloqueio = await navigator.wakeLock.request('screen'); }catch(e){}
+  },
+
+  pararVivo(){
+    const estava = this.vivo;
+    this.vivo = false;
+    if(this.rec){ this.rec.onend = null; try{ this.rec.stop(); }catch(e){} this.rec = null; }
+    if(this.temporizador){ clearTimeout(this.temporizador); this.temporizador = null; }
+    if(this.gravadorVivo && this.gravadorVivo.state !== 'inactive'){
+      this.gravadorVivo.onstop = null; this.gravadorVivo.stop();
+    }
+    this.gravadorVivo = null;
+    if(this.fluxoVivo){ this.fluxoVivo.getTracks().forEach(t => t.stop()); this.fluxoVivo = null; }
+    if(this.bloqueio){ this.bloqueio.release().catch(() => {}); this.bloqueio = null; }
+    if(window.speechSynthesis && estava) speechSynthesis.cancel();
+    this.aFalar = false;
+    this.mostrarParcial('');
+    this.pintarEstadoVivo();
+  },
+
+  async copiarTudo(botao){
+    const texto = this.segmentos.map(s => s.orig + '\n' + (s.trad || '')).join('\n\n');
+    if(!texto) return;
+    try{
+      await navigator.clipboard.writeText(texto);
+      botao.textContent = 'Copiado ✓';
+      setTimeout(() => { botao.textContent = tp('Copiar tudo'); }, 1800);
+    }catch(e){}
   },
 
   async microfone(){
@@ -4461,6 +4796,12 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
+
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden || typeof Tradutor === 'undefined' || !Tradutor.vivo) return;
+  Tradutor.manterEcraLigado();
+  if(Tradutor.rec){ try{ Tradutor.rec.start(); }catch(e){} }
+});
 
 document.getElementById('btnPar').onclick = () => Seletor.abrir('origem');
 Nucleo.arrancar();
