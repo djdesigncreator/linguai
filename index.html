@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-4 · estatísticas · live -->
+<!-- LINGUAI-VERSAO-5 · pagamentos pelo Bubble · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -778,6 +778,7 @@ const EXTRA_PT = {
  "x_um_numero_x_comeca_por_y": "Um número {x} começa por {y}."
 };
 Object.assign(RESERVA, EXTRA_PT);
+RESERVA.x_confirma_telemovel = 'Confirma o pagamento no teu telemóvel';
 const t = ch => Estado.textos[ch] || RESERVA[ch] || ch;
 
 
@@ -1985,7 +1986,7 @@ const PLANOS = [
 
 const METODOS = [
   {id:'mpesa', nome:'M-Pesa',            sub:'Vodacom · 84 ou 85', cor:'#F51F47', tipo:'telefone'},
-  {id:'emola', nome:'e-Mola',            sub:'Movitel · 86 ou 87', cor:'#F5A623', tipo:'telefone'},
+  {id:'emola', nome:'e-Mola',            sub:'Movitel · 86, 87 ou 88', cor:'#F5A623', tipo:'telefone'},
   {id:'cartao',nome:'Visa / Mastercard', sub:'Cartão de crédito ou débito', cor:'#2F5E9E', tipo:'cartao'}
 ];
 
@@ -2137,38 +2138,27 @@ const Pagamento = {
     erro.style.display = 'none';
 
     if(numero.length !== 9) return falhar('O número tem de ter 9 dígitos.');
-    const validos = metodo.id === 'mpesa' ? ['84','85'] : ['86','87'];
-    if(!validos.includes(numero.slice(0,2)))
-      return falhar('Um número ' + metodo.nome + ' começa por ' + validos.join(' ou ') + '.');
+    const validos = metodo.id === 'mpesa' ? ['84','85'] : ['86','87','88'];
+    if(!validos.includes(numero.slice(0,2))){
+      const lista = validos.slice(0,-1).join(', ') + ' ou ' + validos[validos.length-1];
+      return falhar('Um número ' + metodo.nome + ' começa por ' + lista + '.');
+    }
     if(!nome) return falhar('Escreve o teu nome.');
 
     botao.disabled = true;
-    botao.innerHTML = 'A enviar o pedido <span class="pontos"><i></i><i></i><i></i></span>';
-
-    const rota = metodo.id === 'mpesa' ? 'pagamentorotativompesa' : 'pagamentorotativoemola';
+    botao.innerHTML = 'Confirma o pagamento no teu telemóvel <span class="pontos"><i></i><i></i><i></i></span>';
 
     try{
-      // O servidor devolve sempre HTTP 200 — o resultado está no campo "cod".
-      const resposta = await fetch(CFG.moz + '/' + rota, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          carteira:CFG.carteira, numero, cliente:nome, valor:String(this.plano.valor)
-        })
+      // O Bubble cobra, lê a resposta da MozPayment e ativa o plano.
+      // O telemóvel só pede — nunca confirma.
+      const r = await Rede.correr('pagar_movel', {
+        metodo: metodo.id,
+        plano:  this.plano.id,
+        numero,
+        cliente: nome
       });
-      const r = await resposta.json();
 
-      if(Number(r.cod) === 200){
-        // Avisa o Bubble para ativar o plano deste utilizador
-        try{
-          await Rede.correr('confirmar_pagamento', {
-            plano:this.plano.id, metodo:metodo.id,
-            valor:String(this.plano.valor), numero,
-            transacao:r.transacao || ''
-          });
-        }catch(err){ console.warn('[Lingu.AI] Plano não confirmado:', err.message); }
-        return this.sucesso(r.transacao || '');
-      }
+      if(Number(r.cod) === 200) return this.sucesso(r.transacao || '');
 
       botao.disabled = false;
       botao.textContent = 'Pagar ' + this.plano.preco;
