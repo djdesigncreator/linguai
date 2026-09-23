@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-7 · pagamentos e tempo real · live -->
+<!-- LINGUAI-VERSAO-8 · recarga após pagamento · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -2093,7 +2093,8 @@ const Pagamento = {
     this.fundo.onclick = e => { if(e.target === this.fundo) this.fechar(); };
   },
 
-  fechar(){ this.pararVigia(); if(this.fundo){ this.fundo.remove(); this.fundo = null; } },
+  fechar(){ this.pararVigia();
+    if(this.reinicio){ clearTimeout(this.reinicio); this.reinicio = null; } if(this.fundo){ this.fundo.remove(); this.fundo = null; } },
 
   folha(dentro){ this.fundo.innerHTML = '<div class="folha">' + dentro + '</div>'; },
 
@@ -2308,11 +2309,10 @@ const Pagamento = {
       </div>
       <button class="btn" id="pgFim" style="margin-top:14px;">Continuar a aprender</button>`);
 
-    document.getElementById('pgFim').onclick = async () => {
-      this.fechar();
-      await Nucleo.carregarUtilizador();
-      Rota.ir('inicio');
-    };
+    // A confirmação já chegou: recarregar a app para tudo aparecer atualizado
+    const recarregar = () => { try{ location.reload(); }catch(e){} };
+    this.reinicio = setTimeout(recarregar, 4000);
+    document.getElementById('pgFim').onclick = recarregar;
   }
 };
 
