@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-8 · recarga após pagamento · live -->
+<!-- LINGUAI-VERSAO-9 · treinar pronúncia frase a frase · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -804,7 +804,8 @@ Object.assign(RESERVA, {
   x_tv_copiar:'Copiar tudo', x_tv_copiado:'Copiado ✓', x_tv_limpar:'Limpar',
   x_tv_vazio:'Toca no microfone e fala. A tradução aparece aqui, frase a frase.',
   x_tv_sem_rede:'Sem ligação — tenta outra vez.',
-  x_pg_num_moz:'Precisas de um número moçambicano. Se estás noutro país, usa o cartão.'
+  x_pg_num_moz:'Precisas de um número moçambicano. Se estás noutro país, usa o cartão.',
+  x_gr_seguinte:'Frase seguinte →', x_gr_treinar:'Treinar pronúncia', x_gr_ouvir_t:'Ouvir'
 });
 const t = ch => Estado.textos[ch] || RESERVA[ch] || ch;
 
@@ -1543,9 +1544,17 @@ const Licoes = {
             <div style="font-size:13px;color:var(--texto-suave);margin-top:2px;">${orig}</div>
             ${pron ? `<div style="font-size:12px;color:var(--teal);font-style:italic;margin-top:4px;">🗣 ${pron}</div>` : ''}
           </div>
-          <button class="ouvir-frase" data-texto="${alvo.replace(/"/g,'&quot;')}" style="width:32px;height:32px;flex:0 0 auto;border-radius:50%;background:rgba(22,184,166,.12);display:flex;align-items:center;justify-content:center;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="var(--teal)"><path d="M8 5v14l11-7z"/></svg>
-          </button>
+          <div style="display:flex;flex-direction:column;gap:7px;flex:0 0 auto;">
+            <button class="ouvir-frase" data-texto="${alvo.replace(/"/g,'&quot;')}" title="Ouvir" style="width:32px;height:32px;border-radius:50%;background:rgba(22,184,166,.12);display:flex;align-items:center;justify-content:center;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="var(--teal)"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button class="gravar-frase" data-idx="${idx}" title="Treinar pronúncia" style="width:32px;height:32px;border-radius:50%;background:rgba(245,31,71,.12);display:flex;align-items:center;justify-content:center;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="var(--coral)">
+                <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3z"/>
+                <path d="M18 11a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.9V22h2v-3.1A8 8 0 0 0 20 11z"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>`;
   },
@@ -1564,7 +1573,7 @@ const Licoes = {
 
     raiz.querySelectorAll('[data-frase]').forEach(c => {
       c.onclick = e => {
-        if(e.target.closest('.ouvir-frase')) return;
+        if(e.target.closest('.ouvir-frase') || e.target.closest('.gravar-frase')) return;
         this.fraseSel = Number(c.dataset.frase);
         this.verLicao();
       };
@@ -1572,6 +1581,14 @@ const Licoes = {
 
     raiz.querySelectorAll('.ouvir-frase').forEach(b => {
       b.onclick = () => this.falar(b.dataset.texto);
+    });
+
+    raiz.querySelectorAll('.gravar-frase').forEach(b => {
+      b.onclick = () => {
+        const i = Number(b.dataset.idx);
+        this.fraseSel = i;
+        Gravacao.abrir(this.licao.frases[i], this.licao, i);
+      };
     });
 
     const a = raiz.querySelector('#licAudio');
@@ -4337,9 +4354,11 @@ const Gravacao = {
   fluxo:null, contexto:null, analisador:null, animacao:null,
   aGravar:false, segundos:0, relogio:null,
 
-  abrir(frase, licao){
+  abrir(frase, licao, idx){
     this.frase = frase;
     this.licao = licao;
+    this.idx = (typeof idx === 'number') ? idx
+             : (licao && licao.frases ? licao.frases.indexOf(frase) : -1);
     this.blob = null; this.segundos = 0;
     Rota.mostrarModulo();
     this.verPronto();
@@ -4352,7 +4371,8 @@ const Gravacao = {
   verPronto(){
     document.getElementById('v-modulo').innerHTML = `
       <button class="voltar" id="grVoltar">← ${t('voltar')}</button>
-      <div class="gr-etiqueta">Repete a frase</div>
+      <div class="gr-etiqueta">Repete a frase${this.idx > -1 && this.licao && this.licao.frases
+        ? ' · ' + (this.idx + 1) + '/' + this.licao.frases.length : ''}</div>
 
       <div class="gr-frase">
         <div class="gr-alvo">${this.alvoTxt()}</div>
@@ -4543,6 +4563,8 @@ const Gravacao = {
 
   verNota(pontuacao, feedback, transcricao){
     const xp = Jogo.premiar('gravacao', {pontuacao});
+    const frases = (this.licao && this.licao.frases) || [];
+    const temSeguinte = this.idx > -1 && this.idx + 1 < frases.length;
     let emoji = '💪', titulo = 'Vamos treinar mais';
     if(pontuacao >= 90){ emoji = '🌟'; titulo = 'Pronúncia impecável'; }
     else if(pontuacao >= 70){ emoji = '🎉'; titulo = 'Muito bem'; }
@@ -4575,10 +4597,17 @@ const Gravacao = {
         <p style="font-size:14px;line-height:1.6;">${feedback}</p>
       </div>` : ''}
 
-      <button class="btn" id="grOutra" style="margin-top:6px;">Tentar de novo</button>
+      ${temSeguinte ? '<button class="btn" id="grSeguinte" style="margin-top:6px;">Frase seguinte →</button>' : ''}
+      <button class="btn ${temSeguinte ? 'btn-calmo' : ''}" id="grOutra" style="margin-top:${temSeguinte ? '10' : '6'}px;">Tentar de novo</button>
       <button class="btn btn-calmo" id="grFim" style="margin-top:10px;">Voltar à lição</button>`;
 
-    document.getElementById('grOutra').onclick = () => this.abrir(this.frase, this.licao);
+    document.getElementById('grOutra').onclick = () => this.abrir(this.frase, this.licao, this.idx);
+    const bs = document.getElementById('grSeguinte');
+    if(bs) bs.onclick = () => {
+      const i = this.idx + 1;
+      if(Licoes.licao === this.licao) Licoes.fraseSel = i;
+      this.abrir(frases[i], this.licao, i);
+    };
     document.getElementById('grFim').onclick = () => this.sair();
   }
 };
