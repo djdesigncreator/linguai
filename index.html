@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-6 · tradutor em tempo real · live -->
+<!-- LINGUAI-VERSAO-7 · pagamentos e tempo real · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -418,6 +418,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .pg-caixa{position:relative;min-height:240px;}
 .pg-carregando{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:13px;color:var(--texto-suave);background:var(--branco);border-radius:var(--r-md);border:1.5px solid var(--linha);}
 .pg-quadro{transition:opacity .4s;}
+.pg-nota-pais{font-size:12.5px;color:var(--texto-suave);line-height:1.5;margin-bottom:14px;}
 .pg-nota{text-align:center;font-size:12.5px;color:var(--texto-suave);padding:14px 10px 2px;line-height:1.5;}
 
 /* ── Assistente ───────────────────────────────────────── */
@@ -802,7 +803,8 @@ Object.assign(RESERVA, {
   x_tv_nota_altif:'Com o altifalante, o microfone pausa enquanto a tradução fala.',
   x_tv_copiar:'Copiar tudo', x_tv_copiado:'Copiado ✓', x_tv_limpar:'Limpar',
   x_tv_vazio:'Toca no microfone e fala. A tradução aparece aqui, frase a frase.',
-  x_tv_sem_rede:'Sem ligação — tenta outra vez.'
+  x_tv_sem_rede:'Sem ligação — tenta outra vez.',
+  x_pg_num_moz:'Precisas de um número moçambicano. Se estás noutro país, usa o cartão.'
 });
 const t = ch => Estado.textos[ch] || RESERVA[ch] || ch;
 
@@ -2079,20 +2081,6 @@ const Planos = {
 };
 
 /* ── Pagamento ──────────────────────────────────────────── */
-/* ── Onde está a pessoa? ────────────────────────────────
-   M-Pesa e e-Mola só fazem sentido em Moçambique.
-   O fuso 'Africa/Maputo' é exclusivo do país. */
-const Regiao = {
-  emMocambique(){
-    try{
-      const fuso = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-      if(fuso === 'Africa/Maputo') return true;
-    }catch(e){}
-    const linguas = (navigator.languages || [navigator.language || '']).join(',').toLowerCase();
-    return /-mz\b/.test(linguas);
-  }
-};
-
 const Pagamento = {
   plano:null, fundo:null,
 
@@ -2132,7 +2120,7 @@ const Pagamento = {
       this.topo(this.plano.nome, this.plano.preco + ' · ' + this.plano.periodo, false) +
       `<p style="font-size:13px;color:var(--texto-suave);margin-bottom:14px;">Como queres pagar?</p>
        <div style="display:flex;flex-direction:column;gap:10px;">
-       ${(Regiao.emMocambique() ? METODOS : METODOS.filter(m => m.tipo === 'cartao')).map(m => `
+       ${METODOS.map(m => `
          <button class="metodo" data-metodo="${m.id}">
            <span class="metodo-ponto" style="background:${m.cor}"></span>
            <span style="flex:1;min-width:0;">
@@ -2156,7 +2144,8 @@ const Pagamento = {
     const nome = (Estado.utilizador && Estado.utilizador.nome) || '';
     this.folha(
       this.topo(metodo.nome, this.plano.preco, true) +
-      `<label class="rotulo">Número ${metodo.nome}</label>
+      `<div class="pg-nota-pais">Precisas de um número moçambicano. Se estás noutro país, usa o cartão.</div>
+       <label class="rotulo">Número ${metodo.nome}</label>
        <input id="pgNumero" class="campo" type="tel" inputmode="numeric" maxlength="9"
               placeholder="${metodo.id === 'mpesa' ? '84XXXXXXX' : '86XXXXXXX'}">
        <label class="rotulo" style="margin-top:14px;">Nome</label>
