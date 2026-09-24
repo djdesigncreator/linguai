@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-14 · checkout mais limpo · live -->
+<!-- LINGUAI-VERSAO-15 · botão dos lembretes corrigido · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -1134,6 +1134,8 @@ const Ecras = {
       const f = document.getElementById('barraFill');
       if(f) f.style.width = pct + '%';
     });
+
+    Avisos.ligarCartao();
 
     const bm = alvo.querySelector('#barraMeta');
     if(bm) bm.onclick = () => Jogo.escolherMeta();
@@ -2490,6 +2492,8 @@ const Avisos = {
         });
         this.pronto = true;
         await this.identificar();
+        // O cartão foi desenhado antes disto: refrescar se estiver à vista
+        if(Estado.vista === 'inicio' || Estado.vista === 'perfil') Rota.ir(Estado.vista);
       }catch(e){ console.warn('[Lingu.AI] Avisos:', e.message); }
     });
   },
@@ -2544,9 +2548,11 @@ const Avisos = {
     if(!b) return;
     b.onclick = async () => {
       b.disabled = true;
-      const ok = await this.pedir();
-      // O registo demora um instante a concluir
-      if(!ok) await new Promise(r => setTimeout(r, 2500));
+      await this.pedir();
+      // O registo fecha um instante depois: esperar por ele, até 6 segundos
+      for(let i = 0; i < 12 && !this.inscrito(); i++){
+        await new Promise(r => setTimeout(r, 500));
+      }
       Rota.ir(Estado.vista === 'perfil' ? 'perfil' : 'inicio');
     };
   },
