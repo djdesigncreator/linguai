@@ -1,6 +1,3 @@
-/* Notificações (OneSignal) — tem de vir antes de tudo */
-importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
-
 /* Lingu.AI — service worker
    Guarda a casca da app, para abrir depressa e funcionar offline. */
 const CACHE = 'linguai-v2';
