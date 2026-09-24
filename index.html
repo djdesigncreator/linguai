@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-11 · lembretes a arrancar · live -->
+<!-- LINGUAI-VERSAO-12 · lembretes com worker próprio · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -815,6 +815,8 @@ Object.assign(RESERVA, {
   x_pg_num_moz:'Precisas de um número moçambicano. Se estás noutro país, usa o cartão.',
   x_gr_seguinte:'Frase seguinte →', x_gr_treinar:'Treinar pronúncia', x_gr_ouvir_t:'Ouvir',
   x_av_on:'🔔 Lembretes ligados', x_av_off:'🔕 Lembretes desligados',
+  x_av_quase:'🔔 Quase lá', x_av_quase_d:'Autorizaste as notificações, mas o registo ainda não terminou.',
+  x_av_terminar:'Terminar registo',
   x_av_pergunta:'🔔 Queres que te lembremos?',
   x_av_d:'Avisamos-te antes de perderes a sequência de dias, e quando faltar pouco para a meta.',
   x_av_d_on:'Avisamos-te antes de perderes a sequência, e quando faltar pouco para a tua meta.',
@@ -2463,6 +2465,12 @@ const Avisos = {
 
   disponivel(){ return typeof Notification !== 'undefined' && !!CFG.onesignal; },
   concedida(){ return this.disponivel() && Notification.permission === 'granted'; },
+
+  // A autorização do browser não chega: é preciso o OneSignal ter registado o aparelho
+  inscrito(){
+    try{ return !!(window.OneSignal && OneSignal.User && OneSignal.User.PushSubscription.id); }
+    catch(e){ return false; }
+  },
   recusada(){ return this.disponivel() && Notification.permission === 'denied'; },
   porPerguntar(){ return this.disponivel() && Notification.permission === 'default'; },
 
@@ -2478,8 +2486,8 @@ const Avisos = {
       try{
         await OneSignal.init({
           appId: CFG.onesignal,
-          serviceWorkerPath: 'sw.js',          // o mesmo que a app já usa
-          serviceWorkerParam: {scope: '/'}
+          serviceWorkerPath: 'push/onesignal/OneSignalSDKWorker.js',
+          serviceWorkerParam: {scope: '/push/onesignal/'}
         });
         this.pronto = true;
         await this.identificar();
@@ -2497,13 +2505,22 @@ const Avisos = {
   async pedir(){
     if(!window.OneSignal) return false;
     try{ await window.OneSignal.Notifications.requestPermission(); }catch(e){}
-    if(this.concedida()) await this.identificar();
-    return this.concedida();
+    if(!this.concedida()) return false;
+    try{ await window.OneSignal.User.PushSubscription.optIn(); }catch(e){}
+    await this.identificar();
+    return this.inscrito();
   },
 
   // Cartão do Perfil
   cartao(){
     if(!this.disponivel()) return '';
+    if(this.concedida() && !this.inscrito()){
+      return `<div class="cartao av-cartao">
+        <div class="av-t">🔔 Quase lá</div>
+        <p class="av-d">Autorizaste as notificações, mas o registo ainda não terminou.</p>
+        <button class="btn" id="avLigar" style="margin-top:14px;">Terminar registo</button>
+      </div>`;
+    }
     if(this.concedida()){
       return `<div class="cartao av-cartao av-on">
         <div class="av-t">🔔 Lembretes ligados</div>
@@ -2528,7 +2545,9 @@ const Avisos = {
     if(!b) return;
     b.onclick = async () => {
       b.disabled = true;
-      await this.pedir();
+      const ok = await this.pedir();
+      // O registo demora um instante a concluir
+      if(!ok) await new Promise(r => setTimeout(r, 2500));
       Rota.ir('perfil');
     };
   },
