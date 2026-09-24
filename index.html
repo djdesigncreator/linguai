@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-12 · lembretes com worker próprio · live -->
+<!-- LINGUAI-VERSAO-14 · checkout mais limpo · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -254,6 +254,15 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .lg-link{display:block;width:100%;margin-top:14px;padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--texto-suave);}
 .lg-fundo{text-align:center;margin-top:26px;padding-top:20px;border-top:1.5px solid var(--linha);font-size:13.5px;color:var(--texto-suave);}
 .lg-troca{font-weight:700;color:var(--coral);font-size:13.5px;}
+
+.lic-eq{display:flex;align-items:flex-end;gap:2.5px;height:13px;}
+.lic-eq i{width:2.5px;height:3px;border-radius:2px;background:var(--lima);opacity:.35;transition:opacity .2s;}
+.lic-eq.a-tocar i{opacity:1;animation:eqSalta .9s ease-in-out infinite;}
+.lic-eq.a-tocar i:nth-child(2){animation-delay:.15s;}
+.lic-eq.a-tocar i:nth-child(3){animation-delay:.3s;}
+.lic-eq.a-tocar i:nth-child(4){animation-delay:.45s;}
+.lic-eq.a-tocar i:nth-child(5){animation-delay:.6s;}
+@keyframes eqSalta{0%,100%{height:3px;}50%{height:13px;}}
 
 .lic-audio-espera{display:flex;align-items:center;gap:10px;background:var(--branco);border:1.5px dashed var(--linha);border-radius:var(--r-md);padding:14px 16px;margin-bottom:18px;font-size:13px;color:var(--texto-suave);}
 
@@ -1114,6 +1123,8 @@ const Ecras = {
           : t('meta_hoje') + ' · ' + Jogo.e.xpHoje + '/' + meta.xp + ' XP'}</div>
       </div>
 
+      ${Avisos.inscrito() ? '' : Avisos.cartao()}
+
       ${Jogo.cartao()}
 
       <div class="seccao-titulo">Continuar</div>
@@ -1363,16 +1374,8 @@ const Rota = {
    Sem recarregar a página. Tudo acontece no mesmo ecrã.
    ══════════════════════════════════════════════════════════ */
 const TEMAS = {
-  pt:{
-    Iniciante:['Cumprimentos e apresentações','Números de 1 a 20','A família','Comidas e bebidas','A rotina do dia','Animais','Roupa','A casa e as divisões','Dias e meses','O tempo que faz','Partes do corpo','Na escola','Transportes','Profissões','As horas','Compras no mercado','Desporto','Música','Festas e aniversários','Emoções','Na farmácia','No parque','Comer fora','Brinquedos e jogos','Material escolar'],
-    'Intermédio':['Apresentar-se no trabalho','No restaurante','Combinar com amigos','No supermercado','Falar do trabalho','No aeroporto','Reservar hotel','Pedir direções','No banco','Emergências e saúde','Passatempos','Tecnologia e redes','No ginásio','Convites e eventos','Reclamar e devolver','Currículo e candidaturas','Correio e encomendas','Cinema e teatro','Arrendar casa','Seguros','Voluntariado','Cozinhar','Organizar um evento','Notícias do dia','Estudar na universidade'],
-    'Avançado':['Negociar','Argumentar e convencer','Entrevistas exigentes','Tendências de mercado','Contar histórias','Apresentações de negócio','Política e sociedade','Ambiente','Dilemas éticos','Inteligência artificial','Liderar equipas','Imprensa e atualidade','Relações internacionais','Empreender','Debates filosóficos','Direito e contratos','Economia','Ciência e investigação','Crítica de arte','Psicologia','Marketing e marca','Saúde pública','História e geopolítica','Ensinar','Criatividade e inovação']
-  },
-  en:{
-    Iniciante:['Greetings and introductions','Numbers 1 to 20','Family','Food and drink','Daily routine','Animals','Clothes','Home and rooms','Days and months','The weather','Parts of the body','At school','Getting around','Jobs','Telling the time','Shopping for food','Sport','Music','Parties and birthdays','Feelings','At the pharmacy','At the park','Eating out','Toys and games','School supplies'],
-    'Intermédio':['Introducing yourself at work','At the restaurant','Making plans with friends','At the supermarket','Talking about work','At the airport','Booking a hotel','Asking for directions','At the bank','Emergencies and health','Hobbies','Technology and social media','At the gym','Invitations and events','Complaints and returns','CV and job applications','Post and parcels','Cinema and theatre','Renting a home','Insurance','Volunteering','Cooking','Planning an event','Today in the news','University life'],
-    'Avançado':['Negotiating','Arguing and persuading','Demanding interviews','Market trends','Telling stories','Business presentations','Politics and society','The environment','Ethical dilemmas','Artificial intelligence','Leading teams','Press and current affairs','International relations','Starting a business','Philosophical debate','Law and contracts','Economics','Science and research','Art criticism','Psychology','Marketing and brand','Public health','History and geopolitics','Teaching','Creativity and innovation']
-  }
+  pt:{"Iniciante": ["Cumprimentos e apresentações", "Números de 1 a 20", "A família", "Comidas e bebidas", "A rotina do dia", "Animais", "Roupa", "A casa e as divisões", "Dias e meses", "O tempo que faz", "Partes do corpo", "Na escola", "Transportes", "Profissões", "As horas", "Compras no mercado", "Desporto", "Música", "Festas e aniversários", "Emoções", "Na farmácia", "No parque", "Comer fora", "Brinquedos e jogos", "Material escolar", "As cores", "Frutas e legumes", "Na praia", "Dizer olá e adeus", "Pedir com educação", "Contar até cem", "A minha cidade", "Móveis e objetos da casa", "Estações do ano", "Na padaria", "O meu dia na escola", "Telemóvel e computador", "Dinheiro e preços", "Falar de mim", "Os meus amigos", "Dias da semana", "No autocarro", "Animais de estimação", "Pedir ajuda", "No supermercado", "Bebidas quentes e frias", "O pequeno-almoço", "Números de telefone", "Direções simples", "Em casa dos avós", "Brincar lá fora", "O que gosto e não gosto", "Dizer a idade", "Cores da roupa", "Os meses do ano", "Na sala de aula", "Lavar e arrumar", "O corpo e a saúde", "Ir ao médico", "Fazer um convite simples"], "Intermédio": ["Apresentar-se no trabalho", "No restaurante", "Combinar com amigos", "No supermercado", "Falar do trabalho", "No aeroporto", "Reservar hotel", "Pedir direções", "No banco", "Emergências e saúde", "Passatempos", "Tecnologia e redes", "No ginásio", "Convites e eventos", "Reclamar e devolver", "Currículo e candidaturas", "Correio e encomendas", "Cinema e teatro", "Arrendar casa", "Seguros", "Voluntariado", "Cozinhar", "Organizar um evento", "Notícias do dia", "Estudar na universidade", "Falar ao telefone", "Escrever um email", "Numa entrevista de emprego", "Marcar consulta", "No hotel", "Alugar um carro", "Comprar roupa", "Falar do fim de semana", "Descrever pessoas", "Contar uma história curta", "Dar a tua opinião", "Fazer planos de férias", "No mecânico", "Problemas com a internet", "Falar de filmes e séries", "Conhecer gente nova", "Pedir desculpa", "Marcar uma reunião", "Falar de comida típica", "No consultório dentário", "Mudar de casa", "Falar de dinheiro", "Fazer perguntas educadas", "Na estação de comboios", "Comprar online", "Falar do trânsito", "Descrever um problema", "Pedir um favor", "Falar da família alargada", "Na conferência", "Falar de música e concertos", "Descrever o teu bairro", "Combinar horários", "Falar do clima e estações", "Recomendar um sítio"], "Avançado": ["Negociar", "Argumentar e convencer", "Entrevistas exigentes", "Tendências de mercado", "Contar histórias", "Apresentações de negócio", "Política e sociedade", "Ambiente", "Dilemas éticos", "Inteligência artificial", "Liderar equipas", "Imprensa e atualidade", "Relações internacionais", "Empreender", "Debates filosóficos", "Direito e contratos", "Economia", "Ciência e investigação", "Crítica de arte", "Psicologia", "Marketing e marca", "Saúde pública", "História e geopolítica", "Ensinar", "Criatividade e inovação", "Falar em público", "Gerir um conflito", "Entrevistar alguém", "Escrever uma proposta", "Analisar dados", "Defender uma ideia impopular", "Humor e ironia", "Linguagem formal e informal", "Provérbios e expressões", "Discutir literatura", "Cultura e identidade", "Tecnologia e privacidade", "Urbanismo e cidades", "Educação e futuro", "Migração e diáspora", "Ética nos negócios", "Gerir uma crise", "Falar de investimentos", "Sustentabilidade", "Justiça social", "Inovação em África", "Mercados emergentes", "Comunicação intercultural", "Redes e influência", "Tomar decisões difíceis", "Feedback e avaliação", "Contratar e despedir", "Escrever um discurso", "Analisar um contrato", "Falar de riscos", "Apresentar resultados", "Debater políticas públicas", "Storytelling de marca", "Gerir mudança", "Falar do futuro do trabalho"]},
+  en:{"Iniciante": ["Greetings and introductions", "Numbers 1 to 20", "Family", "Food and drink", "Daily routine", "Animals", "Clothes", "Home and rooms", "Days and months", "The weather", "Parts of the body", "At school", "Getting around", "Jobs", "Telling the time", "Shopping for food", "Sport", "Music", "Parties and birthdays", "Feelings", "At the pharmacy", "At the park", "Eating out", "Toys and games", "School supplies", "Colours", "Fruit and vegetables", "At the beach", "Saying hello and goodbye", "Asking politely", "Counting to one hundred", "My town", "Furniture and household objects", "Seasons of the year", "At the bakery", "My school day", "Phone and computer", "Money and prices", "Talking about myself", "My friends", "Days of the week", "On the bus", "Pets", "Asking for help", "At the supermarket", "Hot and cold drinks", "Breakfast", "Phone numbers", "Simple directions", "At my grandparents", "Playing outside", "Likes and dislikes", "Saying your age", "Colours of clothes", "Months of the year", "In the classroom", "Washing and tidying", "Body and health", "Going to the doctor", "Making a simple invitation"], "Intermédio": ["Introducing yourself at work", "At the restaurant", "Making plans with friends", "At the supermarket", "Talking about work", "At the airport", "Booking a hotel", "Asking for directions", "At the bank", "Emergencies and health", "Hobbies", "Technology and social media", "At the gym", "Invitations and events", "Complaints and returns", "CV and job applications", "Post and parcels", "Cinema and theatre", "Renting a home", "Insurance", "Volunteering", "Cooking", "Planning an event", "Today in the news", "University life", "Talking on the phone", "Writing an email", "In a job interview", "Booking an appointment", "At the hotel", "Renting a car", "Buying clothes", "Talking about the weekend", "Describing people", "Telling a short story", "Giving your opinion", "Planning a holiday", "At the mechanic", "Internet problems", "Talking about films and series", "Meeting new people", "Apologising", "Setting up a meeting", "Talking about local food", "At the dentist", "Moving house", "Talking about money", "Asking polite questions", "At the train station", "Shopping online", "Talking about traffic", "Describing a problem", "Asking for a favour", "Talking about extended family", "At a conference", "Music and concerts", "Describing your neighbourhood", "Agreeing on times", "Climate and seasons", "Recommending a place"], "Avançado": ["Negotiating", "Arguing and persuading", "Demanding interviews", "Market trends", "Telling stories", "Business presentations", "Politics and society", "The environment", "Ethical dilemmas", "Artificial intelligence", "Leading teams", "Press and current affairs", "International relations", "Starting a business", "Philosophical debate", "Law and contracts", "Economics", "Science and research", "Art criticism", "Psychology", "Marketing and brand", "Public health", "History and geopolitics", "Teaching", "Creativity and innovation", "Public speaking", "Handling conflict", "Interviewing someone", "Writing a proposal", "Analysing data", "Defending an unpopular idea", "Humour and irony", "Formal and informal language", "Proverbs and idioms", "Discussing literature", "Culture and identity", "Technology and privacy", "Cities and urban planning", "Education and the future", "Migration and diaspora", "Business ethics", "Managing a crisis", "Talking about investments", "Sustainability", "Social justice", "Innovation in Africa", "Emerging markets", "Intercultural communication", "Networks and influence", "Making hard decisions", "Feedback and appraisal", "Hiring and firing", "Writing a speech", "Reviewing a contract", "Talking about risk", "Presenting results", "Debating public policy", "Brand storytelling", "Managing change", "The future of work"]}
 };
 
 const Licoes = {
@@ -1403,6 +1406,7 @@ const Licoes = {
       <div class="escolhas">
         ${niveis.map(n => `<button class="escolha" data-nivel="${n.v}">${t(n.k)}<span style="color:var(--indigo-40)">→</span></button>`).join('')}
       </div>`;
+    window.scrollTo({top:0, behavior:'smooth'});
     this.alvo().querySelector('[data-sair]').onclick = () => Rota.ir('praticar');
     this.alvo().querySelectorAll('[data-nivel]').forEach(b => {
       b.onclick = () => {
@@ -1437,6 +1441,7 @@ const Licoes = {
         <button class="btn btn-calmo" style="width:auto;padding:11px 16px;font-size:13px;" data-pag="1" ${this.pagina>=total-1?'disabled':''}>${t('seguinte')||'Seguinte'} →</button>
       </div>` : ''}`;
 
+    window.scrollTo({top:0, behavior:'smooth'});
     this.alvo().querySelector('[data-mudar-nivel]').onclick = () => {
       try{ localStorage.removeItem('linguai:nivel'); }catch(e){}
       this.verNiveis();
@@ -1528,7 +1533,10 @@ const Licoes = {
           </button>
           <div style="flex:1;min-width:0;">
             <div style="font-size:13px;color:#CFC7E4;">Ouvir as ${L.frases.length} frases</div>
-            <div id="licTempo" style="font-size:12px;color:var(--lima);margin-top:2px;">0:00</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-top:3px;">
+              <div id="licTempo" style="font-size:12px;color:var(--lima);">0:00</div>
+              <div class="lic-eq" id="licEq"><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
           </div>
           <button id="licVel" class="btn btn-calmo" style="width:auto;padding:8px 13px;font-size:12px;background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2);">1×</button>
         </div>
@@ -1549,6 +1557,7 @@ const Licoes = {
       <button class="btn" id="licPraticar" style="margin-top:8px;">Fazer os exercícios</button>
       <button class="btn btn-calmo" id="licGravar" style="margin-top:10px;">Gravar a minha voz</button>`;
 
+    window.scrollTo({top:0, behavior:'smooth'});
     this.ligarLicao();
   },
 
@@ -1619,15 +1628,27 @@ const Licoes = {
       const tempo = raiz.querySelector('#licTempo');
       const vel = raiz.querySelector('#licVel');
 
-      play.onclick = () => {
-        if(a.paused){ a.play(); play.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="#081B44"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
-        else{ a.pause(); play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#081B44"><path d="M8 5v14l11-7z"/></svg>'; }
+      const eq = raiz.querySelector('#licEq');
+      const ICO_PLAY  = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#081B44"><path d="M8 5v14l11-7z"/></svg>';
+      const ICO_PAUSA = '<svg width="15" height="15" viewBox="0 0 24 24" fill="#081B44"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+
+      // O botão e a animação seguem o áudio, não o clique
+      const pintar = () => {
+        const aTocar = !a.paused && !a.ended;
+        play.innerHTML = aTocar ? ICO_PAUSA : ICO_PLAY;
+        if(eq) eq.classList.toggle('a-tocar', aTocar);
       };
+      a.onplay = a.onpause = pintar;
+
+      play.onclick = () => { a.paused ? a.play() : a.pause(); };
       a.ontimeupdate = () => {
         const s = Math.floor(a.currentTime);
         tempo.textContent = Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
       };
-      a.onended = () => { play.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#081B44"><path d="M8 5v14l11-7z"/></svg>'; };
+      a.onended = () => {
+        play.innerHTML = ICO_PLAY;
+        if(eq) eq.classList.remove('a-tocar');
+      };
       vel.onclick = () => {
         this.lento = !this.lento;
         a.playbackRate = this.lento ? 0.72 : 1;
@@ -2263,8 +2284,7 @@ const Pagamento = {
            <iframe id="pgFrame" src="${url}" class="pg-quadro" title="Pagamento"
                    allow="payment" loading="eager" style="opacity:0;"></iframe>
          </div>
-         <div class="pg-nota" id="pgNota">Preenche os dados do cartão acima para concluir.</div>
-         <button class="btn btn-calmo" id="pgJaPaguei" style="margin-top:10px;display:none;">Já paguei — verificar</button>`);
+         <div class="pg-nota" id="pgNota">Preenche os dados do cartão acima para concluir.</div>`);
 
       this.ligarTopo(() => { this.pararVigia(); this.escolherMetodo(); });
 
@@ -2280,14 +2300,9 @@ const Pagamento = {
         if(aviso){ aviso.remove(); frame.style.opacity = '1'; }
       }, 6000);
 
-      // O botão de verificar só faz sentido depois de a pessoa ter tempo de pagar
+      // Depois de algum tempo, a mensagem passa a explicar a espera
       setTimeout(() => {
-        const b = document.getElementById('pgJaPaguei');
         const n = document.getElementById('pgNota');
-        if(b){
-          b.style.display = 'block';
-          b.onclick = ev => this.verificar(ev.currentTarget);
-        }
         if(n) n.textContent = 'Assim que o banco confirmar, libertamos o teu plano.';
       }, 20000);
 
@@ -2319,22 +2334,6 @@ const Pagamento = {
 
   pararVigia(){ if(this.vigia){ clearInterval(this.vigia); this.vigia = null; } },
 
-  async verificar(botao){
-    botao.disabled = true;
-    botao.innerHTML = 'A verificar <span class="pontos"><i></i><i></i><i></i></span>';
-    try{
-      const r = await Rede.correr('estado_pagamento', {plano:this.plano.id});
-      if(r && (r.estado === 'completed' || r.estado === 'pago')){
-        this.pararVigia();
-        return this.sucesso(r.transacao || '');
-      }
-      botao.disabled = false;
-      botao.textContent = 'Ainda não entrou — verificar de novo';
-    }catch(e){
-      botao.disabled = false;
-      botao.textContent = 'Já paguei — verificar';
-    }
-  },
 
   sucesso(transacao){
     this.folha(`
@@ -2548,7 +2547,7 @@ const Avisos = {
       const ok = await this.pedir();
       // O registo demora um instante a concluir
       if(!ok) await new Promise(r => setTimeout(r, 2500));
-      Rota.ir('perfil');
+      Rota.ir(Estado.vista === 'perfil' ? 'perfil' : 'inicio');
     };
   },
 
