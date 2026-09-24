@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-16 · histórico e retomar · live -->
+<!-- LINGUAI-VERSAO-18 · sinal na voz que está a falar · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -150,6 +150,14 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 .p-escrita {background:#F9D08B;color:#6B4413;}
 .p-vocab  {background:#A9C5E8;color:#1B3A63;}
 .p-traduz {background:#D9C6F0;color:#3B2159;}
+
+/* ── Botão que está a falar ───────────────────────────── */
+.a-falar{background:var(--teal)!important;animation:fala 1.1s ease-in-out infinite;}
+.a-falar svg{fill:#fff!important;}
+@keyframes fala{
+  0%,100%{box-shadow:0 0 0 0 rgba(22,184,166,.5);}
+  60%{box-shadow:0 0 0 8px rgba(22,184,166,0);}
+}
 
 /* ── Retomar e histórico ──────────────────────────────── */
 .retomar{display:flex;align-items:center;gap:13px;width:100%;padding:15px 16px;margin-bottom:11px;
@@ -469,6 +477,11 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .asst-barra{display:flex;gap:10px;align-items:flex-end;padding-top:12px;border-top:1.5px solid var(--linha);}
 .asst-barra textarea{flex:1;border:1.5px solid var(--linha);border-radius:17px;padding:12px 15px;font-family:inherit;font-size:14.5px;resize:none;max-height:110px;background:var(--branco);line-height:1.45;}
 .asst-barra textarea:focus{outline:none;border-color:var(--teal);}
+#asstMic{width:44px;height:44px;flex:0 0 auto;border-radius:50%;background:rgba(22,184,166,.12);display:flex;align-items:center;justify-content:center;}
+#asstMic svg{width:18px;height:18px;}
+#asstMic.a-gravar{background:var(--coral);}
+#asstMic.a-gravar svg{fill:#fff;}
+.asst-dica{font-size:12px;color:var(--texto-suave);text-align:center;min-height:16px;padding-top:7px;}
 #asstEnviar{width:44px;height:44px;flex:0 0 auto;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;}
 #asstEnviar svg{width:18px;height:18px;}
 body.em-entrada .nav,body.em-entrada .topo{display:none;}
@@ -846,6 +859,9 @@ Object.assign(RESERVA, {
   x_h_titulo:'Histórico', x_h_sub:'O que andaste a praticar.', x_h_ver:'Ver histórico',
   x_h_vazio:'Ainda sem histórico', x_h_vazio_d:'Faz uma lição e ela aparece aqui.',
   x_h_hoje:'Hoje', x_h_ontem:'Ontem', x_h_frases:'frases',
+  x_nv_agora:'Agora vais aprender', x_nv_teste:'Queres fazer um teste rápido para sabermos o teu nível nesta língua?',
+  x_nv_fazer:'Fazer o teste', x_nv_depois:'Agora não', x_nv_preparar:'A preparar o teste',
+  x_as_ouvir:'A ouvir… toca para parar', x_as_transcrever:'A transcrever…',
   x_av_pergunta:'🔔 Queres que te lembremos?',
   x_av_d:'Avisamos-te antes de perderes a sequência de dias, e quando faltar pouco para a meta.',
   x_av_d_on:'Avisamos-te antes de perderes a sequência, e quando faltar pouco para a tua meta.',
@@ -1286,6 +1302,28 @@ const Ecras = {
    6. SELETOR DE IDIOMAS
    ══════════════════════════════════════════════════════════ */
 const Seletor = {
+  // Depois de trocar a língua a aprender
+  oferecerTeste(){
+    const dest = acharIdioma(Estado.destino, IDIOMAS[1]);
+    const f = document.createElement('div');
+    f.className = 'folha-fundo';
+    f.innerHTML = `<div class="folha" style="text-align:center;padding-top:28px;">
+      <div style="font-size:44px;margin-bottom:12px;">${dest.b}</div>
+      <div style="font-family:'Yusei Magic',cursive;font-size:19px;margin-bottom:8px;">Agora vais aprender ${dest.n}</div>
+      <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.6;margin-bottom:22px;">
+        Queres fazer um teste rápido para sabermos o teu nível nesta língua?</p>
+      <button class="btn" id="selTestar">Fazer o teste</button>
+      <button class="lg-link" id="selDepois">Agora não</button>
+    </div>`;
+    document.body.appendChild(f);
+
+    f.querySelector('#selTestar').onclick = () => {
+      f.remove();
+      Nivel.abrir();
+    };
+    f.querySelector('#selDepois').onclick = () => { f.remove(); location.reload(); };
+  },
+
   abrir(qual){
     const atual = qual === 'origem' ? Estado.origem : Estado.destino;
     const fundo = document.createElement('div');
@@ -1334,6 +1372,13 @@ const Seletor = {
         }
 
         Estado.guardar();
+
+        // Língua nova a aprender: o nível antigo já não serve
+        if(qual === 'destino' && antesD !== Estado.destino){
+          try{ localStorage.removeItem('linguai:nivel'); }catch(e){}
+          fundo.remove();
+          return Seletor.oferecerTeste();
+        }
 
         // Recarrega, para tudo nascer já na língua nova
         location.reload();
@@ -1662,7 +1707,7 @@ const Licoes = {
     });
 
     raiz.querySelectorAll('.ouvir-frase').forEach(b => {
-      b.onclick = () => this.falar(b.dataset.texto);
+      b.onclick = () => this.falar(b.dataset.texto, b);
     });
 
     raiz.querySelectorAll('.gravar-frase').forEach(b => {
@@ -1717,15 +1762,25 @@ const Licoes = {
     };
   },
 
-  falar(texto){
+  // O botão que está a falar fica assinalado, para se saber qual é
+  falar(texto, botao){
     if(!window.speechSynthesis) return;
+    document.querySelectorAll('.a-falar').forEach(x => x.classList.remove('a-falar'));
     speechSynthesis.cancel();
+
     const u = new SpeechSynthesisUtterance(texto);
     const mapa = {pt:'pt-PT',en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',
                   zh:'zh-CN',ja:'ja-JP',ko:'ko-KR',ar:'ar-SA',ru:'ru-RU',hi:'hi-IN',
                   nl:'nl-NL',sv:'sv-SE',tr:'tr-TR'};
     u.lang = mapa[Estado.destino] || 'en-US';
     u.rate = 0.9;
+
+    if(botao){
+      const parar = () => botao.classList.remove('a-falar');
+      u.onstart = () => botao.classList.add('a-falar');
+      u.onend = parar;
+      u.onerror = parar;
+    }
     speechSynthesis.speak(u);
   }
 };
@@ -2422,11 +2477,18 @@ const Assistente = {
     document.getElementById('assistenteConteudo').innerHTML = `
       <div id="asstFio">${this.historico.length ? '' : this.boasVindas()}</div>
       <div class="asst-barra">
+        <button id="asstMic" aria-label="Falar">
+          <svg viewBox="0 0 24 24" fill="var(--teal)">
+            <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3z"/>
+            <path d="M18 11a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.9V22h2v-3.1A8 8 0 0 0 20 11z"/>
+          </svg>
+        </button>
         <textarea id="asstTexto" rows="1" placeholder="Escreve a tua dúvida..."></textarea>
         <button id="asstEnviar" aria-label="Enviar">
           <svg viewBox="0 0 24 24" fill="#fff"><path d="M2 21 23 12 2 3v7l15 2-15 2z"/></svg>
         </button>
-      </div>`;
+      </div>
+      <div class="asst-dica" id="asstDica"></div>`;
 
     if(this.historico.length) this.repintarFio(); else this.ligarSugestoes();
 
@@ -2437,6 +2499,7 @@ const Assistente = {
     };
     caixa.onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); this.enviar(); } };
     document.getElementById('asstEnviar').onclick = () => this.enviar();
+    document.getElementById('asstMic').onclick = () => this.microfone();
   },
 
   boasVindas(){
@@ -2464,8 +2527,56 @@ const Assistente = {
       </div>`).join('') + (this.aEsperar ?
       '<div class="asst-linha ia"><div class="asst-bolha"><span class="pontos"><i></i><i></i><i></i></span></div></div>' : '');
 
-    fio.querySelectorAll('[data-falar]').forEach(b => b.onclick = () => this.falar(b.dataset.falar));
+    fio.querySelectorAll('[data-falar]').forEach(b => b.onclick = () => this.falar(b.dataset.falar, b));
     fio.scrollTop = fio.scrollHeight;
+  },
+
+  gravador:null, fluxo:null, aGravar:false,
+
+  // Ditar em vez de escrever
+  async microfone(){
+    const b = document.getElementById('asstMic');
+    const dica = document.getElementById('asstDica');
+    const dizer = m => { if(dica) dica.textContent = m || ''; };
+
+    if(this.aGravar){
+      if(this.gravador && this.gravador.state !== 'inactive') this.gravador.stop();
+      if(this.fluxo) this.fluxo.getTracks().forEach(t => t.stop());
+      this.aGravar = false;
+      b.classList.remove('a-gravar');
+      dizer('A transcrever…');
+      return;
+    }
+
+    try{ this.fluxo = await navigator.mediaDevices.getUserMedia({audio:true}); }
+    catch(e){ dizer('Sem acesso ao microfone.'); return; }
+
+    const pedacos = [];
+    this.gravador = new MediaRecorder(this.fluxo);
+    this.gravador.ondataavailable = ev => { if(ev.data.size) pedacos.push(ev.data); };
+    this.gravador.onstop = async () => {
+      try{
+        const blob = new Blob(pedacos, {type:'audio/webm'});
+        const base64 = await new Promise((ok, falha) => {
+          const l = new FileReader();
+          l.onload = () => ok(String(l.result).split(',')[1]);
+          l.onerror = () => falha(new Error('erro'));
+          l.readAsDataURL(blob);
+        });
+        const r = await Rede.correr('transcrever', {audio_base64:base64});
+        const txt = (r && r.texto || '').trim();
+        dizer('');
+        if(!txt) return;
+        const caixa = document.getElementById('asstTexto');
+        caixa.value = (caixa.value ? caixa.value + ' ' : '') + txt;
+        caixa.focus();
+        caixa.dispatchEvent(new Event('input'));
+      }catch(e){ dizer('Não consegui transcrever.'); }
+    };
+    this.gravador.start();
+    this.aGravar = true;
+    b.classList.add('a-gravar');
+    dizer('A ouvir… toca para parar');
   },
 
   async enviar(){
@@ -2494,14 +2605,20 @@ const Assistente = {
     this.repintarFio();
   },
 
-  falar(texto){
+  falar(texto, botao){
     if(!window.speechSynthesis) return;
+    document.querySelectorAll('.a-falar').forEach(x => x.classList.remove('a-falar'));
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(texto);
     const mapa = {pt:'pt-PT',en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',
                   zh:'zh-CN',ja:'ja-JP',ko:'ko-KR',ar:'ar-SA',ru:'ru-RU',hi:'hi-IN',
                   nl:'nl-NL',sv:'sv-SE',tr:'tr-TR'};
     u.lang = mapa[Estado.origem] || 'pt-PT';
+    if(botao){
+      const parar = () => botao.classList.remove('a-falar');
+      u.onstart = () => botao.classList.add('a-falar');
+      u.onend = parar; u.onerror = parar;
+    }
     speechSynthesis.speak(u);
   }
 };
@@ -2632,6 +2749,91 @@ const Avisos = {
   }
 };
 
+
+
+/* ══════════════════════════════════════════════════════════
+   NÍVEL — refazer o teste quando se troca de língua
+   ══════════════════════════════════════════════════════════ */
+const Nivel = {
+  perguntas:[], idx:0, respostas:[],
+
+  async abrir(){
+    Rota.mostrarModulo();
+    document.getElementById('v-modulo').innerHTML =
+      '<div class="carregar" style="padding:80px 0;">A preparar o teste<span class="pontos"><i></i><i></i><i></i></span></div>';
+    try{
+      const r = await Rede.correr('avaliar_nivel', {
+        modo:'gerar_perguntas',
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+      let p = r.perguntas;
+      if(typeof p === 'string'){
+        let s = p.slice(p.indexOf('['));
+        const f = s.lastIndexOf(']'); if(f > -1) s = s.slice(0, f + 1);
+        p = JSON.parse(s);
+      }
+      this.perguntas = p || []; this.idx = 0; this.respostas = [];
+      if(!this.perguntas.length) throw new Error('sem perguntas');
+      this.ver();
+    }catch(e){ location.reload(); }
+  },
+
+  ver(){
+    const p = this.perguntas[this.idx];
+    const total = this.perguntas.length;
+    document.getElementById('v-modulo').innerHTML = `
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:20px;">
+        <div style="flex:1;height:5px;background:var(--linha);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${this.idx/total*100}%;background:var(--teal);transition:width .3s;"></div>
+        </div>
+        <span style="font-size:12px;color:var(--texto-suave);font-weight:600;">${this.idx+1}/${total}</span>
+      </div>
+      <div class="cartao" data-conteudo style="padding:22px 18px;font-size:16.5px;line-height:1.5;">${p.pergunta}</div>
+      <div class="escolhas" id="nvOpcoes" data-conteudo>
+        ${(p.opcoes||[]).map((o,i) => `<button class="escolha" data-op="${i}">${o}</button>`).join('')}
+      </div>`;
+
+    document.querySelectorAll('#nvOpcoes [data-op]').forEach(b => {
+      b.onclick = () => {
+        this.respostas.push({dificuldade:p.dificuldade || 'intermedio', acertou:Number(b.dataset.op) === p.correta});
+        this.idx++;
+        if(this.idx < total) this.ver(); else this.avaliar();
+      };
+    });
+  },
+
+  async avaliar(){
+    document.getElementById('v-modulo').innerHTML =
+      '<div class="carregar" style="padding:80px 0;">A avaliar as tuas respostas<span class="pontos"><i></i><i></i><i></i></span></div>';
+    try{
+      const r = await Rede.correr('avaliar_nivel', {
+        modo:'avaliar_multipla',
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n,
+        respostas: JSON.stringify(this.respostas)
+      });
+      const nivel = r.nivel || '';
+      if(nivel){
+        if(Estado.utilizador) Estado.utilizador.nivel = nivel;
+        try{ localStorage.setItem('linguai:nivel', nivel); }catch(e){}
+        await Nucleo.guardarIdiomas();
+      }
+      this.verResultado(nivel, r.feedback || '');
+    }catch(e){ location.reload(); }
+  },
+
+  verResultado(nivel, feedback){
+    document.getElementById('v-modulo').innerHTML = `
+      <div style="text-align:center;padding:28px 6px;">
+        <div style="font-size:12.5px;color:var(--texto-suave);letter-spacing:1.4px;text-transform:uppercase;margin-bottom:14px;">O teu nível</div>
+        <div style="display:inline-block;background:var(--indigo);color:#fff;border-radius:999px;padding:13px 32px;font-family:'Yusei Magic',cursive;font-size:21px;margin-bottom:20px;">${nivel}</div>
+        <p style="font-size:14.5px;color:var(--texto-suave);line-height:1.65;">${feedback}</p>
+      </div>
+      <button class="btn" id="nvFim">Começar →</button>`;
+    document.getElementById('nvFim').onclick = () => location.reload();
+  }
+};
 
 /* ══════════════════════════════════════════════════════════
    HISTÓRICO — o que a pessoa andou a fazer, e onde ficou
@@ -3726,7 +3928,7 @@ const Conversa = {
 
   ligarOuvirDialogo(){
     document.querySelectorAll('#v-modulo .cv-fala-ouvir').forEach(b => {
-      b.onclick = ev => { ev.stopPropagation(); Licoes.falar(b.dataset.txt); };
+      b.onclick = ev => { ev.stopPropagation(); Licoes.falar(b.dataset.txt, b); };
     });
   },
 
@@ -3887,7 +4089,7 @@ const Vocabulario = {
       <button class="btn btn-calmo" id="vcOuvir" style="margin-bottom:10px;">🔊 Ouvir</button>
       <button class="btn" id="vcProx">${this.idx + 1 < this.ordem.length ? 'Seguinte' : 'Ver resultado'}</button>`;
 
-    document.getElementById('vcOuvir').onclick = () => Licoes.falar(certa);
+    document.getElementById('vcOuvir').onclick = e => Licoes.falar(certa, e.currentTarget);
     document.getElementById('vcProx').onclick = () => {
       this.idx++;
       if(this.idx < this.ordem.length) this.ver(); else this.resultado();
@@ -4174,7 +4376,7 @@ const Verbos = {
       };
     });
     document.querySelectorAll('#v-modulo .vb-ouvir').forEach(b => {
-      b.onclick = () => Licoes.falar(b.dataset.txt);
+      b.onclick = () => Licoes.falar(b.dataset.txt, b);
     });
   },
 
@@ -4676,7 +4878,7 @@ const Gravacao = {
       <div id="grRever"></div>`;
 
     document.getElementById('grVoltar').onclick = () => this.sair();
-    document.getElementById('grOuvir').onclick = () => Licoes.falar(this.alvoTxt());
+    document.getElementById('grOuvir').onclick = e => Licoes.falar(this.alvoTxt(), e.currentTarget);
     document.getElementById('grBotao').onclick = () => this.alternar();
   },
 
