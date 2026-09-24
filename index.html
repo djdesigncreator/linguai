@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-15 · botão dos lembretes corrigido · live -->
+<!-- LINGUAI-VERSAO-16 · histórico e retomar · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -150,6 +150,23 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 .p-escrita {background:#F9D08B;color:#6B4413;}
 .p-vocab  {background:#A9C5E8;color:#1B3A63;}
 .p-traduz {background:#D9C6F0;color:#3B2159;}
+
+/* ── Retomar e histórico ──────────────────────────────── */
+.retomar{display:flex;align-items:center;gap:13px;width:100%;padding:15px 16px;margin-bottom:11px;
+  border-radius:var(--r-lg);background:var(--branco);border:1.5px dashed var(--teal);text-align:left;}
+.retomar:active{transform:scale(.985);}
+.ret-ic{font-size:22px;flex:0 0 auto;}
+.ret-txt{flex:1;min-width:0;}
+.ret-t{display:block;font-family:'Yusei Magic',cursive;font-size:15px;line-height:1.3;}
+.ret-d{display:block;font-size:12px;color:var(--texto-suave);margin-top:2px;}
+.ret-seta{flex:0 0 auto;color:var(--teal);font-size:17px;}
+.hist-linha{display:flex;align-items:center;gap:12px;background:var(--branco);border:1.5px solid var(--linha);
+  border-radius:var(--r-md);padding:13px 15px;margin-bottom:8px;}
+.hist-ic{font-size:19px;flex:0 0 auto;}
+.hist-txt{flex:1;min-width:0;}
+.hist-t{display:block;font-size:14.5px;font-weight:600;line-height:1.35;}
+.hist-d{display:block;font-size:12px;color:var(--texto-suave);margin-top:2px;}
+.hist-n{flex:0 0 auto;font-family:'Yusei Magic',cursive;font-size:16px;color:var(--teal);}
 
 /* ── Navegação inferior ───────────────────────────────── */
 .nav{
@@ -826,6 +843,9 @@ Object.assign(RESERVA, {
   x_av_on:'🔔 Lembretes ligados', x_av_off:'🔕 Lembretes desligados',
   x_av_quase:'🔔 Quase lá', x_av_quase_d:'Autorizaste as notificações, mas o registo ainda não terminou.',
   x_av_terminar:'Terminar registo',
+  x_h_titulo:'Histórico', x_h_sub:'O que andaste a praticar.', x_h_ver:'Ver histórico',
+  x_h_vazio:'Ainda sem histórico', x_h_vazio_d:'Faz uma lição e ela aparece aqui.',
+  x_h_hoje:'Hoje', x_h_ontem:'Ontem', x_h_frases:'frases',
   x_av_pergunta:'🔔 Queres que te lembremos?',
   x_av_d:'Avisamos-te antes de perderes a sequência de dias, e quando faltar pouco para a meta.',
   x_av_d_on:'Avisamos-te antes de perderes a sequência, e quando faltar pouco para a tua meta.',
@@ -1128,6 +1148,18 @@ const Ecras = {
       ${Jogo.cartao()}
 
       <div class="seccao-titulo">Continuar</div>
+      ${(() => {
+        const a = Historico.licaoAberta();
+        if(!a) return '';
+        return `<button class="retomar" id="btnRetomar">
+          <span class="ret-ic">📚</span>
+          <span class="ret-txt">
+            <span class="ret-t">${a.licao.tema}</span>
+            <span class="ret-d">${a.nivel || ''} · ${a.licao.frases.length} frases · ${Historico.quando(a.quando)}</span>
+          </span>
+          <span class="ret-seta">→</span>
+        </button>`;
+      })()}
       <div id="atalhoRapido"></div>`;
 
     requestAnimationFrame(() => {
@@ -1136,6 +1168,18 @@ const Ecras = {
     });
 
     Avisos.ligarCartao();
+
+    const br = alvo.querySelector('#btnRetomar');
+    if(br) br.onclick = () => {
+      const a = Historico.licaoAberta();
+      if(!a) return;
+      Licoes.nivel = a.nivel;
+      Licoes.licao = a.licao;
+      Licoes.fraseSel = 0;
+      Licoes.paginaFrase = 0;
+      Rota.mostrarModulo();
+      Licoes.verLicao();
+    };
 
     const bm = alvo.querySelector('#barraMeta');
     if(bm) bm.onclick = () => Jogo.escolherMeta();
@@ -1202,6 +1246,8 @@ const Ecras = {
 
       <button class="btn btn-calmo" id="perfSair" style="margin-bottom:8px;">Terminar sessão</button>
 
+      <button class="btn btn-calmo" id="perfHist" style="margin-bottom:10px;">Ver histórico</button>
+
       <div class="seccao-titulo">Conquistas</div>
       ${Jogo.painelConquistas()}
 
@@ -1213,6 +1259,9 @@ const Ecras = {
       </div>`;
 
     Avisos.ligarCartao();
+
+    const bh = document.getElementById('perfHist');
+    if(bh) bh.onclick = () => Historico.ver();
 
     const bs = document.getElementById('perfSair');
     if(bs) bs.onclick = async () => {
@@ -1480,6 +1529,7 @@ const Licoes = {
 
       this.licao = {tema, explicacao:r.explicacao || '', audio:r.audio || '', frases:frases || []};
       this.fraseSel = 0; this.paginaFrase = 0;
+      Historico.guardarLicao(this.licao, this.nivel);
       this.verLicao();
       if(!this.licao.audio) this.pedirAudio();
     }catch(e){
@@ -2582,6 +2632,79 @@ const Avisos = {
   }
 };
 
+
+/* ══════════════════════════════════════════════════════════
+   HISTÓRICO — o que a pessoa andou a fazer, e onde ficou
+   ══════════════════════════════════════════════════════════ */
+const Historico = {
+  MAX:60,
+
+  lista(){
+    try{ return JSON.parse(localStorage.getItem('linguai:historico') || '[]'); }
+    catch(e){ return []; }
+  },
+
+  registar(item){
+    const l = this.lista();
+    l.unshift(Object.assign({quando: Date.now()}, item));
+    try{ localStorage.setItem('linguai:historico', JSON.stringify(l.slice(0, this.MAX))); }catch(e){}
+  },
+
+  // A lição fica guardada inteira: retomar não gasta IA
+  guardarLicao(licao, nivel){
+    try{
+      localStorage.setItem('linguai:licaoAberta', JSON.stringify({
+        nivel, quando: Date.now(),
+        licao: {tema:licao.tema, explicacao:licao.explicacao, audio:licao.audio, frases:licao.frases}
+      }));
+    }catch(e){}
+  },
+
+  licaoAberta(){
+    try{
+      const g = JSON.parse(localStorage.getItem('linguai:licaoAberta') || 'null');
+      if(!g || !g.licao || !g.licao.frases || !g.licao.frases.length) return null;
+      // Ao fim de 7 dias deixa de fazer sentido retomar
+      if(Date.now() - (g.quando || 0) > 7 * 864e5) return null;
+      return g;
+    }catch(e){ return null; }
+  },
+
+  fecharLicao(){ try{ localStorage.removeItem('linguai:licaoAberta'); }catch(e){} },
+
+  quando(ms){
+    const d = Math.floor((Date.now() - ms) / 864e5);
+    if(d <= 0) return 'Hoje';
+    if(d === 1) return 'Ontem';
+    if(d < 7) return 'Há ' + d + ' dias';
+    return new Date(ms).toLocaleDateString();
+  },
+
+  ICONES:{licao:'📚', exercicio:'✅', gravacao:'🎤', conversa:'💬', escrita:'✍️', vocabulario:'🖼'},
+
+  ver(){
+    Rota.mostrarModulo();
+    const l = this.lista();
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="hSair">← ${t('voltar')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">Histórico</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:18px;">O que andaste a praticar.</p>
+
+      ${l.length ? l.map(x => `
+        <div class="hist-linha">
+          <span class="hist-ic">${this.ICONES[x.tipo] || '•'}</span>
+          <span class="hist-txt">
+            <span class="hist-t">${x.titulo || ''}</span>
+            <span class="hist-d">${this.quando(x.quando)}${x.detalhe ? ' · ' + x.detalhe : ''}</span>
+          </span>
+          ${typeof x.pontuacao === 'number' ? `<span class="hist-n">${x.pontuacao}</span>` : ''}
+        </div>`).join('')
+      : '<div class="vazio"><div class="t">Ainda sem histórico</div><div class="d">Faz uma lição e ela aparece aqui.</div></div>'}`;
+
+    document.getElementById('hSair').onclick = () => Rota.ir('perfil');
+  }
+};
+
 /* ══════════════════════════════════════════════════════════
    ESTATÍSTICAS — soma lições, conversas e escritas no Bubble
    ══════════════════════════════════════════════════════════ */
@@ -2743,6 +2866,8 @@ const Exercicios = {
     const pct = Math.round(this.acertos / total * 100);
     const xp = Jogo.premiar('exercicio', {acertos:this.acertos, total, tema:this.licao.tema});
     if(!this.licao._contada){ this.licao._contada = true; Estatisticas.registar('licao'); }
+    Historico.registar({tipo:'exercicio', titulo:this.licao.tema, pontuacao:pct,
+                        detalhe:this.acertos + '/' + total});
 
     let titulo = 'Continua a praticar', emoji = '💪';
     if(pct >= 90){ titulo = 'Impecável!'; emoji = '🏆'; }
@@ -3514,6 +3639,8 @@ const Conversa = {
   verAvaliacao(pontuacao, fortes, melhorar, geral){
     const xp = Jogo.premiar('conversa', {pontuacao});
     Estatisticas.registar('conversa');
+    Historico.registar({tipo:'conversa', titulo:this.tema, pontuacao:pontuacao || undefined,
+                        detalhe:this.historico.length + ' trocas'});
     document.getElementById('v-modulo').innerHTML = `
       <div style="text-align:center;padding:18px 6px;">
         <div style="font-size:48px;margin-bottom:10px;">🗣</div>
@@ -3911,6 +4038,7 @@ const Escrita = {
   verResultado(pontuacao, corrigida, erros, feedback){
     const xp = Jogo.premiar('escrita', {pontuacao});
     Estatisticas.registar('escrita');
+    Historico.registar({tipo:'escrita', titulo:this.tema || 'Escrita', pontuacao:pontuacao});
     document.getElementById('v-modulo').innerHTML = `
       <div style="text-align:center;padding:16px 6px;">
         <div class="ex-anel">
@@ -4713,6 +4841,7 @@ const Gravacao = {
 
   verNota(pontuacao, feedback, transcricao){
     const xp = Jogo.premiar('gravacao', {pontuacao});
+    Historico.registar({tipo:'gravacao', titulo:this.alvoTxt(), pontuacao:pontuacao});
     const frases = (this.licao && this.licao.frases) || [];
     const temSeguinte = this.idx > -1 && this.idx + 1 < frases.length;
     let emoji = '💪', titulo = 'Vamos treinar mais';
