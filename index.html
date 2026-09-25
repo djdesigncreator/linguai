@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-19 · espera animada e sessão única · live -->
+<!-- LINGUAI-VERSAO-21 · percurso com avaliação final · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -150,6 +150,47 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 .p-escrita {background:#F9D08B;color:#6B4413;}
 .p-vocab  {background:#A9C5E8;color:#1B3A63;}
 .p-traduz {background:#D9C6F0;color:#3B2159;}
+
+/* ── Percurso ─────────────────────────────────────────── */
+.p-percurso{background:#A9E4E8;color:#0B4A50;}
+.pc-tags{display:flex;flex-wrap:wrap;gap:9px;}
+.pc-tag{padding:11px 16px;border-radius:999px;background:var(--branco);border:1.5px solid var(--linha);font-size:13.5px;font-weight:600;}
+.pc-tag.on{border-color:var(--teal);background:rgba(22,184,166,.1);color:var(--teal);}
+.pc-barra{height:8px;border-radius:999px;background:var(--linha);overflow:hidden;margin-bottom:18px;}
+.pc-barra div{height:100%;background:var(--lima);border-radius:999px;transition:width .6s;}
+.pc-lista{display:flex;flex-direction:column;gap:9px;}
+.pc-aula{display:flex;align-items:center;gap:13px;width:100%;padding:14px 15px;border-radius:var(--r-md);
+  background:var(--branco);border:1.5px solid var(--linha);text-align:left;}
+.pc-aula.agora{border-color:var(--teal);border-width:2px;background:rgba(22,184,166,.05);}
+.pc-aula.feita{opacity:.62;}
+.pc-num{width:30px;height:30px;flex:0 0 auto;border-radius:50%;background:var(--papel);display:flex;
+  align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--texto-suave);}
+.pc-aula.feita .pc-num{background:rgba(22,184,166,.15);color:var(--teal);}
+.pc-aula.agora .pc-num{background:var(--teal);color:#fff;}
+.pc-txt{flex:1;min-width:0;}
+.pc-t{display:block;font-weight:600;font-size:14.5px;line-height:1.35;}
+.pc-d{display:block;font-size:12px;color:var(--texto-suave);margin-top:2px;line-height:1.4;}
+.pc-p{display:inline-block;margin-top:5px;font-size:11px;font-weight:600;color:var(--teal);}
+.pc-agora{flex:0 0 auto;font-size:11px;font-weight:700;color:var(--teal);}
+.pc-cab{margin-bottom:20px;}
+.pc-cab-n{font-size:11.5px;font-weight:700;color:var(--teal);letter-spacing:1.4px;text-transform:uppercase;}
+.pc-passos{display:flex;flex-direction:column;gap:10px;}
+.pc-passo{display:flex;align-items:center;gap:13px;width:100%;padding:16px;border-radius:var(--r-md);
+  background:var(--branco);border:1.5px solid var(--linha);text-align:left;}
+.pc-passo.feito{border-color:var(--teal);background:rgba(22,184,166,.06);}
+.pc-passo-ic{font-size:20px;flex:0 0 auto;width:26px;text-align:center;}
+.pc-passo.feito .pc-passo-ic{color:var(--teal);font-weight:700;}
+.pc-passo-t{flex:1;font-weight:600;font-size:14.5px;}
+.pc-passo-s{color:var(--indigo-40);}
+.pc-salto{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px;}
+.pc-salto-a{font-size:15px;color:var(--texto-suave);text-decoration:line-through;}
+.pc-salto-s{color:var(--teal);font-size:19px;}
+.pc-salto-b{background:var(--teal);color:#fff;border-radius:999px;padding:12px 26px;
+  font-family:'Yusei Magic',cursive;font-size:20px;}
+.pc-seguir{display:flex;align-items:center;gap:13px;width:100%;padding:15px 16px;margin-bottom:11px;
+  border-radius:var(--r-lg);background:var(--indigo);color:#fff;text-align:left;}
+.pc-seguir .ret-d{color:#CFC7E4;}
+.pc-seguir .ret-seta{color:var(--lima);}
 
 /* ── Espera ───────────────────────────────────────────── */
 .esp{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:54px 20px;text-align:center;}
@@ -691,6 +732,16 @@ const RESERVA = {
   p_escrita:'Escrita corrigida', p_escrita_d:'Escreve e recebe cada erro explicado.',
   p_vocab:'Vocabulário', p_vocab_d:'Palavras novas com imagens, por categoria.',
   p_traduz:'Tradutor', p_traduz_d:'Traduz por voz, texto ou ficheiro.',
+  p_percurso:'O teu percurso', p_percurso_d:'Um guia de aulas feito para ti, passo a passo.',
+  x_pc_titulo:'O teu percurso', x_pc_para_que:'Para que precisas da língua?',
+  x_pc_escolhe:'Escolhe o que quiseres — o percurso é montado à tua medida.',
+  x_pc_montar:'Montar o meu percurso', x_pc_outro:'Montar outro percurso',
+  x_pc_aula:'Aula', x_pc_seguinte:'Seguinte', x_pc_passos:'passos',
+  x_pc_ler:'Ler e ouvir', x_pc_ex:'Exercícios', x_pc_pron:'Pronúncia', x_pc_conv:'Conversar',
+  x_pc_concluido:'Percurso concluído',
+  x_pc_terminaste:'Terminaste o percurso', x_pc_ver_nivel:'Ver o meu nível',
+  x_pc_subiu:'Subiste de nível!', x_pc_meu_nivel:'O teu nível',
+  x_pc_comecar:'Começar o percurso de', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
   // Perfil
   teus_idiomas:'Os teus idiomas', explicacoes_em:'Explicações em', a_aprender:'A aprender',
   atividade:'Atividade', terminar_sessao:'Terminar sessão',
@@ -1139,6 +1190,7 @@ const ICONES = {
 };
 
 const PRATICAS = [
+  {id:'percurso', cls:'p-percurso', cor:'#0E7C86', k:'p_percurso', ic:'<path d="M5 20V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14"/><path d="M9 8h6M9 12h6M9 16h3"/>'},
   {id:'licoes',   cls:'p-licoes',   cor:'#6B5AD6', k:'p_licoes',  ic:'<path d="M3 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H3zM21 5h-7a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h7z"/>'},
   {id:'conversa', cls:'p-conversa', cor:'#2E8F66', k:'p_conversa', ic:'<rect x="3" y="4.5" width="18" height="13" rx="3"/><path d="m8 20.5 3-3h3"/>'},
   {id:'verbos',   cls:'p-verbos',   cor:'#C4564A', k:'p_verbos', ic:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9.5a4 4 0 0 1 0 5"/>'},
@@ -1204,6 +1256,7 @@ const Ecras = {
       ${Jogo.cartao()}
 
       <div class="seccao-titulo">Continuar</div>
+      ${Percurso.repor() ? Percurso.cartao() : ''}
       ${(() => {
         const a = Historico.licaoAberta();
         if(!a) return '';
@@ -1224,6 +1277,9 @@ const Ecras = {
     });
 
     Avisos.ligarCartao();
+
+    const ps = alvo.querySelector('#pcSeguir');
+    if(ps) ps.onclick = () => Percurso.abrir();
 
     const br = alvo.querySelector('#btnRetomar');
     if(br) br.onclick = () => {
@@ -1488,6 +1544,7 @@ const Rota = {
   abrirPratica(id){
     if(!this.podeUsar()){ this.barrar(); return; }
     const modulos = {
+      percurso:() => Percurso.abrir(),
       licoes:  () => Licoes.abrir(),
       escrita: () => Escrita.abrir(),
       verbos:  () => Verbos.abrir(),
@@ -1620,6 +1677,11 @@ const Licoes = {
       this.fraseSel = 0; this.paginaFrase = 0;
       Historico.guardarLicao(this.licao, this.nivel);
       Espera.parar();
+      Percurso.marcar('licao');
+      const pedido = Percurso.passoPendente;
+      Percurso.passoPendente = null;
+      if(pedido === 'exercicios'){ this.verLicao(); if(!this.licao.audio) this.pedirAudio(); return Exercicios.abrir(this.licao); }
+      if(pedido === 'gravacao'){ this.verLicao(); if(!this.licao.audio) this.pedirAudio(); return Gravacao.abrir(this.licao.frases[0], this.licao, 0); }
       this.verLicao();
       if(!this.licao.audio) this.pedirAudio();
     }catch(e){
@@ -2799,6 +2861,377 @@ const Avisos = {
 
 
 /* ══════════════════════════════════════════════════════════
+   PERCURSO — o guia de aulas, montado pela IA para cada pessoa
+   Nada fica trancado: sugere a próxima, mas pode ir onde quiser.
+   ══════════════════════════════════════════════════════════ */
+const PASSOS = [
+  {id:'licao',      ic:'📖', nome:'Ler e ouvir'},
+  {id:'exercicios', ic:'✅', nome:'Exercícios'},
+  {id:'gravacao',   ic:'🎤', nome:'Pronúncia'},
+  {id:'conversa',   ic:'💬', nome:'Conversar'}
+];
+
+const Percurso = {
+  aulas:[], feitas:{}, aulaAberta:null,
+
+  chave(){ return Estado.destino + '|' + (this.nivel() || ''); },
+  nivel(){
+    try{ return localStorage.getItem('linguai:nivel') || (Estado.utilizador && Estado.utilizador.nivel) || ''; }
+    catch(e){ return (Estado.utilizador && Estado.utilizador.nivel) || ''; }
+  },
+
+  // ── Guardar e repor ───────────────────────────────────
+  repor(){
+    const u = Estado.utilizador || {};
+    if(u.percurso_chave === this.chave() && u.percurso_json){
+      try{
+        this.aulas = JSON.parse(u.percurso_json) || [];
+        this.feitas = JSON.parse(u.aulas_feitas || '{}') || {};
+        return true;
+      }catch(e){}
+    }
+    try{
+      const g = JSON.parse(localStorage.getItem('linguai:percurso') || 'null');
+      if(g && g.chave === this.chave()){
+        this.aulas = g.aulas || [];
+        this.feitas = g.feitas || {};
+        return true;
+      }
+    }catch(e){}
+    this.aulas = []; this.feitas = {};
+    return false;
+  },
+
+  guardar(){
+    try{
+      localStorage.setItem('linguai:percurso', JSON.stringify({
+        chave:this.chave(), aulas:this.aulas, feitas:this.feitas
+      }));
+    }catch(e){}
+    Rede.correr('guardar_percurso', {
+      percurso: JSON.stringify(this.aulas),
+      chave: this.chave(),
+      feitas: JSON.stringify(this.feitas)
+    }).catch(() => {});
+  },
+
+  // ── Onde a pessoa vai ─────────────────────────────────
+  concluida(i){
+    const f = this.feitas[i] || {};
+    return PASSOS.every(p => f[p.id]);
+  },
+  proxima(){
+    for(let i = 0; i < this.aulas.length; i++) if(!this.concluida(i)) return i;
+    return -1;
+  },
+  quantasFeitas(){ return this.aulas.filter((_, i) => this.concluida(i)).length; },
+
+  // ── Abrir ─────────────────────────────────────────────
+  async abrir(){
+    Rota.mostrarModulo();
+    if(!this.nivel()) return this.pedirNivel();
+    if(this.repor() && this.aulas.length) return this.ver();
+    this.perguntarInteresses();
+  },
+
+  pedirNivel(){
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="pcSair">← ${t('voltar')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">${t('qual_nivel')}</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;">O percurso é montado a partir daqui.</p>
+      <div class="escolhas">
+        ${[['Iniciante','iniciante'],['Intermédio','intermedio'],['Avançado','avancado']]
+          .map(([v,k]) => `<button class="escolha" data-n="${v}">${t(k)}<span style="color:var(--indigo-40)">→</span></button>`).join('')}
+      </div>`;
+    document.getElementById('pcSair').onclick = () => Rota.ir('praticar');
+    document.querySelectorAll('#v-modulo [data-n]').forEach(b => {
+      b.onclick = () => {
+        try{ localStorage.setItem('linguai:nivel', b.dataset.n); }catch(e){}
+        this.abrir();
+      };
+    });
+  },
+
+  perguntarInteresses(){
+    const op = ['Viajar','Trabalho','Estudar','Falar com pessoas','Negócios','Cultura e lazer'];
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="pcSair">← ${t('voltar')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">Para que precisas da língua?</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:18px;">
+        Escolhe o que quiseres — o percurso é montado à tua medida.</p>
+      <div class="pc-tags">
+        ${op.map(x => `<button class="pc-tag" data-int="${x}">${x}</button>`).join('')}
+      </div>
+      <button class="btn" id="pcGerar" style="margin-top:20px;">Montar o meu percurso</button>`;
+
+    document.getElementById('pcSair').onclick = () => Rota.ir('praticar');
+    document.querySelectorAll('#v-modulo [data-int]').forEach(b => {
+      b.onclick = () => b.classList.toggle('on');
+    });
+    document.getElementById('pcGerar').onclick = () => {
+      const esc = [...document.querySelectorAll('#v-modulo .pc-tag.on')].map(b => b.dataset.int);
+      this.gerar(esc.join(', '));
+    };
+  },
+
+  async gerar(interesses){
+    Espera.abrir('v-modulo', [
+      'A montar o teu percurso…',
+      'A escolher por onde começar…',
+      'A organizar as aulas…',
+      'Quase pronto'
+    ]);
+    try{
+      const r = await Rede.correr('gerar_percurso', {
+        nivel: this.nivel(),
+        interesses: interesses || '',
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino: acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+      let a = r.aulas;
+      if(typeof a === 'string'){
+        let s = a.slice(a.indexOf('['));
+        const f = s.lastIndexOf(']'); if(f > -1) s = s.slice(0, f + 1);
+        a = JSON.parse(s);
+      }
+      this.aulas = (a || []).filter(x => x && x.tema);
+      this.feitas = {};
+      if(!this.aulas.length) throw new Error('sem aulas');
+      Espera.parar();
+      this.guardar();
+      this.ver();
+    }catch(e){
+      Espera.parar();
+      document.getElementById('v-modulo').innerHTML = `
+        <button class="voltar" id="pcSair">← ${t('voltar')}</button>
+        <div class="aviso">Não consegui montar o percurso. Tenta outra vez.</div>`;
+      document.getElementById('pcSair').onclick = () => Rota.ir('praticar');
+    }
+  },
+
+  // ── A lista das aulas ─────────────────────────────────
+  ver(){
+    const prox = this.proxima();
+    const feitas = this.quantasFeitas();
+    const pct = Math.round(feitas / this.aulas.length * 100);
+
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="pcSair">← ${t('voltar')}</button>
+      <h1 style="font-size:22px;margin-bottom:6px;">O teu percurso</h1>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:14px;">
+        ${acharIdioma(Estado.destino, IDIOMAS[1]).n} · ${this.nivel()} · ${feitas} de ${this.aulas.length} aulas</p>
+
+      <div class="pc-barra"><div style="width:${pct}%"></div></div>
+
+      <div class="pc-lista">
+        ${this.aulas.map((a, i) => {
+          const f = this.concluida(i);
+          const agora = i === prox;
+          const passosFeitos = PASSOS.filter(p => (this.feitas[i] || {})[p.id]).length;
+          return `<button class="pc-aula ${f ? 'feita' : ''} ${agora ? 'agora' : ''}" data-aula="${i}">
+            <span class="pc-num">${f ? '✓' : (i + 1)}</span>
+            <span class="pc-txt">
+              <span class="pc-t">${a.titulo || a.tema}</span>
+              <span class="pc-d">${a.objetivo || ''}</span>
+              ${!f && passosFeitos ? `<span class="pc-p">${passosFeitos}/${PASSOS.length} passos</span>` : ''}
+            </span>
+            ${agora ? '<span class="pc-agora">Seguinte</span>' : ''}
+          </button>`;
+        }).join('')}
+      </div>
+
+      <button class="btn btn-calmo" id="pcRefazer" style="margin-top:16px;">Montar outro percurso</button>`;
+
+    document.getElementById('pcSair').onclick = () => Rota.ir('praticar');
+    document.getElementById('pcRefazer').onclick = () => this.perguntarInteresses();
+    document.querySelectorAll('#v-modulo [data-aula]').forEach(b => {
+      b.onclick = () => this.verAula(Number(b.dataset.aula));
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  },
+
+  // ── Uma aula ──────────────────────────────────────────
+  verAula(i){
+    const a = this.aulas[i];
+    if(!a) return;
+    this.aulaAberta = i;
+    const f = this.feitas[i] || {};
+
+    document.getElementById('v-modulo').innerHTML = `
+      <button class="voltar" id="pcVoltar">← O teu percurso</button>
+      <div class="pc-cab">
+        <div class="pc-cab-n">Aula ${i + 1}</div>
+        <h1 style="font-size:22px;margin:4px 0 6px;">${a.titulo || a.tema}</h1>
+        <p style="color:var(--texto-suave);font-size:13.5px;line-height:1.55;">${a.objetivo || ''}</p>
+      </div>
+
+      <div class="pc-passos">
+        ${PASSOS.map(p => `
+          <button class="pc-passo ${f[p.id] ? 'feito' : ''}" data-passo="${p.id}">
+            <span class="pc-passo-ic">${f[p.id] ? '✓' : p.ic}</span>
+            <span class="pc-passo-t">${p.nome}</span>
+            <span class="pc-passo-s">→</span>
+          </button>`).join('')}
+      </div>`;
+
+    document.getElementById('pcVoltar').onclick = () => this.ver();
+    document.querySelectorAll('#v-modulo [data-passo]').forEach(b => {
+      b.onclick = () => this.abrirPasso(b.dataset.passo);
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  },
+
+  abrirPasso(passo){
+    const a = this.aulas[this.aulaAberta];
+    if(!a) return;
+    const nivel = this.nivel();
+
+    if(passo === 'licao' || passo === 'exercicios' || passo === 'gravacao'){
+      Licoes.nivel = nivel;
+      // Se a lição deste tema já está guardada, não gasta IA
+      const g = Historico.licaoAberta();
+      if(g && g.licao && g.licao.tema === a.tema){
+        Licoes.licao = g.licao; Licoes.fraseSel = 0; Licoes.paginaFrase = 0;
+        Rota.mostrarModulo();
+        if(passo === 'exercicios') return Exercicios.abrir(Licoes.licao);
+        if(passo === 'gravacao') return Gravacao.abrir(Licoes.licao.frases[0], Licoes.licao, 0);
+        return Licoes.verLicao();
+      }
+      this.passoPendente = passo;
+      Rota.mostrarModulo();
+      return Licoes.gerar(a.tema);
+    }
+
+    if(passo === 'conversa'){
+      Conversa.modo = 'vivo';
+      Conversa.nivel = nivel;
+      Conversa.tema = a.tema;
+      Conversa.historico = [];
+      Rota.mostrarModulo();
+      return Conversa.verSala();
+    }
+  },
+
+  // Chamado quando um passo termina
+  marcar(passo){
+    const i = this.aulaAberta;
+    if(i === null || i === undefined || !this.aulas[i]) return;
+    this.feitas[i] = this.feitas[i] || {};
+    if(this.feitas[i][passo]) return;
+    this.feitas[i][passo] = true;
+    this.guardar();
+
+    // Acabou o percurso todo: é altura de ver o nível
+    if(this.proxima() < 0 && this.aulas.length){
+      setTimeout(() => this.oferecerAvaliacao(), 1400);
+    }
+  },
+
+  // ── Avaliação no fim do percurso ──────────────────────
+  oferecerAvaliacao(){
+    if(this.avaliado) return;
+    this.avaliado = true;
+    const f = document.createElement('div');
+    f.className = 'folha-fundo';
+    f.innerHTML = `<div class="folha" style="text-align:center;padding-top:30px;">
+      <div style="font-size:48px;margin-bottom:14px;">🎓</div>
+      <div style="font-family:'Yusei Magic',cursive;font-size:20px;margin-bottom:8px;">Terminaste o percurso</div>
+      <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.6;margin-bottom:22px;">
+        ${this.aulas.length} aulas feitas. Queres ver em que nível estás agora?</p>
+      <button class="btn" id="pcAvaliar">Ver o meu nível</button>
+      <button class="lg-link" id="pcDepois">Agora não</button>
+    </div>`;
+    document.body.appendChild(f);
+    f.querySelector('#pcAvaliar').onclick = () => { f.remove(); this.avaliar(); };
+    f.querySelector('#pcDepois').onclick = () => f.remove();
+  },
+
+  async avaliar(){
+    Rota.mostrarModulo();
+    Espera.abrir('v-modulo', ['A preparar o teste…', 'A escolher as perguntas…']);
+    try{
+      const r = await Rede.correr('avaliar_nivel', {
+        modo:'gerar_perguntas',
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino:acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+      let p = r.perguntas;
+      if(typeof p === 'string'){
+        let s = p.slice(p.indexOf('['));
+        const k = s.lastIndexOf(']'); if(k > -1) s = s.slice(0, k + 1);
+        p = JSON.parse(s);
+      }
+      Espera.parar();
+      if(!p || !p.length) throw new Error('sem perguntas');
+      // Reaproveita o teste que já existe, mas com um fim diferente
+      Nivel.perguntas = p; Nivel.idx = 0; Nivel.respostas = [];
+      Nivel.aoTerminar = (nivelNovo, feedback) => this.verResultado(nivelNovo, feedback);
+      Nivel.ver();
+    }catch(e){
+      Espera.parar();
+      this.ver();
+    }
+  },
+
+  verResultado(nivelNovo, feedback){
+    const antes = this.nivel();
+    const ordem = ['Iniciante','Intermédio','Avançado'];
+    const subiu = ordem.indexOf(nivelNovo) > ordem.indexOf(antes);
+
+    document.getElementById('v-modulo').innerHTML = `
+      <div style="text-align:center;padding:26px 6px;">
+        <div style="font-size:52px;margin-bottom:12px;">${subiu ? '🎉' : '💪'}</div>
+        <h1 style="font-size:23px;margin-bottom:10px;">${subiu ? 'Subiste de nível!' : 'O teu nível'}</h1>
+
+        ${subiu ? `<div class="pc-salto">
+          <span class="pc-salto-a">${antes}</span>
+          <span class="pc-salto-s">→</span>
+          <span class="pc-salto-b">${nivelNovo}</span>
+        </div>` : `<div style="display:inline-block;background:var(--indigo);color:#fff;border-radius:999px;
+          padding:13px 32px;font-family:'Yusei Magic',cursive;font-size:21px;margin-bottom:18px;">${nivelNovo}</div>`}
+
+        <p style="font-size:14.5px;color:var(--texto-suave);line-height:1.65;">${feedback || ''}</p>
+      </div>
+
+      <button class="btn" id="pcNovo">${subiu ? 'Começar o percurso de ' + nivelNovo : 'Montar outro percurso'}</button>
+      <button class="btn btn-calmo" id="pcFim" style="margin-top:10px;">Voltar</button>`;
+
+    if(nivelNovo){
+      try{ localStorage.setItem('linguai:nivel', nivelNovo); }catch(e){}
+      if(Estado.utilizador) Estado.utilizador.nivel = nivelNovo;
+      Nucleo.guardarIdiomas();
+    }
+
+    document.getElementById('pcNovo').onclick = () => {
+      this.aulas = []; this.feitas = {}; this.avaliado = false;
+      this.perguntarInteresses();
+    };
+    document.getElementById('pcFim').onclick = () => Rota.ir('inicio');
+  },
+
+  // Cartão para o ecrã Início
+  cartao(){
+    if(!this.aulas.length) return '';
+    const i = this.proxima();
+    if(i < 0){
+      return `<button class="pc-seguir" id="pcSeguir">
+        <span class="ret-ic">🎓</span>
+        <span class="ret-txt"><span class="ret-t">Percurso concluído</span>
+        <span class="ret-d">${this.aulas.length} aulas · monta outro quando quiseres</span></span>
+        <span class="ret-seta">→</span></button>`;
+    }
+    const a = this.aulas[i];
+    return `<button class="pc-seguir" id="pcSeguir">
+      <span class="ret-ic">🎓</span>
+      <span class="ret-txt">
+        <span class="ret-t">Aula ${i + 1}: ${a.titulo || a.tema}</span>
+        <span class="ret-d">${this.quantasFeitas()} de ${this.aulas.length} aulas feitas</span>
+      </span>
+      <span class="ret-seta">→</span></button>`;
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
    SESSÃO ÚNICA — uma conta, um telemóvel de cada vez
    Quem entra de novo fica com a conta; o anterior é avisado.
    ══════════════════════════════════════════════════════════ */
@@ -2895,7 +3328,7 @@ const Espera = {
    NÍVEL — refazer o teste quando se troca de língua
    ══════════════════════════════════════════════════════════ */
 const Nivel = {
-  perguntas:[], idx:0, respostas:[],
+  perguntas:[], idx:0, respostas:[], aoTerminar:null,
 
   async abrir(){
     Rota.mostrarModulo();
@@ -2952,6 +3385,14 @@ const Nivel = {
         respostas: JSON.stringify(this.respostas)
       });
       const nivel = r.nivel || '';
+
+      // Quem pediu o teste decide o que fazer com o resultado
+      if(this.aoTerminar){
+        const fim = this.aoTerminar;
+        this.aoTerminar = null;
+        return fim(nivel, r.feedback || '');
+      }
+
       if(nivel){
         if(Estado.utilizador) Estado.utilizador.nivel = nivel;
         try{ localStorage.setItem('linguai:nivel', nivel); }catch(e){}
@@ -3206,6 +3647,7 @@ const Exercicios = {
     const pct = Math.round(this.acertos / total * 100);
     const xp = Jogo.premiar('exercicio', {acertos:this.acertos, total, tema:this.licao.tema});
     if(!this.licao._contada){ this.licao._contada = true; Estatisticas.registar('licao'); }
+    Percurso.marcar('exercicios');
     Historico.registar({tipo:'exercicio', titulo:this.licao.tema, pontuacao:pct,
                         detalhe:this.acertos + '/' + total});
 
@@ -3978,6 +4420,7 @@ const Conversa = {
   verAvaliacao(pontuacao, fortes, melhorar, geral){
     const xp = Jogo.premiar('conversa', {pontuacao});
     Estatisticas.registar('conversa');
+    Percurso.marcar('conversa');
     Historico.registar({tipo:'conversa', titulo:this.tema, pontuacao:pontuacao || undefined,
                         detalhe:this.historico.length + ' trocas'});
     document.getElementById('v-modulo').innerHTML = `
@@ -5179,6 +5622,7 @@ const Gravacao = {
 
   verNota(pontuacao, feedback, transcricao){
     const xp = Jogo.premiar('gravacao', {pontuacao});
+    Percurso.marcar('gravacao');
     Historico.registar({tipo:'gravacao', titulo:this.alvoTxt(), pontuacao:pontuacao});
     const frases = (this.licao && this.licao.frases) || [];
     const temSeguinte = this.idx > -1 && this.idx + 1 < frases.length;
