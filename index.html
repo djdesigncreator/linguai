@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-21 · percurso com avaliação final · live -->
+<!-- LINGUAI-VERSAO-23 · guia sobre os temas existentes · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -150,6 +150,14 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 .p-escrita {background:#F9D08B;color:#6B4413;}
 .p-vocab  {background:#A9C5E8;color:#1B3A63;}
 .p-traduz {background:#D9C6F0;color:#3B2159;}
+
+/* ── Tirar dúvidas ────────────────────────────────────── */
+.dv-botao{display:block;width:100%;margin-top:14px;padding:11px;border-radius:var(--r-sm);
+  background:rgba(8,27,68,.06);font-size:13px;font-weight:600;color:var(--indigo);}
+.dv-folha{max-height:82vh;display:flex;flex-direction:column;}
+.dv-frase{font-size:13px;color:var(--teal);margin-top:3px;line-height:1.4;font-weight:600;}
+.dv-fio{flex:1;min-height:32vh;max-height:52vh;overflow-y:auto;padding:4px 0 8px;}
+.dv-sugs{display:flex;flex-wrap:wrap;gap:8px;padding:14px 0 6px;}
 
 /* ── Percurso ─────────────────────────────────────────── */
 .p-percurso{background:#A9E4E8;color:#0B4A50;}
@@ -741,7 +749,12 @@ const RESERVA = {
   x_pc_concluido:'Percurso concluído',
   x_pc_terminaste:'Terminaste o percurso', x_pc_ver_nivel:'Ver o meu nível',
   x_pc_subiu:'Subiste de nível!', x_pc_meu_nivel:'O teu nível',
-  x_pc_comecar:'Começar o percurso de', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
+  x_pc_comecar:'Começar o percurso de',
+  x_dv_titulo:'Tirar dúvidas', x_dv_tema:'💡 Tirar dúvidas sobre este tema',
+  x_dv_significa:'O que significa?', x_dv_ordem:'Porquê esta ordem das palavras?',
+  x_dv_quando:'Quando se usa isto?', x_dv_pron:'Como pronuncio?',
+  x_dv_regra:'Explica-me a regra deste tema', x_dv_exemplos:'Dá-me mais exemplos',
+  x_dv_erros:'Quais são os erros mais comuns?', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
   // Perfil
   teus_idiomas:'Os teus idiomas', explicacoes_em:'Explicações em', a_aprender:'A aprender',
   atividade:'Atividade', terminar_sessao:'Terminar sessão',
@@ -1723,6 +1736,7 @@ const Licoes = {
 
       ${L.explicacao ? `<div class="cartao" style="background:#F3EFFB;border-color:#DCD2F2;">
         <p style="font-size:14.5px;line-height:1.65;">${L.explicacao}</p>
+        <button class="dv-botao" id="licDuvida">💡 Tirar dúvidas sobre este tema</button>
       </div>` : ''}
 
       ${!L.audio ? `<div class="lic-audio-espera">
@@ -1782,6 +1796,7 @@ const Licoes = {
             <button class="ouvir-frase" data-texto="${alvo.replace(/"/g,'&quot;')}" title="Ouvir" style="width:32px;height:32px;border-radius:50%;background:rgba(22,184,166,.12);display:flex;align-items:center;justify-content:center;">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="var(--teal)"><path d="M8 5v14l11-7z"/></svg>
             </button>
+            <button class="duvida-frase" data-dvi="${idx}" title="Tirar dúvidas" style="width:32px;height:32px;border-radius:50%;background:rgba(8,27,68,.08);display:flex;align-items:center;justify-content:center;font-size:14px;">💡</button>
             <button class="gravar-frase" data-idx="${idx}" title="Treinar pronúncia" style="width:32px;height:32px;border-radius:50%;background:rgba(245,31,71,.12);display:flex;align-items:center;justify-content:center;">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="var(--coral)">
                 <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3z"/>
@@ -1807,7 +1822,7 @@ const Licoes = {
 
     raiz.querySelectorAll('[data-frase]').forEach(c => {
       c.onclick = e => {
-        if(e.target.closest('.ouvir-frase') || e.target.closest('.gravar-frase')) return;
+        if(e.target.closest('.ouvir-frase') || e.target.closest('.gravar-frase') || e.target.closest('.duvida-frase')) return;
         this.fraseSel = Number(c.dataset.frase);
         this.verLicao();
       };
@@ -1815,6 +1830,16 @@ const Licoes = {
 
     raiz.querySelectorAll('.ouvir-frase').forEach(b => {
       b.onclick = () => this.falar(b.dataset.texto, b);
+    });
+
+    const bd = raiz.querySelector('#licDuvida');
+    if(bd) bd.onclick = () => Duvidas.abrir(this.licao.tema);
+
+    raiz.querySelectorAll('.duvida-frase').forEach(b => {
+      b.onclick = () => {
+        const f = this.licao.frases[Number(b.dataset.dvi)];
+        if(f) Duvidas.abrir(this.licao.tema, f.alvo || f.en || '');
+      };
     });
 
     raiz.querySelectorAll('.gravar-frase').forEach(b => {
@@ -2861,6 +2886,112 @@ const Avisos = {
 
 
 /* ══════════════════════════════════════════════════════════
+   DÚVIDAS — perguntar sem sair da lição
+   O assistente já sabe de que frase se trata.
+   ══════════════════════════════════════════════════════════ */
+const Duvidas = {
+  fundo:null, contexto:'', fio:[],
+
+  abrir(contexto, frase){
+    this.contexto = contexto;
+    this.frase = frase || '';
+    this.fio = [];
+
+    this.fundo = document.createElement('div');
+    this.fundo.className = 'folha-fundo';
+    document.body.appendChild(this.fundo);
+    this.fundo.onclick = e => { if(e.target === this.fundo) this.fechar(); };
+    this.pintar();
+  },
+
+  fechar(){ if(this.fundo){ this.fundo.remove(); this.fundo = null; } },
+
+  sugestoes(){
+    return this.frase
+      ? ['O que significa?', 'Porquê esta ordem das palavras?', 'Quando se usa isto?', 'Como pronuncio?']
+      : ['Explica-me a regra deste tema', 'Dá-me mais exemplos', 'Quais são os erros mais comuns?'];
+  },
+
+  pintar(){
+    this.fundo.innerHTML = `<div class="folha dv-folha">
+      <div class="folha-topo">
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Yusei Magic',cursive;font-size:16.5px;">Tirar dúvidas</div>
+          ${this.frase ? `<div class="dv-frase" data-conteudo>${this.frase}</div>`
+                       : `<div style="font-size:12.5px;color:var(--texto-suave);margin-top:2px;">${this.contexto}</div>`}
+        </div>
+        <button class="folha-x" id="dvX" aria-label="Fechar">✕</button>
+      </div>
+
+      <div class="dv-fio" id="dvFio">
+        ${this.fio.length ? '' : `<div class="dv-sugs">
+          ${this.sugestoes().map(s => `<button class="asst-sug" data-dv="${s}">${s}</button>`).join('')}
+        </div>`}
+      </div>
+
+      <div class="asst-barra">
+        <textarea id="dvTexto" rows="1" placeholder="Escreve a tua dúvida..."></textarea>
+        <button id="dvEnviar" aria-label="Enviar">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M2 21 23 12 2 3v7l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>`;
+
+    document.getElementById('dvX').onclick = () => this.fechar();
+    document.getElementById('dvEnviar').onclick = () => this.perguntar();
+    const caixa = document.getElementById('dvTexto');
+    caixa.onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); this.perguntar(); } };
+    this.fundo.querySelectorAll('[data-dv]').forEach(b => {
+      b.onclick = () => { caixa.value = b.dataset.dv; this.perguntar(); };
+    });
+    if(this.fio.length) this.pintarFio();
+  },
+
+  pintarFio(){
+    const fio = document.getElementById('dvFio');
+    if(!fio) return;
+    fio.innerHTML = this.fio.map(h => `
+      <div class="asst-linha ${h.de === 'eu' ? 'eu' : 'ia'}">
+        <div class="asst-bolha">${h.texto}</div>
+      </div>`).join('') + (this.aEsperar
+      ? '<div class="asst-linha ia"><div class="asst-bolha"><span class="pontos"><i></i><i></i><i></i></span></div></div>'
+      : '');
+    fio.scrollTop = fio.scrollHeight;
+  },
+
+  async perguntar(){
+    const caixa = document.getElementById('dvTexto');
+    const texto = (caixa.value || '').trim();
+    if(!texto || this.aEsperar) return;
+
+    this.fio.push({de:'eu', texto});
+    caixa.value = '';
+    this.aEsperar = true;
+    this.pintarFio();
+
+    // A pergunta vai com o contexto agarrado
+    const pergunta = this.frase
+      ? 'Na frase "' + this.frase + '" (tema: ' + this.contexto + '): ' + texto
+      : 'Sobre o tema "' + this.contexto + '": ' + texto;
+
+    try{
+      const r = await Rede.correr('assistente', {
+        mensagem: pergunta,
+        historico: JSON.stringify(this.fio.slice(0, -1)),
+        origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
+        destino: acharIdioma(Estado.destino, IDIOMAS[1]).n
+      });
+      this.aEsperar = false;
+      this.fio.push({de:'ia', texto:(r.resposta || '').trim() || 'Não consegui responder agora.'});
+    }catch(e){
+      this.aEsperar = false;
+      this.fio.push({de:'ia', texto:'Não consegui responder agora. Tenta outra vez. 🙏'});
+    }
+    this.pintarFio();
+  }
+};
+
+/* ══════════════════════════════════════════════════════════
    PERCURSO — o guia de aulas, montado pela IA para cada pessoa
    Nada fica trancado: sugere a próxima, mas pode ir onde quiser.
    ══════════════════════════════════════════════════════════ */
@@ -2982,9 +3113,13 @@ const Percurso = {
       'Quase pronto'
     ]);
     try{
+      // Os temas são os que a app já tem — a IA só escolhe e ordena
+      const banco = (TEMAS[Estado.origem] || TEMAS.pt)[this.nivel()] || [];
+
       const r = await Rede.correr('gerar_percurso', {
         nivel: this.nivel(),
         interesses: interesses || '',
+        temas: JSON.stringify(banco),
         origem: acharIdioma(Estado.origem, IDIOMAS[0]).n,
         destino: acharIdioma(Estado.destino, IDIOMAS[1]).n
       });
@@ -2994,7 +3129,18 @@ const Percurso = {
         const f = s.lastIndexOf(']'); if(f > -1) s = s.slice(0, f + 1);
         a = JSON.parse(s);
       }
-      this.aulas = (a || []).filter(x => x && x.tema);
+      // Se a IA devolver um tema que não existe, fica de fora
+      const validos = new Set(banco);
+      this.aulas = (a || []).filter(x => x && x.tema && validos.has(x.tema));
+
+      // Se sobrar pouco, completa pela ordem da lista
+      if(this.aulas.length < 10){
+        const jaTem = new Set(this.aulas.map(x => x.tema));
+        banco.forEach(tm => {
+          if(this.aulas.length < 20 && !jaTem.has(tm)) this.aulas.push({titulo:tm, objetivo:'', tema:tm});
+        });
+      }
+
       this.feitas = {};
       if(!this.aulas.length) throw new Error('sem aulas');
       Espera.parar();
