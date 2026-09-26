@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-26 · avaliações com o que rever · live -->
+<!-- LINGUAI-VERSAO-27 · sugerir mudança de nível · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -772,7 +772,9 @@ const RESERVA = {
   x_pg_moeda:'Os preços são em meticais (MZN). Se pagares com cartão estrangeiro, o teu banco converte ao câmbio do dia.',
   x_pg_meticais:'em meticais.', x_pg_vais_pagar:'Vais pagar',
   x_rev_titulo:'Para rever', x_rev_palavras:'Palavras a rever',
-  x_rev_nenhuma:'Não falhaste nenhuma. 🎯', x_rev_todas:'Acertaste todas. 🎯', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
+  x_rev_nenhuma:'Não falhaste nenhuma. 🎯', x_rev_todas:'Acertaste todas. 🎯',
+  x_ds_avontade:'Estás à vontade neste nível', x_ds_custa:'Estas lições estão a custar?',
+  x_ds_teste:'Fazer o teste de nível', x_ds_mudar:'Mudar para', x_ds_ficar:'Ficar em', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
   // Perfil
   teus_idiomas:'Os teus idiomas', explicacoes_em:'Explicações em', a_aprender:'A aprender',
   atividade:'Atividade', terminar_sessao:'Terminar sessão',
@@ -3580,6 +3582,92 @@ const Nivel = {
   }
 };
 
+
+/* ══════════════════════════════════════════════════════════
+   DESEMPENHO — repara se o nível está desajustado
+   Sugere, nunca impõe: a decisão é sempre da pessoa.
+   ══════════════════════════════════════════════════════════ */
+const Desempenho = {
+  MINIMO:8,          // atividades a olhar
+  SUBIR:85,          // média acima disto: está à vontade
+  DESCER:40,         // média abaixo disto: está a custar
+
+  ordem:['Iniciante','Intermédio','Avançado'],
+
+  // As últimas notas, das atividades que dão nota
+  ultimas(){
+    return Historico.lista()
+      .filter(x => typeof x.pontuacao === 'number')
+      .slice(0, this.MINIMO)
+      .map(x => x.pontuacao);
+  },
+
+  media(n){ return n.reduce((a, b) => a + b, 0) / n.length; },
+
+  nivelAtual(){
+    try{ return localStorage.getItem('linguai:nivel') || (Estado.utilizador && Estado.utilizador.nivel) || ''; }
+    catch(e){ return (Estado.utilizador && Estado.utilizador.nivel) || ''; }
+  },
+
+  // Chamado depois de cada atividade com nota
+  avaliar(){
+    const notas = this.ultimas();
+    if(notas.length < this.MINIMO) return;
+
+    const atual = this.nivelAtual();
+    const i = this.ordem.indexOf(atual);
+    if(i < 0) return;
+
+    const m = this.media(notas);
+    let sugestao = null;
+    if(m >= this.SUBIR && i < 2)  sugestao = {para:this.ordem[i + 1], sobe:true,  media:Math.round(m)};
+    if(m <= this.DESCER && i > 0) sugestao = {para:this.ordem[i - 1], sobe:false, media:Math.round(m)};
+    if(!sugestao) return;
+
+    // Não insistir: uma sugestão por semana, e só se não foi recusada
+    try{
+      const g = JSON.parse(localStorage.getItem('linguai:sugNivel') || '{}');
+      if(g.para === sugestao.para && Date.now() - (g.quando || 0) < 7 * 864e5) return;
+    }catch(e){}
+
+    setTimeout(() => this.propor(sugestao, atual), 1600);
+  },
+
+  propor(s, atual){
+    const f = document.createElement('div');
+    f.className = 'folha-fundo';
+    f.innerHTML = `<div class="folha" style="text-align:center;padding-top:28px;">
+      <div style="font-size:46px;margin-bottom:12px;">${s.sobe ? '📈' : '🌱'}</div>
+      <div style="font-family:'Yusei Magic',cursive;font-size:19px;margin-bottom:10px;">
+        ${s.sobe ? 'Estás à vontade neste nível' : 'Estas lições estão a custar?'}
+      </div>
+      <p style="font-size:13.5px;color:var(--texto-suave);line-height:1.6;margin-bottom:20px;">
+        ${s.sobe
+          ? 'As tuas últimas ' + this.MINIMO + ' atividades deram uma média de ' + s.media + '%. Queres experimentar o nível ' + s.para + '?'
+          : 'As tuas últimas ' + this.MINIMO + ' atividades deram uma média de ' + s.media + '%. Não faz mal — às vezes é melhor ganhar base primeiro. Queres tentar o nível ' + s.para + '?'}
+      </p>
+      <button class="btn" id="dsTeste">Fazer o teste de nível</button>
+      <button class="btn btn-calmo" id="dsMudar" style="margin-top:10px;">Mudar para ${s.para}</button>
+      <button class="lg-link" id="dsFicar">Ficar em ${atual}</button>
+    </div>`;
+    document.body.appendChild(f);
+
+    const lembrar = () => {
+      try{ localStorage.setItem('linguai:sugNivel', JSON.stringify({para:s.para, quando:Date.now()})); }catch(e){}
+    };
+
+    f.querySelector('#dsTeste').onclick = () => { lembrar(); f.remove(); Nivel.abrir(); };
+    f.querySelector('#dsMudar').onclick = () => {
+      lembrar(); f.remove();
+      try{ localStorage.setItem('linguai:nivel', s.para); }catch(e){}
+      if(Estado.utilizador) Estado.utilizador.nivel = s.para;
+      Nucleo.guardarIdiomas();
+      Rota.ir('inicio');
+    };
+    f.querySelector('#dsFicar').onclick = () => { lembrar(); f.remove(); };
+  }
+};
+
 /* ══════════════════════════════════════════════════════════
    HISTÓRICO — o que a pessoa andou a fazer, e onde ficou
    ══════════════════════════════════════════════════════════ */
@@ -3818,6 +3906,7 @@ const Exercicios = {
     Percurso.marcar('exercicios');
     Historico.registar({tipo:'exercicio', titulo:this.licao.tema, pontuacao:pct,
                         detalhe:this.acertos + '/' + total});
+    Desempenho.avaliar();
 
     let titulo = 'Continua a praticar', emoji = '💪';
     if(pct >= 90){ titulo = 'Impecável!'; emoji = '🏆'; }
@@ -5007,6 +5096,7 @@ const Escrita = {
     const xp = Jogo.premiar('escrita', {pontuacao});
     Estatisticas.registar('escrita');
     Historico.registar({tipo:'escrita', titulo:this.tema || 'Escrita', pontuacao:pontuacao});
+    Desempenho.avaliar();
     document.getElementById('v-modulo').innerHTML = `
       <div style="text-align:center;padding:16px 6px;">
         <div class="ex-anel">
@@ -5811,6 +5901,7 @@ const Gravacao = {
     const xp = Jogo.premiar('gravacao', {pontuacao});
     Percurso.marcar('gravacao');
     Historico.registar({tipo:'gravacao', titulo:this.alvoTxt(), pontuacao:pontuacao});
+    Desempenho.avaliar();
     const frases = (this.licao && this.licao.frases) || [];
     const temSeguinte = this.idx > -1 && this.idx + 1 < frases.length;
     let emoji = '💪', titulo = 'Vamos treinar mais';
