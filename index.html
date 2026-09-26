@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-23 · guia sobre os temas existentes · live -->
+<!-- LINGUAI-VERSAO-24 · moeda clara e números em algarismo · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -352,6 +352,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .lg-fundo{text-align:center;margin-top:26px;padding-top:20px;border-top:1.5px solid var(--linha);font-size:13.5px;color:var(--texto-suave);}
 .lg-troca{font-weight:700;color:var(--coral);font-size:13.5px;}
 
+.lic-num{display:inline-block;margin-left:7px;padding:2px 9px;border-radius:999px;background:rgba(22,184,166,.12);color:var(--teal);font-family:'Yusei Magic',cursive;font-size:13.5px;vertical-align:middle;}
 .lic-eq{display:flex;align-items:flex-end;gap:2.5px;height:13px;}
 .lic-eq i{width:2.5px;height:3px;border-radius:2px;background:var(--lima);opacity:.35;transition:opacity .2s;}
 .lic-eq.a-tocar i{opacity:1;animation:eqSalta .9s ease-in-out infinite;}
@@ -530,6 +531,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .pg-carregando{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:13px;color:var(--texto-suave);background:var(--branco);border-radius:var(--r-md);border:1.5px solid var(--linha);}
 .pg-quadro{transition:opacity .4s;}
 .pg-nota-pais{font-size:12.5px;color:var(--texto-suave);line-height:1.5;margin-bottom:14px;}
+.pg-moeda{font-size:12.5px;color:var(--texto-suave);line-height:1.5;margin-bottom:20px;padding:11px 13px;background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-sm);}
 .pg-nota{text-align:center;font-size:12.5px;color:var(--texto-suave);padding:14px 10px 2px;line-height:1.5;}
 
 /* ── Assistente ───────────────────────────────────────── */
@@ -754,7 +756,9 @@ const RESERVA = {
   x_dv_significa:'O que significa?', x_dv_ordem:'Porquê esta ordem das palavras?',
   x_dv_quando:'Quando se usa isto?', x_dv_pron:'Como pronuncio?',
   x_dv_regra:'Explica-me a regra deste tema', x_dv_exemplos:'Dá-me mais exemplos',
-  x_dv_erros:'Quais são os erros mais comuns?', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
+  x_dv_erros:'Quais são os erros mais comuns?',
+  x_pg_moeda:'Os preços são em meticais (MZN). Se pagares com cartão estrangeiro, o teu banco converte ao câmbio do dia.',
+  x_pg_meticais:'em meticais.', x_pg_vais_pagar:'Vais pagar', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
   // Perfil
   teus_idiomas:'Os teus idiomas', explicacoes_em:'Explicações em', a_aprender:'A aprender',
   atividade:'Atividade', terminar_sessao:'Terminar sessão',
@@ -1783,12 +1787,13 @@ const Licoes = {
     const alvo = f.alvo || f.en || '';
     const orig = f.origem || f.pt || '';
     const pron = f.pronuncia || '';
+    const num = f.numero || '';   // nas lições de números, datas e preços
     const sel = idx === this.fraseSel;
     return `
       <div class="cartao" data-frase="${idx}" style="padding:15px 16px;margin-bottom:9px;cursor:pointer;${sel?'border-color:var(--teal);background:rgba(22,184,166,.05);':''}">
         <div style="display:flex;align-items:flex-start;gap:12px;">
           <div style="flex:1;min-width:0;">
-            <div style="font-weight:600;font-size:15px;">${alvo}</div>
+            <div style="font-weight:600;font-size:15px;">${alvo}${num ? ` <span class="lic-num">${num}</span>` : ''}</div>
             <div style="font-size:13px;color:var(--texto-suave);margin-top:2px;">${orig}</div>
             ${pron ? `<div style="font-size:12px;color:var(--teal);font-style:italic;margin-top:4px;">🗣 ${pron}</div>` : ''}
           </div>
@@ -2351,9 +2356,10 @@ const Planos = {
         return '';
       })()}
 
-      <p style="color:var(--texto-suave);font-size:14px;line-height:1.6;margin-bottom:20px;">
+      <p style="color:var(--texto-suave);font-size:14px;line-height:1.6;margin-bottom:8px;">
         Assina de qualquer parte do mundo. Estuda onde estiveres, a qualquer hora.
       </p>
+      <p class="pg-moeda">Os preços são em meticais (MZN). Se pagares com cartão estrangeiro, o teu banco converte ao câmbio do dia.</p>
 
       ${PLANOS.map(p => `
         <div class="plano ${p.destaque ? 'plano-top' : ''}">
@@ -2418,7 +2424,7 @@ const Pagamento = {
   escolherMetodo(){
     this.folha(
       this.topo(this.plano.nome, this.plano.preco + ' · ' + this.plano.periodo, false) +
-      `<p style="font-size:13px;color:var(--texto-suave);margin-bottom:14px;">Como queres pagar?</p>
+      `<p style="font-size:13px;color:var(--texto-suave);margin-bottom:14px;">Como queres pagar? <b>${this.plano.preco}</b> em meticais.</p>
        <div style="display:flex;flex-direction:column;gap:10px;">
        ${METODOS.map(m => `
          <button class="metodo" data-metodo="${m.id}">
@@ -2523,7 +2529,8 @@ const Pagamento = {
            <iframe id="pgFrame" src="${url}" class="pg-quadro" title="Pagamento"
                    allow="payment" loading="eager" style="opacity:0;"></iframe>
          </div>
-         <div class="pg-nota" id="pgNota">Preenche os dados do cartão acima para concluir.</div>`);
+         <div class="pg-nota" id="pgNota">Preenche os dados do cartão acima para concluir.<br>
+           <b>Vais pagar ${this.plano.preco} (meticais).</b> Cartões estrangeiros são convertidos pelo teu banco.</div>`);
 
       this.ligarTopo(() => { this.pararVigia(); this.escolherMetodo(); });
 
