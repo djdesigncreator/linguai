@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-24 · moeda clara e números em algarismo · live -->
+<!-- LINGUAI-VERSAO-26 · avaliações com o que rever · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -150,6 +150,18 @@ button{font-family:inherit;font-size:inherit;color:inherit;border:0;background:n
 .p-escrita {background:#F9D08B;color:#6B4413;}
 .p-vocab  {background:#A9C5E8;color:#1B3A63;}
 .p-traduz {background:#D9C6F0;color:#3B2159;}
+
+/* ── Rever depois da avaliação ────────────────────────── */
+.rev-linha{background:var(--branco);border:1.5px solid var(--linha);border-radius:var(--r-md);padding:13px 15px;margin-bottom:8px;}
+.rev-p{font-size:14px;font-weight:600;line-height:1.4;}
+.rev-r{font-size:13.5px;margin-top:5px;}
+.rev-perfeito{text-align:center;padding:18px;font-size:14px;color:var(--teal);font-weight:600;}
+.vc-rever{display:flex;flex-wrap:wrap;gap:9px;}
+.vc-rev{width:calc(33.33% - 6px);background:var(--branco);border:1.5px solid var(--linha);
+  border-radius:var(--r-md);padding:10px 7px;text-align:center;}
+.vc-rev img{width:100%;height:56px;object-fit:contain;margin-bottom:6px;}
+.vc-rev-t{font-size:13px;font-weight:600;line-height:1.25;}
+.vc-rev-d{font-size:11px;color:var(--texto-suave);margin-top:2px;}
 
 /* ── Tirar dúvidas ────────────────────────────────────── */
 .dv-botao{display:block;width:100%;margin-top:14px;padding:11px;border-radius:var(--r-sm);
@@ -352,7 +364,7 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .lg-fundo{text-align:center;margin-top:26px;padding-top:20px;border-top:1.5px solid var(--linha);font-size:13.5px;color:var(--texto-suave);}
 .lg-troca{font-weight:700;color:var(--coral);font-size:13.5px;}
 
-.lic-num{display:inline-block;margin-left:7px;padding:2px 9px;border-radius:999px;background:rgba(22,184,166,.12);color:var(--teal);font-family:'Yusei Magic',cursive;font-size:13.5px;vertical-align:middle;}
+.lic-alg{color:var(--teal);font-weight:700;}
 .lic-eq{display:flex;align-items:flex-end;gap:2.5px;height:13px;}
 .lic-eq i{width:2.5px;height:3px;border-radius:2px;background:var(--lima);opacity:.35;transition:opacity .2s;}
 .lic-eq.a-tocar i{opacity:1;animation:eqSalta .9s ease-in-out infinite;}
@@ -758,7 +770,9 @@ const RESERVA = {
   x_dv_regra:'Explica-me a regra deste tema', x_dv_exemplos:'Dá-me mais exemplos',
   x_dv_erros:'Quais são os erros mais comuns?',
   x_pg_moeda:'Os preços são em meticais (MZN). Se pagares com cartão estrangeiro, o teu banco converte ao câmbio do dia.',
-  x_pg_meticais:'em meticais.', x_pg_vais_pagar:'Vais pagar', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
+  x_pg_meticais:'em meticais.', x_pg_vais_pagar:'Vais pagar',
+  x_rev_titulo:'Para rever', x_rev_palavras:'Palavras a rever',
+  x_rev_nenhuma:'Não falhaste nenhuma. 🎯', x_rev_todas:'Acertaste todas. 🎯', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
   // Perfil
   teus_idiomas:'Os teus idiomas', explicacoes_em:'Explicações em', a_aprender:'A aprender',
   atividade:'Atividade', terminar_sessao:'Terminar sessão',
@@ -1787,13 +1801,12 @@ const Licoes = {
     const alvo = f.alvo || f.en || '';
     const orig = f.origem || f.pt || '';
     const pron = f.pronuncia || '';
-    const num = f.numero || '';   // nas lições de números, datas e preços
     const sel = idx === this.fraseSel;
     return `
       <div class="cartao" data-frase="${idx}" style="padding:15px 16px;margin-bottom:9px;cursor:pointer;${sel?'border-color:var(--teal);background:rgba(22,184,166,.05);':''}">
         <div style="display:flex;align-items:flex-start;gap:12px;">
           <div style="flex:1;min-width:0;">
-            <div style="font-weight:600;font-size:15px;">${alvo}${num ? ` <span class="lic-num">${num}</span>` : ''}</div>
+            <div style="font-weight:600;font-size:15px;">${alvo}</div>
             <div style="font-size:13px;color:var(--texto-suave);margin-top:2px;">${orig}</div>
             ${pron ? `<div style="font-size:12px;color:var(--teal);font-style:italic;margin-top:4px;">🗣 ${pron}</div>` : ''}
           </div>
@@ -3662,7 +3675,7 @@ const Estatisticas = {
    Instantâneos, sem custo, e sempre sobre o que acabou de ver.
    ══════════════════════════════════════════════════════════ */
 const Exercicios = {
-  lista:[], idx:0, acertos:0, licao:null,
+  lista:[], idx:0, acertos:0, erros:[], licao:null,
 
   baralhar(a){
     const c = a.slice();
@@ -3724,7 +3737,7 @@ const Exercicios = {
               opcoes, correta:opcoes.indexOf(certa)};
     });
 
-    this.idx = 0; this.acertos = 0;
+    this.idx = 0; this.acertos = 0; this.erros = [];
     return true;
   },
 
@@ -3773,6 +3786,8 @@ const Exercicios = {
     const e = this.lista[this.idx];
     const certo = escolha === e.correta;
     if(certo) this.acertos++;
+    else this.erros.push({pergunta:e.enunciado, apoio:e.pergunta,
+                          dado:e.opcoes[escolha], certo:e.opcoes[e.correta]});
 
     document.querySelectorAll('#exOpcoes [data-op]').forEach(b => {
       b.disabled = true;
@@ -3828,7 +3843,15 @@ const Exercicios = {
         <div class="ex-xp">+${xp} XP</div>
       </div>
 
-      <button class="btn" id="exRepetir" style="margin-bottom:10px;">Repetir os exercícios</button>
+      ${this.erros.length ? `
+        <div class="seccao-titulo">Para rever</div>
+        ${this.erros.map(x => `<div class="rev-linha" data-conteudo>
+          <div class="rev-p">${x.pergunta}</div>
+          <div class="rev-r"><span class="es-x">${x.dado}</span> → <span class="es-v">${x.certo}</span></div>
+        </div>`).join('')}` : `
+        <div class="rev-perfeito">Não falhaste nenhuma. 🎯</div>`}
+
+      <button class="btn" id="exRepetir" style="margin-bottom:10px;margin-top:14px;">Repetir os exercícios</button>
       <button class="btn btn-calmo" id="exVoltar">Voltar à lição</button>`;
 
     setTimeout(() => Avisos.convidar(), 1200);
@@ -4709,7 +4732,7 @@ const CATEGORIAS = {
 };
 
 const Vocabulario = {
-  banco:null, pool:[], ordem:[], idx:0, acertos:0, TOTAL:10, respondeu:false,
+  banco:null, pool:[], ordem:[], idx:0, acertos:0, falhadas:[], TOTAL:10, respondeu:false,
 
   async abrir(){
     Rota.mostrarModulo();
@@ -4765,7 +4788,7 @@ const Vocabulario = {
     this.pool = cat === 'todas' ? this.banco : this.banco.filter(o => o.c === cat);
     if(this.pool.length < 4) return;
     this.ordem = this.baralhar(this.pool).slice(0, this.TOTAL);
-    this.idx = 0; this.acertos = 0;
+    this.idx = 0; this.acertos = 0; this.falhadas = [];
     this.ver();
   },
 
@@ -4806,6 +4829,7 @@ const Vocabulario = {
     this.respondeu = true;
     const acertou = escolha === certa;
     if(acertou) this.acertos++;
+    else this.falhadas.push({certa, dada:escolha, origem:this.origem(objeto), img:objeto.i});
 
     document.querySelectorAll('#vcOpcoes [data-op]').forEach(b => {
       b.disabled = true;
@@ -4852,12 +4876,22 @@ const Vocabulario = {
         </div>
         <div class="ex-xp">+${xp} XP</div>
       </div>
-      <button class="btn" id="vcOutra" style="margin-bottom:10px;">Outra ronda</button>
+      ${this.falhadas.length ? `
+        <div class="seccao-titulo">Palavras a rever</div>
+        <div class="vc-rever">
+          ${this.falhadas.map(x => `<div class="vc-rev" data-conteudo>
+            ${x.img ? `<img src="data:image/jpeg;base64,${x.img}" alt="">` : ''}
+            <div class="vc-rev-t">${x.certa}</div>
+            <div class="vc-rev-d">${x.origem}</div>
+          </div>`).join('')}
+        </div>` : '<div class="rev-perfeito">Acertaste todas. 🎯</div>'}
+
+      <button class="btn" id="vcOutra" style="margin:14px 0 10px;">Outra ronda</button>
       <button class="btn btn-calmo" id="vcCats">Trocar de categoria</button>`;
 
     document.getElementById('vcOutra').onclick = () => {
       this.ordem = this.baralhar(this.pool).slice(0, this.TOTAL);
-      this.idx = 0; this.acertos = 0; this.ver();
+      this.idx = 0; this.acertos = 0; this.falhadas = []; this.ver();
     };
     document.getElementById('vcCats').onclick = () => this.verCategorias();
   }
