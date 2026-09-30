@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-28 · avançar para o tema seguinte · live -->
+<!-- LINGUAI-VERSAO-29 · a voz não repete os algarismos · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -1934,9 +1934,23 @@ const Licoes = {
     };
   },
 
+  // O algarismo entre parêntesis é para ler com os olhos, não em voz alta
+  semAlgarismos(texto){
+    return String(texto || '')
+      .replace(/\s*\(([^)]*)\)/g, (todo, dentro) => {
+        const temNumero = /\d/.test(dentro);
+        const letras = dentro.replace(/[^A-Za-zÀ-ÿ]/g, '').length;
+        // Tira "(9)", "(14h30)", "(150 MZN)" — mantém "(bom dia?)"
+        return (temNumero && letras <= 4) ? '' : todo;
+      })
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  },
+
   // O botão que está a falar fica assinalado, para se saber qual é
   falar(texto, botao){
     if(!window.speechSynthesis) return;
+    texto = this.semAlgarismos(texto);
     document.querySelectorAll('.a-falar').forEach(x => x.classList.remove('a-falar'));
     speechSynthesis.cancel();
 
@@ -2781,6 +2795,7 @@ const Assistente = {
 
   falar(texto, botao){
     if(!window.speechSynthesis) return;
+    texto = Licoes.semAlgarismos(texto);
     document.querySelectorAll('.a-falar').forEach(x => x.classList.remove('a-falar'));
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(texto);
