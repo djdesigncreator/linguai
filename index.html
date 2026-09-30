@@ -1,4 +1,4 @@
-<!-- LINGUAI-VERSAO-29 · a voz não repete os algarismos · live -->
+<!-- LINGUAI-VERSAO-30 · concluir o nível e subir · live -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -494,8 +494,11 @@ body.em-login #ecra{padding-top:34px;padding-bottom:40px;}
 .ex-anel circle{transition:stroke-dashoffset 1s cubic-bezier(.2,.7,.3,1);}
 .ex-anel-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Yusei Magic',cursive;font-size:29px;}
 .ex-pos{display:block;font-size:11.5px;opacity:.85;margin-top:3px;font-family:'Inter',sans-serif;font-weight:500;}
-.ex-fim{text-align:center;padding:18px;margin-top:14px;font-size:14px;color:var(--teal);font-weight:600;
-  background:rgba(22,184,166,.08);border-radius:var(--r-md);}
+.ex-fim{text-align:center;padding:20px 16px;margin-top:14px;background:rgba(22,184,166,.08);border-radius:var(--r-md);}
+.ex-fim-t{font-family:'Yusei Magic',cursive;font-size:16px;color:var(--teal);}
+.ex-fim-d{font-size:13px;color:var(--texto-suave);margin-top:6px;line-height:1.5;}
+.tema-feito{opacity:.62;}
+.tema-visto{color:var(--teal);font-weight:700;margin-left:8px;}
 .ex-xp{display:inline-block;background:var(--lima);color:var(--indigo);border-radius:999px;padding:9px 22px;font-family:'Yusei Magic',cursive;font-size:17px;}
 
 /* ── Jogo ─────────────────────────────────────────────── */
@@ -778,7 +781,10 @@ const RESERVA = {
   x_rev_nenhuma:'Não falhaste nenhuma. 🎯', x_rev_todas:'Acertaste todas. 🎯',
   x_ds_avontade:'Estás à vontade neste nível', x_ds_custa:'Estas lições estão a custar?',
   x_ds_teste:'Fazer o teste de nível', x_ds_mudar:'Mudar para', x_ds_ficar:'Ficar em',
-  x_ex_seguinte:'Tema seguinte:', x_ex_de:'de', x_ex_fim:'Chegaste ao fim dos temas de', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
+  x_ex_seguinte:'Tema seguinte:', x_ex_de:'de',
+  x_ex_terminaste:'Terminaste o nível', x_ex_estudaste:'Estudaste os temas deste nível.',
+  x_ex_subir:'Passar ao nível seguinte', x_ex_mais:'Estudar mais temas deste nível',
+  x_ex_estudados:'temas estudados', x_pc_aulas_feitas:'aulas feitas. Queres ver em que nível estás agora?', x_pc_erro:'Não consegui montar o percurso. Tenta outra vez.',
   // Perfil
   teus_idiomas:'Os teus idiomas', explicacoes_em:'Explicações em', a_aprender:'A aprender',
   atividade:'Atividade', terminar_sessao:'Terminar sessão',
@@ -1658,9 +1664,10 @@ const Licoes = {
 
   temaSeguinte(){
     const lista = this.temasDoNivel();
-    const i = this.idxTema > -1 ? this.idxTema : lista.indexOf(this.licao ? this.licao.tema : '');
-    if(i < 0 || i + 1 >= lista.length) return null;
-    return {tema:lista[i + 1], pos:i + 2, total:lista.length};
+    const porFazer = Feitos.proximoPorFazer(this.nivel, lista);
+    if(!porFazer) return null;                       // já fez todos
+    const feitos = lista.length - Feitos.quantosFaltam(this.nivel, lista);
+    return {tema:porFazer, pos:feitos + 1, total:lista.length};
   },
 
   // ── 2. Tema ───────────────────────────────────────────
@@ -1675,9 +1682,14 @@ const Licoes = {
     this.alvo().innerHTML = `
       <button class="voltar" data-mudar-nivel>← ${t('qual_nivel')}</button>
       <h1 style="font-size:22px;margin-bottom:6px;">${t('escolhe_tema')}</h1>
-      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;">${this.nivel} · ${this.temas.length} temas</p>
+      <p style="color:var(--texto-suave);font-size:13.5px;margin-bottom:20px;">${this.nivel} · ${this.temas.length - Feitos.quantosFaltam(this.nivel, this.temas)} de ${this.temas.length} temas estudados</p>
       <div class="escolhas">
-        ${lote.map(x => `<button class="escolha" data-tema="${x.replace(/"/g,'&quot;')}">${x}</button>`).join('')}
+        ${lote.map(x => {
+          const feito = Feitos.lista(this.nivel).indexOf(x) > -1;
+          return `<button class="escolha ${feito ? 'tema-feito' : ''}" data-tema="${x.replace(/"/g,'&quot;')}">
+            ${x}${feito ? '<span class="tema-visto">✓</span>' : ''}
+          </button>`;
+        }).join('')}
       </div>
       ${total > 1 ? `
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px;">
@@ -3618,6 +3630,49 @@ const Nivel = {
 };
 
 
+
+/* ══════════════════════════════════════════════════════════
+   TEMAS FEITOS — o que já foi estudado em cada nível
+   ══════════════════════════════════════════════════════════ */
+const Feitos = {
+  tudo(){
+    try{ return JSON.parse(localStorage.getItem('linguai:temasFeitos') || '{}'); }
+    catch(e){ return {}; }
+  },
+  chave(nivel){ return Estado.destino + '|' + nivel; },
+
+  lista(nivel){ return this.tudo()[this.chave(nivel)] || []; },
+
+  marcar(nivel, tema){
+    if(!nivel || !tema) return;
+    const t = this.tudo();
+    const k = this.chave(nivel);
+    t[k] = t[k] || [];
+    if(t[k].indexOf(tema) < 0){
+      t[k].push(tema);
+      try{ localStorage.setItem('linguai:temasFeitos', JSON.stringify(t)); }catch(e){}
+    }
+  },
+
+  // Quantos faltam neste nível
+  quantosFaltam(nivel, todos){
+    const feitos = new Set(this.lista(nivel));
+    return todos.filter(x => !feitos.has(x)).length;
+  },
+
+  // O primeiro que ainda não foi feito
+  proximoPorFazer(nivel, todos){
+    const feitos = new Set(this.lista(nivel));
+    return todos.find(x => !feitos.has(x)) || null;
+  },
+
+  limpar(nivel){
+    const t = this.tudo();
+    delete t[this.chave(nivel)];
+    try{ localStorage.setItem('linguai:temasFeitos', JSON.stringify(t)); }catch(e){}
+  }
+};
+
 /* ══════════════════════════════════════════════════════════
    DESEMPENHO — repara se o nível está desajustado
    Sugere, nunca impõe: a decisão é sempre da pessoa.
@@ -3811,6 +3866,7 @@ const Exercicios = {
 
   // Constrói 8 exercícios variados a partir das frases
   montar(licao){
+    if(!licao) return false;
     this.licao = licao;
     const fr = (licao.frases || []).filter(f => (f.alvo || f.en) && (f.origem || f.pt));
     if(fr.length < 4) return false;
@@ -3865,6 +3921,7 @@ const Exercicios = {
   },
 
   abrir(licao){
+    if(!licao) return Rota.ir('praticar');
     if(!this.montar(licao)){
       Jogo.premiar('licao', {tema:licao.tema});
       if(!licao._contada){ licao._contada = true; Estatisticas.registar('licao'); }
@@ -3939,6 +3996,7 @@ const Exercicios = {
     const xp = Jogo.premiar('exercicio', {acertos:this.acertos, total, tema:this.licao.tema});
     if(!this.licao._contada){ this.licao._contada = true; Estatisticas.registar('licao'); }
     Percurso.marcar('exercicios');
+    Feitos.marcar(Licoes.nivel, this.licao.tema);
     Historico.registar({tipo:'exercicio', titulo:this.licao.tema, pontuacao:pct,
                         detalhe:this.acertos + '/' + total});
     Desempenho.avaliar();
@@ -3977,7 +4035,12 @@ const Exercicios = {
 
       ${(() => {
         const s = Licoes.temaSeguinte();
-        if(!s) return `<div class="ex-fim">Chegaste ao fim dos temas de ${Licoes.nivel}. 🎓</div>`;
+        if(!s) return `<div class="ex-fim">
+            <div class="ex-fim-t">Terminaste o nível ${Licoes.nivel} 🎓</div>
+            <div class="ex-fim-d">Estudaste os ${Licoes.temasDoNivel().length} temas deste nível.</div>
+          </div>
+          <button class="btn" id="exSubir" style="margin-top:12px;">Passar ao nível seguinte</button>
+          <button class="btn btn-calmo" id="exMaisTemas" style="margin-top:10px;">Estudar mais temas deste nível</button>`;
         return `<button class="btn" id="exSeguinte" style="margin-top:14px;">
           Tema seguinte: ${s.tema}
           <span class="ex-pos">${s.pos} de ${s.total}</span>
@@ -3988,6 +4051,32 @@ const Exercicios = {
       <button class="btn btn-calmo" id="exVoltar" style="margin-top:10px;">Voltar à lição</button>`;
 
     setTimeout(() => Avisos.convidar(), 1200);
+
+    const bSubir = document.getElementById('exSubir');
+    if(bSubir) bSubir.onclick = () => {
+      const ordem = ['Iniciante','Intermédio','Avançado'];
+      const i = ordem.indexOf(Licoes.nivel);
+      if(i < 0 || i === 2){
+        Espera.parar();
+        return Nivel.abrir();          // já está no topo: confirma o nível
+      }
+      Licoes.nivel = ordem[i + 1];
+      try{ localStorage.setItem('linguai:nivel', Licoes.nivel); }catch(e){}
+      if(Estado.utilizador) Estado.utilizador.nivel = Licoes.nivel;
+      Nucleo.guardarIdiomas();
+      Licoes.licao = null;
+      Rota.mostrarModulo();
+      Licoes.verTemas();
+    };
+
+    const bMais = document.getElementById('exMaisTemas');
+    if(bMais) bMais.onclick = () => {
+      // Recomeça a lista: as lições são sempre geradas de novo
+      Feitos.limpar(Licoes.nivel);
+      Licoes.idxTema = -1;
+      Rota.mostrarModulo();
+      Licoes.verTemas();
+    };
 
     const bs = document.getElementById('exSeguinte');
     if(bs) bs.onclick = () => {
